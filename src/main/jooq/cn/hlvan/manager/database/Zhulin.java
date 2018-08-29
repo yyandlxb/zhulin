@@ -4,10 +4,15 @@
 package cn.hlvan.manager.database;
 
 
+import cn.hlvan.manager.database.tables.EssayType;
+import cn.hlvan.manager.database.tables.Order;
+import cn.hlvan.manager.database.tables.OrderEassy;
 import cn.hlvan.manager.database.tables.Permission;
+import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
 import cn.hlvan.manager.database.tables.RolePermission;
 import cn.hlvan.manager.database.tables.User;
+import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.UserPermission;
 import cn.hlvan.manager.database.tables.UserRole;
 
@@ -35,7 +40,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zhulin extends SchemaImpl {
 
-    private static final long serialVersionUID = 176283582;
+    private static final long serialVersionUID = 266986341;
 
     /**
      * The reference instance of <code>zhulin</code>
@@ -43,9 +48,29 @@ public class Zhulin extends SchemaImpl {
     public static final Zhulin ZHULIN = new Zhulin();
 
     /**
+     * 文章领域
+     */
+    public final EssayType ESSAY_TYPE = cn.hlvan.manager.database.tables.EssayType.ESSAY_TYPE;
+
+    /**
+     * The table <code>zhulin.order</code>.
+     */
+    public final Order ORDER = cn.hlvan.manager.database.tables.Order.ORDER;
+
+    /**
+     * The table <code>zhulin.order_eassy</code>.
+     */
+    public final OrderEassy ORDER_EASSY = cn.hlvan.manager.database.tables.OrderEassy.ORDER_EASSY;
+
+    /**
      * The table <code>zhulin.permission</code>.
      */
     public final Permission PERMISSION = cn.hlvan.manager.database.tables.Permission.PERMISSION;
+
+    /**
+     * The table <code>zhulin.picture</code>.
+     */
+    public final Picture PICTURE = cn.hlvan.manager.database.tables.Picture.PICTURE;
 
     /**
      * The table <code>zhulin.role</code>.
@@ -61,6 +86,11 @@ public class Zhulin extends SchemaImpl {
      * The table <code>zhulin.user</code>.
      */
     public final User USER = cn.hlvan.manager.database.tables.User.USER;
+
+    /**
+     * The table <code>zhulin.user_order</code>.
+     */
+    public final UserOrder USER_ORDER = cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
     /**
      * The table <code>zhulin.user_permission</code>.
@@ -97,10 +127,15 @@ public class Zhulin extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            EssayType.ESSAY_TYPE,
+            Order.ORDER,
+            OrderEassy.ORDER_EASSY,
             Permission.PERMISSION,
+            Picture.PICTURE,
             Role.ROLE,
             RolePermission.ROLE_PERMISSION,
             User.USER,
+            UserOrder.USER_ORDER,
             UserPermission.USER_PERMISSION,
             UserRole.USER_ROLE);
     }

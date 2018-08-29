@@ -4,10 +4,15 @@
 package cn.hlvan.manager.database;
 
 
+import cn.hlvan.manager.database.tables.EssayType;
+import cn.hlvan.manager.database.tables.Order;
+import cn.hlvan.manager.database.tables.OrderEassy;
 import cn.hlvan.manager.database.tables.Permission;
+import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
 import cn.hlvan.manager.database.tables.RolePermission;
 import cn.hlvan.manager.database.tables.User;
+import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.UserPermission;
 import cn.hlvan.manager.database.tables.UserRole;
 
@@ -28,9 +33,29 @@ import javax.annotation.Generated;
 public class Tables {
 
     /**
+     * 文章领域
+     */
+    public static final EssayType ESSAY_TYPE = cn.hlvan.manager.database.tables.EssayType.ESSAY_TYPE;
+
+    /**
+     * The table <code>zhulin.order</code>.
+     */
+    public static final Order ORDER = cn.hlvan.manager.database.tables.Order.ORDER;
+
+    /**
+     * The table <code>zhulin.order_eassy</code>.
+     */
+    public static final OrderEassy ORDER_EASSY = cn.hlvan.manager.database.tables.OrderEassy.ORDER_EASSY;
+
+    /**
      * The table <code>zhulin.permission</code>.
      */
     public static final Permission PERMISSION = cn.hlvan.manager.database.tables.Permission.PERMISSION;
+
+    /**
+     * The table <code>zhulin.picture</code>.
+     */
+    public static final Picture PICTURE = cn.hlvan.manager.database.tables.Picture.PICTURE;
 
     /**
      * The table <code>zhulin.role</code>.
@@ -46,6 +71,11 @@ public class Tables {
      * The table <code>zhulin.user</code>.
      */
     public static final User USER = cn.hlvan.manager.database.tables.User.USER;
+
+    /**
+     * The table <code>zhulin.user_order</code>.
+     */
+    public static final UserOrder USER_ORDER = cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
     /**
      * The table <code>zhulin.user_permission</code>.

@@ -4,10 +4,15 @@
 package cn.hlvan.manager.database;
 
 
+import cn.hlvan.manager.database.tables.EssayType;
+import cn.hlvan.manager.database.tables.Order;
+import cn.hlvan.manager.database.tables.OrderEassy;
 import cn.hlvan.manager.database.tables.Permission;
+import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
 import cn.hlvan.manager.database.tables.RolePermission;
 import cn.hlvan.manager.database.tables.User;
+import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.UserPermission;
 import cn.hlvan.manager.database.tables.UserRole;
 
@@ -35,13 +40,18 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index ESSAY_TYPE_PRIMARY = Indexes0.ESSAY_TYPE_PRIMARY;
+    public static final Index ORDER_PRIMARY = Indexes0.ORDER_PRIMARY;
+    public static final Index ORDER_EASSY_PRIMARY = Indexes0.ORDER_EASSY_PRIMARY;
     public static final Index PERMISSION_PRIMARY = Indexes0.PERMISSION_PRIMARY;
     public static final Index PERMISSION_UK_CODE_SYSTEM = Indexes0.PERMISSION_UK_CODE_SYSTEM;
+    public static final Index PICTURE_PRIMARY = Indexes0.PICTURE_PRIMARY;
     public static final Index ROLE_PRIMARY = Indexes0.ROLE_PRIMARY;
     public static final Index ROLE_PERMISSION_PRIMARY = Indexes0.ROLE_PERMISSION_PRIMARY;
     public static final Index USER_PRIMARY = Indexes0.USER_PRIMARY;
     public static final Index USER_UK_ACCOUNT = Indexes0.USER_UK_ACCOUNT;
     public static final Index USER_UK_NUMBER = Indexes0.USER_UK_NUMBER;
+    public static final Index USER_ORDER_PRIMARY = Indexes0.USER_ORDER_PRIMARY;
     public static final Index USER_PERMISSION_PRIMARY = Indexes0.USER_PERMISSION_PRIMARY;
     public static final Index USER_ROLE_PRIMARY = Indexes0.USER_ROLE_PRIMARY;
 
@@ -50,13 +60,18 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
+        public static Index ESSAY_TYPE_PRIMARY = Internal.createIndex("PRIMARY", EssayType.ESSAY_TYPE, new OrderField[] { EssayType.ESSAY_TYPE.ID }, true);
+        public static Index ORDER_PRIMARY = Internal.createIndex("PRIMARY", Order.ORDER, new OrderField[] { Order.ORDER.ID }, true);
+        public static Index ORDER_EASSY_PRIMARY = Internal.createIndex("PRIMARY", OrderEassy.ORDER_EASSY, new OrderField[] { OrderEassy.ORDER_EASSY.ID }, true);
         public static Index PERMISSION_PRIMARY = Internal.createIndex("PRIMARY", Permission.PERMISSION, new OrderField[] { Permission.PERMISSION.ID }, true);
         public static Index PERMISSION_UK_CODE_SYSTEM = Internal.createIndex("uk_code_system", Permission.PERMISSION, new OrderField[] { Permission.PERMISSION.CODE, Permission.PERMISSION.SYSTEM_ID }, true);
+        public static Index PICTURE_PRIMARY = Internal.createIndex("PRIMARY", Picture.PICTURE, new OrderField[] { Picture.PICTURE.ID }, true);
         public static Index ROLE_PRIMARY = Internal.createIndex("PRIMARY", Role.ROLE, new OrderField[] { Role.ROLE.ID }, true);
         public static Index ROLE_PERMISSION_PRIMARY = Internal.createIndex("PRIMARY", RolePermission.ROLE_PERMISSION, new OrderField[] { RolePermission.ROLE_PERMISSION.ID }, true);
         public static Index USER_PRIMARY = Internal.createIndex("PRIMARY", User.USER, new OrderField[] { User.USER.ID }, true);
         public static Index USER_UK_ACCOUNT = Internal.createIndex("uk_account", User.USER, new OrderField[] { User.USER.ACCOUNT }, true);
         public static Index USER_UK_NUMBER = Internal.createIndex("uk_number", User.USER, new OrderField[] { User.USER.NUMBER }, true);
+        public static Index USER_ORDER_PRIMARY = Internal.createIndex("PRIMARY", UserOrder.USER_ORDER, new OrderField[] { UserOrder.USER_ORDER.ID }, true);
         public static Index USER_PERMISSION_PRIMARY = Internal.createIndex("PRIMARY", UserPermission.USER_PERMISSION, new OrderField[] { UserPermission.USER_PERMISSION.ID }, true);
         public static Index USER_ROLE_PRIMARY = Internal.createIndex("PRIMARY", UserRole.USER_ROLE, new OrderField[] { UserRole.USER_ROLE.ID }, true);
     }
