@@ -1,4 +1,4 @@
-package cn.hlvan.controller;
+package cn.hlvan.controller.admin;
 
 import cn.hlvan.constant.UserType;
 import cn.hlvan.manager.database.tables.records.UserRecord;
@@ -19,11 +19,11 @@ import java.util.UUID;
 
 import static cn.hlvan.manager.database.tables.User.USER;
 
-@RestController("userAccountController")
+@RestController("adminAccountController")
 @RequestMapping("/user")
-public class UserController {
+public class SuperAdminController {
     private DSLContext dsl;
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static Logger logger = LoggerFactory.getLogger(SuperAdminController.class);
     @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
@@ -101,5 +101,27 @@ public class UserController {
         boolean b = userService.update(userRecord);
         return b ? Reply.success() : Reply.fail().message("更新失败");
     }
+
+    //把商家或者写手分配至其它管理员
+    @PostMapping("/update_admin")
+    public Reply distribute(Integer id,Integer adminId){
+
+        boolean b = userService.updateAdmin(id,adminId);
+        if (b){
+            return Reply.success();
+        }else {
+            return Reply.fail().message("更换商家失败");
+        }
+
+    }
+
+    //列出管理员下的商家与写手
+    @GetMapping("/merchant_list")
+    public Reply findMerchantAndWriter(Integer id ){
+        List<UserRecord> userRecords = dsl.selectFrom(USER).where(USER.PID.eq(id)).fetchInto(UserRecord.class);
+        return Reply.success().data(userRecords);
+
+    }
+
 
 }

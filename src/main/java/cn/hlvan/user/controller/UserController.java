@@ -14,8 +14,6 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,7 +100,7 @@ public class UserController {
     }
     @PostMapping("/send_code")
     @ResponseBody
-    public Reply register(String phoneNumber){
+    public Reply register(@RequestBody String phoneNumber){
 
         String s = message.sendSMSCode(phoneNumber);
         if (StringUtils.isNotBlank(s)){
@@ -162,6 +160,7 @@ public class UserController {
 
 
     @PostMapping("/reset")
+    @ResponseBody
     public Reply resetPassword(HttpServletRequest request,@RequestParam String phoneNumber,String password,
                                String msgid,String validCode){
 
