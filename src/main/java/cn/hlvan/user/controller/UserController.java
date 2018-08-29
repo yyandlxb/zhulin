@@ -102,15 +102,9 @@ public class UserController {
     }
     @PostMapping("/send_code")
     @ResponseBody
-    public Reply register(JSONObject params){
+    public Reply register(String phoneNumber){
 
-        String s;
-        try {
-            s = message.sendSMSCode(params.getString("phoneNumber"));
-        } catch (JSONException e) {
-            logger.info("参数错误",e);
-            return Reply.fail().message("参数错误");
-        }
+        String s = message.sendSMSCode(phoneNumber);
         if (StringUtils.isNotBlank(s)){
             return Reply.success().data(s);
         }else {
