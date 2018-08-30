@@ -1,4 +1,4 @@
-package cn.hlvan.service.sso;
+package cn.hlvan.service;
 
 import cn.jiguang.common.ClientConfig;
 import cn.jiguang.common.ServiceHelper;

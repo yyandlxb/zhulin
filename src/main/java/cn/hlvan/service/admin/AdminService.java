@@ -1,6 +1,7 @@
-package cn.hlvan.service;
+package cn.hlvan.service.admin;
 
 import cn.hlvan.controller.admin.AdminController;
+import cn.hlvan.user.controller.AuthorizedUser;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +22,13 @@ public class AdminService {
         this.dsl = dsl;
     }
 
-    public Integer updateSuccess(Integer[] ids) {
+    public Integer updateSuccess(Integer[] ids, AuthorizedUser user) {
         logger.info("审核成功");
-        return dsl.update(USER).set(USER.ENABLED,AUDUTING_SUCCESS).where(USER.ID.in(ids)).execute();
+        return dsl.update(USER).set(USER.ENABLED,AUDUTING_SUCCESS).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 
-    public Integer updateFail(Integer[] ids) {
+    public Integer updateFail(Integer[] ids, AuthorizedUser user) {
         logger.info("审核失败");
-        return dsl.update(USER).set(USER.ENABLED,AUDUTING_FAIL).where(USER.ID.in(ids)).execute();
+        return dsl.update(USER).set(USER.ENABLED,AUDUTING_FAIL).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 }

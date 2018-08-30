@@ -1,4 +1,4 @@
-package cn.hlvan.service.sso;
+package cn.hlvan.service.admin;
 
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import lombok.Data;

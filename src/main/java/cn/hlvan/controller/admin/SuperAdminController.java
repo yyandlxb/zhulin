@@ -2,7 +2,7 @@ package cn.hlvan.controller.admin;
 
 import cn.hlvan.constant.UserType;
 import cn.hlvan.manager.database.tables.records.UserRecord;
-import cn.hlvan.service.sso.UserService;
+import cn.hlvan.service.admin.UserService;
 import cn.hlvan.util.Reply;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
