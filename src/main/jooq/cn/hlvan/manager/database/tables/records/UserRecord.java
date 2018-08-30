@@ -27,7 +27,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> {
 
-    private static final long serialVersionUID = -405902691;
+    private static final long serialVersionUID = 1526400205;
 
     /**
      * Setter for <code>zhulin.user.id</code>. 用户id
@@ -152,7 +152,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Setter for <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public UserRecord setEnabled(Integer value) {
+    public UserRecord setEnabled(Byte value) {
         set(8, value);
         return this;
     }
@@ -160,8 +160,8 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Getter for <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public Integer getEnabled() {
-        return (Integer) get(8);
+    public Byte getEnabled() {
+        return (Byte) get(8);
     }
 
     /**
@@ -400,7 +400,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Integer enabled, Integer creditLevel, Integer type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel) {
+    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte enabled, Integer creditLevel, Integer type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel) {
         super(User.USER);
 
         set(0, id);

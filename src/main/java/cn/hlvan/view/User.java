@@ -6,8 +6,6 @@ import lombok.Data;
 public class User {
     private String name;
     private Integer id;
-    private Integer departmentId;
-    private String departmentName;
     private String account;
     private Integer type;
     private Integer enabled;

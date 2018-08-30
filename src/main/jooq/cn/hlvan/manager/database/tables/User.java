@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 847730017;
+    private static final long serialVersionUID = -1497422973;
 
     /**
      * The reference instance of <code>zhulin.user</code>
@@ -98,7 +98,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public final TableField<UserRecord, Integer> ENABLED = createField("enabled", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.INTEGER)), this, "1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用");
+    public final TableField<UserRecord, Byte> ENABLED = createField("enabled", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用");
 
     /**
      * The column <code>zhulin.user.credit_level</code>. 信用等级
