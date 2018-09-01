@@ -2,7 +2,7 @@
 SQLyog Ultimate v8.32 
 MySQL - 8.0.12 : Database - zhulin
 *********************************************************************
-*/
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -28,6 +28,8 @@ CREATE TABLE `essay_type` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章领域';
 
+/*Data for the table `essay_type` */
+
 /*Table structure for table `order` */
 
 DROP TABLE IF EXISTS `order`;
@@ -35,8 +37,8 @@ DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_code` varchar(255) DEFAULT NULL COMMENT '订单号',
-  `order_status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '1' COMMENT '1：待接单 2：已接单 3：待审核 4：待点评 5：商家已完成（已打款）6：取消 7：关闭 8：管理员已完成（已打款）',
-  `pay_type` varchar(10) CHARACTER SET utf8 COLLATE utf8_swedish_ci DEFAULT NULL COMMENT '1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay',
+  `order_status` tinyint(1) DEFAULT '0' COMMENT '0：待审核 1：发布中 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过',
+  `pay_type` tinyint(1) DEFAULT NULL COMMENT '1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay',
   `user_id` int(11) DEFAULT NULL COMMENT '用户id',
   `total` int(11) DEFAULT '0' COMMENT '数量',
   `merchant_price` decimal(20,2) DEFAULT '0.00' COMMENT '商家价格',
@@ -53,9 +55,12 @@ CREATE TABLE `order` (
   `require` varchar(1024) DEFAULT NULL COMMENT '要求',
   `eassy_total` int(3) DEFAULT NULL COMMENT '文章数量',
   `word_count` int(8) DEFAULT NULL COMMENT '文章字数',
-  `open_user` int(11) DEFAULT NULL COMMENT '指定用户id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25732 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25736 DEFAULT CHARSET=utf8;
+
+/*Data for the table `order` */
+
+insert  into `order`(`id`,`order_code`,`order_status`,`pay_type`,`user_id`,`total`,`merchant_price`,`admin_price`,`eassy_type`,`notes`,`created_at`,`updated_at`,`order_title`,`original_level`,`picture`,`type`,`end_time`,`require`,`eassy_total`,`word_count`) values (25731,'33',1,NULL,NULL,0,'0.00','3.00','1',NULL,'2018-08-28 19:28:36','2018-08-28 19:30:02',NULL,322.00,NULL,NULL,NULL,NULL,NULL,NULL),(25733,'1535791959241743',0,NULL,2,3,'12.00','0.00','aaa',NULL,'2018-09-01 16:52:39','2018-09-01 17:04:13','bbb',NULL,NULL,NULL,'2018-09-13 00:00:00',NULL,NULL,NULL);
 
 /*Table structure for table `order_eassy` */
 
@@ -77,6 +82,8 @@ CREATE TABLE `order_eassy` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `order_eassy` */
+
 /*Table structure for table `permission` */
 
 DROP TABLE IF EXISTS `permission`;
@@ -94,6 +101,8 @@ CREATE TABLE `permission` (
   UNIQUE KEY `uk_code_system` (`code`,`system_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `permission` */
+
 /*Table structure for table `picture` */
 
 DROP TABLE IF EXISTS `picture`;
@@ -109,6 +118,8 @@ CREATE TABLE `picture` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `picture` */
+
 /*Table structure for table `role` */
 
 DROP TABLE IF EXISTS `role`;
@@ -122,6 +133,8 @@ CREATE TABLE `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `role` */
+
 /*Table structure for table `role_permission` */
 
 DROP TABLE IF EXISTS `role_permission`;
@@ -133,6 +146,8 @@ CREATE TABLE `role_permission` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `role_permission` */
 
 /*Table structure for table `user` */
 
@@ -147,9 +162,9 @@ CREATE TABLE `user` (
   `wechat` varchar(50) DEFAULT NULL COMMENT '微信号',
   `code` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '用户编码',
   `address` varchar(255) DEFAULT NULL COMMENT '用户地址',
-  `enabled` int(2) NOT NULL DEFAULT '1' COMMENT '1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用',
   `credit_level` int(11) DEFAULT NULL COMMENT '信用等级',
-  `type` int(4) NOT NULL COMMENT '用户身份(1-超级管理员，2-管理员，3-商家，4-写手)',
+  `type` tinyint(1) NOT NULL COMMENT '用户身份(1-超级管理员，2-管理员，3-商家，4-写手)',
   `pid` int(11) DEFAULT NULL COMMENT '用户所属id',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -159,13 +174,18 @@ CREATE TABLE `user` (
   `age` int(2) DEFAULT NULL COMMENT '年龄',
   `profession` varchar(50) DEFAULT NULL COMMENT '职业',
   `good` varchar(100) DEFAULT NULL COMMENT '擅长领域',
-  `full_time` int(2) DEFAULT NULL COMMENT '0-全职，1-兼职',
+  `full_time` int(1) DEFAULT NULL COMMENT '0-全职，1-兼职',
   `pay_picture` varchar(100) DEFAULT NULL COMMENT '支付宝二维码',
   `start_level` int(1) DEFAULT NULL COMMENT '用户星级别',
+  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_account` (`account`),
   UNIQUE KEY `uk_number` (`number`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+/*Data for the table `user` */
+
+insert  into `user`(`id`,`account`,`name`,`password`,`qq`,`wechat`,`code`,`address`,`status`,`credit_level`,`type`,`pid`,`created_at`,`updated_at`,`number`,`remark`,`sex`,`age`,`profession`,`good`,`full_time`,`pay_picture`,`start_level`,`email`) values (2,'15736883328','ayao','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,NULL,NULL,1,NULL,1,NULL,'2018-09-01 16:13:05','2018-09-01 16:13:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
 /*Table structure for table `user_order` */
 
@@ -175,14 +195,17 @@ CREATE TABLE `user_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL COMMENT '订单号id',
   `order_code` varchar(255) DEFAULT NULL COMMENT '订单号',
-  `order_status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '1' COMMENT '1：待完成 2：已完成',
+  `order_status` tinyint(1) DEFAULT NULL COMMENT '0-待预约，1：待完成 2：已完成，3：拒绝',
   `user_id` int(11) DEFAULT NULL COMMENT '用户id',
   `user_total` int(11) DEFAULT '0' COMMENT '已上传数量',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `accept_total` int(2) DEFAULT NULL COMMENT '接受文章的数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `user_order` */
 
 /*Table structure for table `user_permission` */
 
@@ -196,6 +219,8 @@ CREATE TABLE `user_permission` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `user_permission` */
+
 /*Table structure for table `user_role` */
 
 DROP TABLE IF EXISTS `user_role`;
@@ -207,6 +232,8 @@ CREATE TABLE `user_role` (
   `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `user_role` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
