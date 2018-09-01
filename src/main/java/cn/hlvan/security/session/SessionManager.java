@@ -51,24 +51,17 @@ public class SessionManager extends HandlerInterceptorAdapter implements Handler
             return true;
         }
         HttpSession session = request.getSession(false);
-        AuthorizedUser authorizedUser ;
-        //检查用户是否过期
-        String cookieValue ="";
-        //请求中没有token
-        if (StringUtils.isBlank(cookieValue)){
-//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ssoUrl);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-       /* String s = redis.opsForValue().get(cookieValue);
-        if (StringUtils.isNotBlank(s)){
-            redis.expire(cookieValue, 30, TimeUnit.MINUTES);
-            authorizedUser = JSON.parseObject(s, AuthorizedUser.class);
-            session.setAttribute(Authenticated.class.getName(),authorizedUser);
-        }else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,ssoUrl);
+
+        Object authorizedUser = session.getAttribute(Authenticated.class.getName());
+        if (authorizedUser == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
-        }*/
-//        request.setAttribute(Authenticated.class.getName(), authorizedUser);
+        }
+        request.setAttribute(Authenticated.class.getName(), authorizedUser);
 
         //编写admin与管理员的权限控制
         boolean needPermission = AnnotationUtils.findAnnotation(method.getBeanType(), RequirePermission.class) != null;

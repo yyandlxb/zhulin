@@ -1,6 +1,6 @@
 package cn.hlvan.service.admin;
 
-import cn.hlvan.controller.admin.AdminController;
+import cn.hlvan.controller.admin.AdminUserController;
 import cn.hlvan.user.controller.AuthorizedUser;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import static cn.hlvan.manager.database.Tables.USER;
 @Service
 public class AdminService {
 
-    private static Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminUserController.class);
     private DSLContext dsl;
     @Autowired
     public void setDsl(DSLContext dsl) {

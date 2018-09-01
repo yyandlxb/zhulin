@@ -61,16 +61,16 @@ public class UserController {
                     .from(USER)
                     .where(USER.ACCOUNT.eq(phoneNumber))
                     .and(USER.PASSWORD.eq(pw))
-                    .and(USER.STATUS.eq(UserStatus.AUDUTING_SUCCESS))
+                    .and(USER.STATUS.notEqual(UserStatus.DISABLED))
                     .fetchOneInto(User.class);
         if (null == u){
             return Reply.fail().message("用户名或密码错误");
         }
-        sessionManager.bind(request.getSession(), new AuthorizedUser(u.getName(),u.getId(),u.getAccount(),u.getType(),
-            u.getEnabled()));
+        sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(),u.getId(),u.getAccount(),u.getType(),
+            u.getStatus()));
         //登录用户数据存在session中
-        HttpSession session = request.getSession(true);
-        session.setAttribute(Authenticated.class.getName(),u);
+//        HttpSession session = request.getSession(true);
+//        session.setAttribute(Authenticated.class.getName(),u);
 
         return Reply.success();
     }

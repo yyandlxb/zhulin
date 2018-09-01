@@ -8,5 +8,5 @@ public class User {
     private Integer id;
     private String account;
     private Integer type;
-    private Integer enabled;
+    private Integer status;
 }

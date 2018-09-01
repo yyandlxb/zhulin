@@ -17,7 +17,7 @@ public class UserType {
      */
     public static byte MERCHANT = 3;
     /**
-     * 商家
+     * 作家
      */
     public static byte WRITER = 4;
 

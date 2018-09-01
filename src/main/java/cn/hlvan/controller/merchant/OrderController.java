@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,6 +48,7 @@ public class OrderController {
 
         orderForm.setId(user.getId());
         List<Condition> conditions = orderService.buildConditions(orderForm);
+
         int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
         List<OrderRecord> orderRecords;
         if (pageable.getOffset() >= count) {
@@ -97,7 +101,7 @@ public class OrderController {
     @PostMapping("/create")
     public Reply addOrder(OrderService.OrderForm orderFrom,@Authenticated AuthorizedUser user ){
         OrderRecord orderRecord = new OrderRecord();
-        orderRecord.setOrderCode(System.currentTimeMillis()+ RandomStringUtils.random(3));
+        orderRecord.setOrderCode(System.currentTimeMillis()+ RandomStringUtils.randomNumeric(3));
         orderRecord.setUserId(user.getId());
         orderRecord.setTotal(orderFrom.getTotal());
         orderRecord.setMerchantPrice(orderFrom.getMerchantPrice());
@@ -107,7 +111,7 @@ public class OrderController {
         orderRecord.setOriginalLevel(orderFrom.getOriginalLevel());
         orderRecord.setPicture(orderFrom.getPicture());
         orderRecord.setType(orderFrom.getType());
-        orderRecord.setEndTime(orderFrom.getEndTime());
+        orderRecord.setEndTime(Timestamp.valueOf(LocalDateTime.of(orderFrom.getEndTime(),LocalTime.MIN)));
         orderRecord.setRequire(orderFrom.getRequire());
         orderRecord.setWordCount(orderFrom.getWordCount());
         Boolean b = orderService.addOrder(orderRecord);

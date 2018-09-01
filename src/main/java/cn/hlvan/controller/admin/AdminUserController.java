@@ -24,11 +24,11 @@ import java.util.List;
 
 import static cn.hlvan.manager.database.Tables.USER;
 
-@RestController("adminAccountController")
+@RestController("adminMerchantWriterController")
 @RequestMapping("/user/merchant")
-public class AdminController {
+public class AdminUserController {
 
-    private static Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static Logger logger = LoggerFactory.getLogger(AdminUserController.class);
     private DSLContext dsl;
     @Autowired
     public void setDsl(DSLContext dsl) {

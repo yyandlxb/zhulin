@@ -9,6 +9,7 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ public class OrderService {
 
     public List<Condition> buildConditions(OrderQueryForm orderForm) {
         List<Condition> list = new ArrayList<>();
+        list.add(ORDER.USER_ID.eq(orderForm.getId()));
         String startTime = orderForm.getStartTime();
         if (StringUtils.isNotBlank(startTime)){
             LocalDateTime start = LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN);
@@ -90,7 +92,8 @@ public class OrderService {
         private Integer picture;//图片数量要求
         private Byte type;//类型 0-流量文，1-养号文
         @NotNull
-        private Timestamp endTime;//截止交稿时间
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private LocalDate endTime;//截止交稿时间
         private String require;//要求
         private Integer wordCount;//字数要求
 
