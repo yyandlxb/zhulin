@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -1497422973;
+    private static final long serialVersionUID = 532112363;
 
     /**
      * The reference instance of <code>zhulin.user</code>
@@ -96,9 +96,9 @@ public class User extends TableImpl<UserRecord> {
     public final TableField<UserRecord, String> ADDRESS = createField("address", org.jooq.impl.SQLDataType.VARCHAR(255), this, "用户地址");
 
     /**
-     * The column <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
+     * The column <code>zhulin.user.status</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public final TableField<UserRecord, Byte> ENABLED = createField("enabled", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用");
+    public final TableField<UserRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用");
 
     /**
      * The column <code>zhulin.user.credit_level</code>. 信用等级
@@ -108,7 +108,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>zhulin.user.type</code>. 用户身份(1-超级管理员，2-管理员，3-商家，4-写手)
      */
-    public final TableField<UserRecord, Integer> TYPE = createField("type", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "用户身份(1-超级管理员，2-管理员，3-商家，4-写手)");
+    public final TableField<UserRecord, Byte> TYPE = createField("type", org.jooq.impl.SQLDataType.TINYINT.nullable(false), this, "用户身份(1-超级管理员，2-管理员，3-商家，4-写手)");
 
     /**
      * The column <code>zhulin.user.pid</code>. 用户所属id
@@ -169,6 +169,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>zhulin.user.start_level</code>. 用户星级别
      */
     public final TableField<UserRecord, Integer> START_LEVEL = createField("start_level", org.jooq.impl.SQLDataType.INTEGER, this, "用户星级别");
+
+    /**
+     * The column <code>zhulin.user.email</code>. 邮箱
+     */
+    public final TableField<UserRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR(50), this, "邮箱");
 
     /**
      * Create a <code>zhulin.user</code> table reference

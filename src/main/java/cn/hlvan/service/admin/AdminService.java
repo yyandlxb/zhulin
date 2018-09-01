@@ -24,11 +24,11 @@ public class AdminService {
 
     public Integer updateSuccess(Integer[] ids, AuthorizedUser user) {
         logger.info("审核成功");
-        return dsl.update(USER).set(USER.ENABLED,AUDUTING_SUCCESS).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
+        return dsl.update(USER).set(USER.STATUS,AUDUTING_SUCCESS).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 
     public Integer updateFail(Integer[] ids, AuthorizedUser user) {
         logger.info("审核失败");
-        return dsl.update(USER).set(USER.ENABLED,AUDUTING_FAIL).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
+        return dsl.update(USER).set(USER.STATUS,AUDUTING_FAIL).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 }

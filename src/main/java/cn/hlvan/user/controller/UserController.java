@@ -1,5 +1,6 @@
 package cn.hlvan.user.controller;
 
+import cn.hlvan.constant.UserStatus;
 import cn.hlvan.constant.UserType;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.session.Authenticated;
@@ -60,7 +61,7 @@ public class UserController {
                     .from(USER)
                     .where(USER.ACCOUNT.eq(phoneNumber))
                     .and(USER.PASSWORD.eq(pw))
-                    .and(USER.ENABLED.isTrue())
+                    .and(USER.STATUS.eq(UserStatus.AUDUTING_SUCCESS))
                     .fetchOneInto(User.class);
         if (null == u){
             return Reply.fail().message("用户名或密码错误");
@@ -75,7 +76,7 @@ public class UserController {
     }
     @PostMapping("/register")
     @ResponseBody
-    public Reply register(@RequestParam String phoneNumber,@RequestParam String password,@RequestParam Integer type,
+    public Reply register(@RequestParam String phoneNumber,@RequestParam String password,@RequestParam Byte type,
                           @RequestParam String msgid,@RequestParam String code,@RequestParam String validCode){
         Boolean b = message.sendValidSMSCode(msgid, validCode);
         if (b){
@@ -126,7 +127,6 @@ public class UserController {
         User u = dsl.selectFrom(USER)
                     .where(USER.ID.eq(user.getId()))
                     .and(USER.PASSWORD.eq(pw))
-                    .and(USER.ENABLED.eq(3))
                     .fetchOneInto(User.class);
         if (null != u){
             String pd = DigestUtils.md5Hex(password);
@@ -142,7 +142,7 @@ public class UserController {
     @ResponseBody
     public Reply checkAccount(@RequestParam String phoneNumber,HttpServletRequest request){
         UserRecord userRecord = dsl.select(USER.fields()).from(USER).where(USER.ACCOUNT.eq(phoneNumber))
-                                   .and(USER.ENABLED.isTrue())
+                                   .and(USER.STATUS.eq(UserStatus.AUDUTING_SUCCESS))
                                    .fetchOneInto(UserRecord.class);
 
         request.getSession().setAttribute(NUMBER,phoneNumber);
@@ -154,7 +154,7 @@ public class UserController {
                 return Reply.fail().message("获取验证码失败");
             }
         }else {
-            return Reply.fail().message("账号不存在");
+            return Reply.fail().message("账号不存在,或被禁用");
         }
     }
 
@@ -178,4 +178,29 @@ public class UserController {
             return Reply.fail().message("手机号填写不正确");
         }
     }
+    @PostMapping("/addMessage")
+    @ResponseBody
+    public Reply addMessage(UserService.UserMessage userMessage,@Authenticated AuthorizedUser user){
+
+        UserRecord userRecord = new UserRecord();
+        userRecord.from(userMessage);
+        userRecord.setId(user.getId());
+        userRecord.setStatus(UserStatus.AWAIT_AUDUTING);
+        boolean b = userService.updateUser(userRecord);
+
+        if (b){
+            return Reply.success();
+        }else {
+            return Reply.fail().message("添加信息失败");
+        }
+    }
+
+    @PostMapping("/info")
+    @ResponseBody
+    public Reply userInfo(@Authenticated AuthorizedUser user){
+        UserRecord userRecord = dsl.selectFrom(USER).where(USER.ID.eq(user.getId())).fetchSingleInto(UserRecord.class);
+        userRecord.setPassword(null);
+        return Reply.success().data(userRecord);
+    }
+
 }

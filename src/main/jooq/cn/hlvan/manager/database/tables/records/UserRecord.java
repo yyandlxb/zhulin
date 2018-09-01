@@ -27,7 +27,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> {
 
-    private static final long serialVersionUID = 1526400205;
+    private static final long serialVersionUID = -2023484166;
 
     /**
      * Setter for <code>zhulin.user.id</code>. 用户id
@@ -150,17 +150,17 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     }
 
     /**
-     * Setter for <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
+     * Setter for <code>zhulin.user.status</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public UserRecord setEnabled(Byte value) {
+    public UserRecord setStatus(Byte value) {
         set(8, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.user.enabled</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
+     * Getter for <code>zhulin.user.status</code>. 1-待提交信息，2-待审核，3-审核成功，4-审核失败，5-禁用
      */
-    public Byte getEnabled() {
+    public Byte getStatus() {
         return (Byte) get(8);
     }
 
@@ -182,7 +182,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Setter for <code>zhulin.user.type</code>. 用户身份(1-超级管理员，2-管理员，3-商家，4-写手)
      */
-    public UserRecord setType(Integer value) {
+    public UserRecord setType(Byte value) {
         set(10, value);
         return this;
     }
@@ -190,8 +190,8 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Getter for <code>zhulin.user.type</code>. 用户身份(1-超级管理员，2-管理员，3-商家，4-写手)
      */
-    public Integer getType() {
-        return (Integer) get(10);
+    public Byte getType() {
+        return (Byte) get(10);
     }
 
     /**
@@ -374,6 +374,21 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         return (Integer) get(22);
     }
 
+    /**
+     * Setter for <code>zhulin.user.email</code>. 邮箱
+     */
+    public UserRecord setEmail(String value) {
+        set(23, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>zhulin.user.email</code>. 邮箱
+     */
+    public String getEmail() {
+        return (String) get(23);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -400,7 +415,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte enabled, Integer creditLevel, Integer type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel) {
+    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte status, Integer creditLevel, Byte type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel, String email) {
         super(User.USER);
 
         set(0, id);
@@ -411,7 +426,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         set(5, wechat);
         set(6, code);
         set(7, address);
-        set(8, enabled);
+        set(8, status);
         set(9, creditLevel);
         set(10, type);
         set(11, pid);
@@ -426,5 +441,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         set(20, fullTime);
         set(21, payPicture);
         set(22, startLevel);
+        set(23, email);
     }
 }

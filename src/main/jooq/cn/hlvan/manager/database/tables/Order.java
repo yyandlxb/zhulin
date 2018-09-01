@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = 1907000816;
+    private static final long serialVersionUID = -1466782012;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -64,12 +64,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.order_code</code>. 订单号
      */
-    public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "订单号");
+    public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255), this, "订单号");
 
     /**
-     * The column <code>zhulin.order.order_status</code>. 0: 待审核  1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）
+     * The column <code>zhulin.order.order_status</code>. 0：待审核 1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）
      */
-    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0: 待审核  1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）");
+    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）");
 
     /**
      * The column <code>zhulin.order.pay_type</code>. 1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay
@@ -79,12 +79,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.user_id</code>. 用户id
      */
-    public final TableField<OrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "用户id");
+    public final TableField<OrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
 
     /**
      * The column <code>zhulin.order.total</code>. 数量
      */
-    public final TableField<OrderRecord, Integer> TOTAL = createField("total", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "数量");
+    public final TableField<OrderRecord, Integer> TOTAL = createField("total", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "数量");
 
     /**
      * The column <code>zhulin.order.merchant_price</code>. 商家价格
@@ -119,7 +119,7 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.order_title</code>. 文章标题
      */
-    public final TableField<OrderRecord, String> ORDER_TITLE = createField("order_title", org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "文章标题");
+    public final TableField<OrderRecord, String> ORDER_TITLE = createField("order_title", org.jooq.impl.SQLDataType.VARCHAR(255), this, "文章标题");
 
     /**
      * The column <code>zhulin.order.original_level</code>. 原创度
@@ -155,11 +155,6 @@ public class Order extends TableImpl<OrderRecord> {
      * The column <code>zhulin.order.word_count</code>. 文章字数
      */
     public final TableField<OrderRecord, Integer> WORD_COUNT = createField("word_count", org.jooq.impl.SQLDataType.INTEGER, this, "文章字数");
-
-    /**
-     * The column <code>zhulin.order.open_user</code>. 指定用户id
-     */
-    public final TableField<OrderRecord, Integer> OPEN_USER = createField("open_user", org.jooq.impl.SQLDataType.INTEGER, this, "指定用户id");
 
     /**
      * Create a <code>zhulin.order</code> table reference
