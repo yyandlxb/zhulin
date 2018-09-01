@@ -1,8 +1,11 @@
 package cn.hlvan.security.session;
 
+import cn.hlvan.controller.merchant.OrderController;
 import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.user.controller.AuthorizedUser;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -24,13 +27,14 @@ import java.util.stream.Stream;
 @Component
 public class SessionManager extends HandlerInterceptorAdapter implements HandlerMethodArgumentResolver {
 
-
+    private static Logger logger = LoggerFactory.getLogger(SessionManager.class);
 //    @Autowired
 //    private PermissionService permissionService;
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        logger.info(request.getRequestURI());
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }

@@ -1,6 +1,7 @@
 package cn.hlvan.service.admin;
 
 import cn.hlvan.manager.database.tables.records.UserRecord;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jooq.DSLContext;
@@ -76,4 +77,9 @@ public class UserService {
         private String payPicture;//支付宝二维码
     }
 
+    @Data
+    @AllArgsConstructor
+    public class Account{
+        public String phoneNUmber;
+    }
 }

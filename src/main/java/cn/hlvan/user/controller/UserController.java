@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 import static cn.hlvan.manager.database.tables.User.USER;
@@ -51,23 +50,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/sign_in")
+    @PostMapping(value = "/sign_in",consumes="application/json")
     @ResponseBody
-    public Reply signIn(@RequestParam String phoneNumber, @RequestParam String password, HttpServletRequest request) {
+    public Reply signIn(@RequestBody User user, HttpServletRequest request) {
 
-        String pw = DigestUtils.md5Hex(password);
+        String pw = DigestUtils.md5Hex(user.getPassword());
 
         User u = dsl.select(USER.fields())
                     .from(USER)
-                    .where(USER.ACCOUNT.eq(phoneNumber))
+                    .where(USER.ACCOUNT.eq(user.getPhoneNumber()))
                     .and(USER.PASSWORD.eq(pw))
                     .and(USER.STATUS.notEqual(UserStatus.DISABLED))
                     .fetchOneInto(User.class);
         if (null == u){
             return Reply.fail().message("用户名或密码错误");
         }
-        sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(),u.getId(),u.getAccount(),u.getType(),
-            u.getStatus()));
+        sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(),u.getId(),u.getAccount(),
+            Integer.parseInt(u.getType()),u.getStatus()));
         //登录用户数据存在session中
 //        HttpSession session = request.getSession(true);
 //        session.setAttribute(Authenticated.class.getName(),u);
@@ -76,19 +75,18 @@ public class UserController {
     }
     @PostMapping("/register")
     @ResponseBody
-    public Reply register(@RequestParam String phoneNumber,@RequestParam String password,@RequestParam Byte type,
-                          @RequestParam String msgid,@RequestParam String code,@RequestParam String validCode){
-        Boolean b = message.sendValidSMSCode(msgid, validCode);
+    public Reply register(@RequestBody User user){
+        Boolean b = message.sendValidSMSCode(user.getMsgid(), user.getValidCode());
         if (b){
             UserRecord userRecord = new UserRecord();
-            userRecord.setAccount(phoneNumber);
-            userRecord.setPassword(DigestUtils.md5Hex(password));
-            UserRecord user = dsl.select(USER.fields()).from(USER).where(USER.CODE.eq(code))
+            userRecord.setAccount(user.getPhoneNumber());
+            userRecord.setPassword(DigestUtils.md5Hex(user.getPassword()));
+            UserRecord userR = dsl.select(USER.fields()).from(USER).where(USER.CODE.eq(user.getCode()))
                                  .and(USER.TYPE.eq(UserType.MANAGER)).fetchOneInto(UserRecord.class);
-            user.setCode(phoneNumber);
+            user.setCode(user.getPhoneNumber());
             if (user != null){
-                userRecord.setType(type);
-                userRecord.setPid(user.getPid());
+                userRecord.setType(Byte.valueOf(user.getType()));
+                userRecord.setPid(userR.getPid());
                 userRecord.setNumber(UUID.randomUUID().toString());
                 userService.addUser(userRecord);
             }else {
@@ -99,11 +97,11 @@ public class UserController {
         }
         return Reply.fail().message("注册失败");
     }
-    @PostMapping("/send_code")
+    @PostMapping(value = "/send_code",consumes="application/json")
     @ResponseBody
-    public Reply register(@RequestBody String phoneNumber){
+    public Reply registerCode(@RequestBody User user){
 
-        String s = message.sendSMSCode(phoneNumber);
+        String s = message.sendSMSCode(user.getPhoneNumber());
         if (StringUtils.isNotBlank(s)){
             return Reply.success().data(s);
         }else {
@@ -122,7 +120,6 @@ public class UserController {
     @PostMapping("/password/update")
     @ResponseBody
     public Reply updatePassword(@Authenticated AuthorizedUser user, String srcPassword,String password){
-
         String pw = DigestUtils.md5Hex(srcPassword);
         User u = dsl.selectFrom(USER)
                     .where(USER.ID.eq(user.getId()))

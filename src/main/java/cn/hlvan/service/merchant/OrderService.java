@@ -42,7 +42,7 @@ public class OrderService {
 
     public List<Condition> buildConditions(OrderQueryForm orderForm) {
         List<Condition> list = new ArrayList<>();
-        list.add(ORDER.USER_ID.eq(orderForm.getId()));
+
         String startTime = orderForm.getStartTime();
         if (StringUtils.isNotBlank(startTime)){
             LocalDateTime start = LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN);

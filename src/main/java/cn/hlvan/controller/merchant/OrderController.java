@@ -46,9 +46,8 @@ public class OrderController {
     @GetMapping("/list")
     public Reply list(OrderService.OrderQueryForm orderForm,@Authenticated AuthorizedUser user,Pageable pageable){
 
-        orderForm.setId(user.getId());
         List<Condition> conditions = orderService.buildConditions(orderForm);
-
+        conditions.add(ORDER.USER_ID.eq(user.getId()));
         int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
         List<OrderRecord> orderRecords;
         if (pageable.getOffset() >= count) {
