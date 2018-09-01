@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 import static cn.hlvan.manager.database.tables.User.USER;
@@ -113,8 +114,13 @@ public class UserController {
     @PostMapping("/sign_out")
     @ResponseBody
     public Reply signOut(HttpServletRequest request){
-        request.getSession(false).invalidate();
-        return Reply.success();
+        HttpSession session = request.getSession(false);
+        if (null == session){
+            return Reply.fail().message("退出失败");
+        }else {
+            request.getSession(false).invalidate();
+            return Reply.success();
+        }
     }
 
     @PostMapping("/password/update")
