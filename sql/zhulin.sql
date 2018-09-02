@@ -56,6 +56,7 @@ CREATE TABLE `order` (
   `eassy_total` int(3) DEFAULT NULL COMMENT '文章数量',
   `word_count` varchar(8) DEFAULT NULL COMMENT '文章字数',
   `result` varchar(1024) DEFAULT NULL COMMENT '审核结果',
+  `bespoke_total` int(2) DEFAULT NULL COMMENT '已预约数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25736 DEFAULT CHARSET=utf8;
 
