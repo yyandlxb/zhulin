@@ -43,7 +43,7 @@ CREATE TABLE `order` (
   `total` int(11) DEFAULT '0' COMMENT '数量',
   `merchant_price` decimal(20,2) DEFAULT '0.00' COMMENT '商家价格',
   `admin_price` decimal(20,2) DEFAULT '0.00' COMMENT '管理员价格',
-  `eassy_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章领域',
+  `eassy_type` varchar(255)  NOT NULL COMMENT '文章领域',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
   `created_at` timestamp NOT NULL ,
   `updated_at` timestamp NOT NULL  ,
