@@ -18,6 +18,8 @@ import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.User.USER;
+import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
+import static org.jooq.impl.DSL.sum;
 
 @RestController("adminOrderController")
 @RequestMapping("/admin/merchant/order")
@@ -49,6 +51,10 @@ public class OrderController {
                               .orderBy(ORDER.ID.desc())
                               .limit((int) pageable.getOffset(), pageable.getPageSize())
                               .fetchInto(OrderRecord.class);
+            orderRecords.forEach(e -> e.setBespokeTotal(
+                dsl.select(sum(USER_ORDER.RESERVE_TOTAL)).from(USER_ORDER)
+                   .where(USER_ORDER.ORDER_CODE.eq(e.getOrderCode()).and(USER_ORDER.STATUS.eq(Byte.valueOf("1")))
+                   ).fetchOneInto(Integer.class)));
         }
         return Reply.success().data(new Page<>(orderRecords, pageable, count));
     }
