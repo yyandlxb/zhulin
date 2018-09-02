@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = -217842279;
+    private static final long serialVersionUID = 945752491;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -160,6 +160,11 @@ public class Order extends TableImpl<OrderRecord> {
      * The column <code>zhulin.order.result</code>. 审核结果
      */
     public final TableField<OrderRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "审核结果");
+
+    /**
+     * The column <code>zhulin.order.bespoke_total</code>. 已预约数量
+     */
+    public final TableField<OrderRecord, Integer> BESPOKE_TOTAL = createField("bespoke_total", org.jooq.impl.SQLDataType.INTEGER, this, "已预约数量");
 
     /**
      * Create a <code>zhulin.order</code> table reference

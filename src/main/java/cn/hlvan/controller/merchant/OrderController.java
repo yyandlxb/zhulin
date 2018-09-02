@@ -59,6 +59,10 @@ public class OrderController {
                               .orderBy(ORDER.ID.desc())
                               .limit((int) pageable.getOffset(), pageable.getPageSize())
                               .fetchInto(OrderRecord.class);
+            orderRecords.forEach(e -> e.setBespokeTotal(
+                dsl.select(sum(USER_ORDER.RESERVE_TOTAL)).from(USER_ORDER)
+                   .where(USER_ORDER.ORDER_CODE.eq(e.getOrderCode()).and(USER_ORDER.STATUS.eq(Byte.valueOf("1")))
+                ).fetchOneInto(Integer.class)));
         }
         return Reply.success().data(new Page<>(orderRecords, pageable, count));
     }
