@@ -12,7 +12,7 @@ public class UserOrder {
     private BigDecimal adminPrice;//价格
     private String essayType;//文章领域
     private Integer reserveTotal;//预定数量
-    private String wordCount;//文章字数
+    private String wordCount;//文章字数要求
     private Integer picture;//图片数量
     private Integer  complete;//已完成数量
 }
