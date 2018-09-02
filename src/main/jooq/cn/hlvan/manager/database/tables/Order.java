@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = -1466782012;
+    private static final long serialVersionUID = -217842279;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -67,9 +67,9 @@ public class Order extends TableImpl<OrderRecord> {
     public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255), this, "订单号");
 
     /**
-     * The column <code>zhulin.order.order_status</code>. 0：待审核 1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）
+     * The column <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过
      */
-    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("1", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：待接单 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）");
+    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：发布中 2：已接单 3：待点评 4：商家已完成（已打款）5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过");
 
     /**
      * The column <code>zhulin.order.pay_type</code>. 1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay
@@ -154,7 +154,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.word_count</code>. 文章字数
      */
-    public final TableField<OrderRecord, Integer> WORD_COUNT = createField("word_count", org.jooq.impl.SQLDataType.INTEGER, this, "文章字数");
+    public final TableField<OrderRecord, String> WORD_COUNT = createField("word_count", org.jooq.impl.SQLDataType.VARCHAR(8), this, "文章字数");
+
+    /**
+     * The column <code>zhulin.order.result</code>. 审核结果
+     */
+    public final TableField<OrderRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "审核结果");
 
     /**
      * Create a <code>zhulin.order</code> table reference

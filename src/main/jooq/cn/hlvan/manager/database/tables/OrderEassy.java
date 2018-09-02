@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEassy extends TableImpl<OrderEassyRecord> {
 
-    private static final long serialVersionUID = -1381707442;
+    private static final long serialVersionUID = -1838701752;
 
     /**
      * The reference instance of <code>zhulin.order_eassy</code>
@@ -114,6 +114,11 @@ public class OrderEassy extends TableImpl<OrderEassyRecord> {
      * The column <code>zhulin.order_eassy.status</code>. 0-待审核，1-
      */
     public final TableField<OrderEassyRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待审核，1-");
+
+    /**
+     * The column <code>zhulin.order_eassy.result</code>. 审核结果
+     */
+    public final TableField<OrderEassyRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "审核结果");
 
     /**
      * Create a <code>zhulin.order_eassy</code> table reference

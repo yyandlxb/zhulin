@@ -1,7 +1,9 @@
 package cn.hlvan.service.merchant;
 
 import cn.hlvan.constant.OrderStatus;
+import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
+import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
@@ -29,6 +31,7 @@ public class OrderService {
 
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
     private DSLContext dsl;
+
     @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
@@ -37,30 +40,29 @@ public class OrderService {
     @Transactional
     public Boolean addOrder(OrderRecord orderRecord) {
 
-        return dsl.executeInsert(orderRecord)>0;
+        return dsl.executeInsert(orderRecord) > 0;
     }
 
     public List<Condition> buildConditions(OrderQueryForm orderForm) {
         List<Condition> list = new ArrayList<>();
-
         String startTime = orderForm.getStartTime();
-        if (StringUtils.isNotBlank(startTime)){
+        if (StringUtils.isNotBlank(startTime)) {
             LocalDateTime start = LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN);
             list.add(ORDER.CREATED_AT.greaterOrEqual(Timestamp.valueOf(start)));
         }
 
         String endTime = orderForm.getEndTime();
-        if (StringUtils.isNotBlank(startTime)){
+        if (StringUtils.isNotBlank(startTime)) {
             LocalDateTime end = LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX);
             list.add(ORDER.CREATED_AT.lessThan(Timestamp.valueOf(end)));
         }
         Integer status = orderForm.getStatus();
-        if (null != status){
+        if (null != status) {
 
             list.add(ORDER.ORDER_STATUS.eq(status.byteValue()));
         }
         String orderCode = orderForm.getOrderCode();
-        if (StringUtils.isNotBlank(orderCode)){
+        if (StringUtils.isNotBlank(orderCode)) {
             list.add(ORDER.ORDER_CODE.contains(orderCode));
         }
         return list;
@@ -70,16 +72,39 @@ public class OrderService {
         return dsl.executeUpdate(orderRecord) > 0;
     }
 
-    public Integer delete(Integer[] ids,Integer userId) {
-       return dsl.update(ORDER).set(ORDER.ORDER_STATUS,OrderStatus.DELETE)
-                 .where(ORDER.ORDER_STATUS.eq(OrderStatus.WAIT_AUDITING))
-                 .and(ORDER.ID.in(ids))
-                 .and(ORDER.USER_ID.eq(userId))
-                 .execute() ;
+    public Integer delete(Integer[] ids, Integer userId) {
+        return dsl.update(ORDER).set(ORDER.ORDER_STATUS, OrderStatus.DELETE)
+                  .where(ORDER.ORDER_STATUS.eq(OrderStatus.WAIT_AUDITING))
+                  .and(ORDER.ID.in(ids))
+                  .and(ORDER.USER_ID.eq(userId))
+                  .execute();
+    }
+
+    public boolean auditing(Integer id, String status, String result, BigDecimal price) {
+
+        return dsl.update(ORDER).set(ORDER.ORDER_STATUS, Byte.valueOf(status))
+                  .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
+                  .where(ORDER.ID.eq(id)).execute() > 0;
+    }
+
+    @Transactional
+    public boolean distribute(String orderId, Integer reserveTotal, Integer userId) {
+        //查询订单还有多少文章
+        OrderRecord orderRecord = dsl.select(ORDER.fields()).from(ORDER).where(ORDER.ORDER_CODE.eq(orderId)).fetchSingleInto(OrderRecord.class);
+        if (orderRecord.getTotal() >= reserveTotal){
+            UserOrderRecord userOrderRecord = new UserOrderRecord();
+            userOrderRecord.setOrderCode(orderRecord.getOrderCode());
+            userOrderRecord.setUserId(userId);
+            userOrderRecord.setReserveTotal(reserveTotal);
+            userOrderRecord.setStatus(Byte.valueOf("0"));
+            return dsl.executeInsert(userOrderRecord) > 0;
+        }else {
+            return false;
+        }
     }
 
     @Data
-    public class OrderForm{
+    public class OrderForm {
         @NotNull
         private Integer total;//文章数量
         private BigDecimal merchantPrice;//商户定价
@@ -95,12 +120,12 @@ public class OrderService {
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate endTime;//截止交稿时间
         private String require;//要求
-        private Integer wordCount;//字数要求
+        private String wordCount;//字数要求
 
     }
 
     @Data
-    public class OrderQueryForm{
+    public class OrderQueryForm {
         private Integer id;
         private String startTime;
         private String endTime;

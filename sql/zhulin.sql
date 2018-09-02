@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `essay_type`;
 CREATE TABLE `essay_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '领域名称',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章领域';
 
@@ -45,8 +45,8 @@ CREATE TABLE `order` (
   `admin_price` decimal(20,2) DEFAULT '0.00' COMMENT '管理员价格',
   `eassy_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章领域',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   `order_title` varchar(255) DEFAULT NULL COMMENT '文章标题',
   `original_level` double(10,2) DEFAULT '0.00' COMMENT '原创度',
   `picture` int(3) DEFAULT NULL COMMENT '图片数量要求',
@@ -54,13 +54,14 @@ CREATE TABLE `order` (
   `end_time` timestamp NULL DEFAULT NULL COMMENT '截止日期',
   `require` varchar(1024) DEFAULT NULL COMMENT '要求',
   `eassy_total` int(3) DEFAULT NULL COMMENT '文章数量',
-  `word_count` int(8) DEFAULT NULL COMMENT '文章字数',
+  `word_count` varchar(8) DEFAULT NULL COMMENT '文章字数',
+  `result` varchar(1024) DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25736 DEFAULT CHARSET=utf8;
 
 /*Data for the table `order` */
 
-insert  into `order`(`id`,`order_code`,`order_status`,`pay_type`,`user_id`,`total`,`merchant_price`,`admin_price`,`eassy_type`,`notes`,`created_at`,`updated_at`,`order_title`,`original_level`,`picture`,`type`,`end_time`,`require`,`eassy_total`,`word_count`) values (25731,'33',1,NULL,NULL,0,'0.00','3.00','1',NULL,'2018-08-28 19:28:36','2018-08-28 19:30:02',NULL,322.00,NULL,NULL,NULL,NULL,NULL,NULL),(25733,'1535791959241743',0,NULL,2,3,'12.00','0.00','aaa',NULL,'2018-09-01 16:52:39','2018-09-01 17:04:13','bbb',NULL,NULL,NULL,'2018-09-13 00:00:00',NULL,NULL,NULL);
+insert  into `order`(`id`,`order_code`,`order_status`,`pay_type`,`user_id`,`total`,`merchant_price`,`admin_price`,`eassy_type`,`notes`,`created_at`,`updated_at`,`order_title`,`original_level`,`picture`,`type`,`end_time`,`require`,`eassy_total`,`word_count`,`result`) values (25731,'33',1,NULL,NULL,0,'0.00','3.00','1',NULL,'2018-08-28 19:28:36','2018-08-28 19:30:02',NULL,322.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25733,'1535791959241743',0,NULL,2,3,'12.00','0.00','aaa',NULL,'2018-09-01 16:52:39','2018-09-01 17:04:13','bbb',NULL,NULL,NULL,'2018-09-13 00:00:00',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `order_eassy` */
 
@@ -76,9 +77,10 @@ CREATE TABLE `order_eassy` (
   `picture_total` int(5) DEFAULT NULL COMMENT '图片数量',
   `picture_id` int(11) DEFAULT NULL COMMENT '图片id',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   `status` tinyint(1) DEFAULT '0' COMMENT '0-待审核，1-',
+  `result` varchar(1024) DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -95,8 +97,8 @@ CREATE TABLE `permission` (
   `description` varchar(100) DEFAULT NULL COMMENT '权限描述',
   `system_id` int(11) NOT NULL COMMENT '系统id',
   `pid` int(11) NOT NULL COMMENT '父id',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code_system` (`code`,`system_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -113,8 +115,8 @@ CREATE TABLE `picture` (
   `picture_name` varchar(255) DEFAULT NULL COMMENT '图片名称',
   `order_eassy_id` int(11) DEFAULT NULL COMMENT '文章id',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -128,8 +130,8 @@ CREATE TABLE `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `name` varchar(50) NOT NULL COMMENT '角色名称',
   `enabled` bit(1) NOT NULL DEFAULT b'1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -143,7 +145,7 @@ CREATE TABLE `role_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色权限id',
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `permission_id` int(11) NOT NULL COMMENT '权限id',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -166,8 +168,8 @@ CREATE TABLE `user` (
   `credit_level` int(11) DEFAULT NULL COMMENT '信用等级',
   `type` tinyint(1) NOT NULL COMMENT '用户身份(1-超级管理员，2-管理员，3-商家，4-写手)',
   `pid` int(11) DEFAULT NULL COMMENT '用户所属id',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   `number` varchar(60) DEFAULT NULL COMMENT '编号',
   `remark` text COMMENT '备注',
   `sex` int(2) DEFAULT NULL COMMENT '性别：0-男，1-女',
@@ -178,6 +180,7 @@ CREATE TABLE `user` (
   `pay_picture` varchar(100) DEFAULT NULL COMMENT '支付宝二维码',
   `start_level` int(1) DEFAULT NULL COMMENT '用户星级别',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `result` varchar(255) DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_account` (`account`),
   UNIQUE KEY `uk_number` (`number`) USING BTREE
@@ -185,7 +188,7 @@ CREATE TABLE `user` (
 
 /*Data for the table `user` */
 
-insert  into `user`(`id`,`account`,`name`,`password`,`qq`,`wechat`,`code`,`address`,`status`,`credit_level`,`type`,`pid`,`created_at`,`updated_at`,`number`,`remark`,`sex`,`age`,`profession`,`good`,`full_time`,`pay_picture`,`start_level`,`email`) values (2,'15736883328','ayao','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,NULL,NULL,1,NULL,1,NULL,'2018-09-01 16:13:05','2018-09-01 16:13:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert  into `user`(`id`,`account`,`name`,`password`,`qq`,`wechat`,`code`,`address`,`status`,`credit_level`,`type`,`pid`,`created_at`,`updated_at`,`number`,`remark`,`sex`,`age`,`profession`,`good`,`full_time`,`pay_picture`,`start_level`,`email`,`result`) values (2,'15736883328','ayao','e10adc3949ba59abbe56e057f20f883e',NULL,NULL,NULL,NULL,1,NULL,1,NULL,'2018-09-01 16:13:05','2018-09-01 16:13:05',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
 /*Table structure for table `user_order` */
 
@@ -193,15 +196,13 @@ DROP TABLE IF EXISTS `user_order`;
 
 CREATE TABLE `user_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) NOT NULL COMMENT '订单号id',
   `order_code` varchar(255) DEFAULT NULL COMMENT '订单号',
-  `order_status` tinyint(1) DEFAULT NULL COMMENT '0-待预约，1：待完成 2：已完成，3：拒绝',
+  `reserve_total` int(5) NOT NULL COMMENT '预定的文章数量',
+  `complete` int(5) NOT NULL COMMENT '完成文章数量',
+  `created_at` timestamp NOT NULL ,
+  `updated_at` timestamp NOT NULL  ,
   `user_id` int(11) DEFAULT NULL COMMENT '用户id',
-  `user_total` int(11) DEFAULT '0' COMMENT '已上传数量',
-  `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `accept_total` int(2) DEFAULT NULL COMMENT '接受文章的数量',
+  `status` tinyint(1) DEFAULT NULL COMMENT '0待预约，1-预约成功',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -215,7 +216,7 @@ CREATE TABLE `user_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户权限id',
   `user_id` int(11) NOT NULL COMMENT '用户id',
   `permission_id` int(11) NOT NULL COMMENT '权限id',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -229,7 +230,7 @@ CREATE TABLE `user_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户角色id',
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `user_id` int(11) NOT NULL COMMENT '用户id',
-  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_at` timestamp NOT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -1,6 +1,5 @@
 package cn.hlvan.controller.merchant;
 
-import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.merchant.OrderService;
@@ -23,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
+import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
+import static org.jooq.impl.DSL.sum;
 
 @RestController("merchantOrderController")
 @RequestMapping("/merchant/order")
@@ -73,22 +74,28 @@ public class OrderController {
         return Reply.success().data(count);
     }
     @PostMapping("/update")
-    public Reply update(OrderService.OrderForm orderForm,@RequestParam Integer id){
+    public Reply update(OrderService.OrderForm orderForm,@RequestParam Integer id,@Authenticated AuthorizedUser user){
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setId(id);
         orderRecord.from(orderForm);
-        Integer integer = dsl.selectCount().from(ORDER)
-                             .where(ORDER.ORDER_STATUS.eq(OrderStatus.WAIT_AUDITING)
-                                                      .or(ORDER.ORDER_STATUS.eq(OrderStatus.AUDITING_FAIL)))
-                             .and(ORDER.ID.eq(id))
-                             .fetchOne().value1();
+        OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
+                             .where(ORDER.ID.eq(id))
+                             .and(ORDER.USER_ID.eq(user.getId()))
+                             .fetchSingleInto(OrderRecord.class);
 
-        if (integer > 0){
-            boolean b = orderService.update(orderRecord);
-            if (b){
-                return Reply.success();
+        if (null != orderR){
+            Integer count = dsl.select(sum(USER_ORDER.RESERVE_TOTAL)).from(USER_ORDER)
+                               .where(USER_ORDER.ORDER_CODE.eq(orderR.getOrderCode()))
+                               .and(USER_ORDER.STATUS.eq(Byte.valueOf("1"))).fetchOneInto(Integer.class);
+            if (orderForm.getTotal() >= count){
+                boolean b = orderService.update(orderRecord);
+                if (b){
+                    return Reply.success();
+                }else {
+                    return Reply.fail().message("更新订单失败");
+                }
             }else {
-                return Reply.fail().message("更新订单失败");
+                return Reply.fail().message("更新订单失败,数量小于已预订数量");
             }
         }else {
             return Reply.fail().message("此状态不能进行修改");

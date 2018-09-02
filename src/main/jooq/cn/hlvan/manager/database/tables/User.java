@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 532112363;
+    private static final long serialVersionUID = 911012979;
 
     /**
      * The reference instance of <code>zhulin.user</code>
@@ -174,6 +174,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>zhulin.user.email</code>. 邮箱
      */
     public final TableField<UserRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR(50), this, "邮箱");
+
+    /**
+     * The column <code>zhulin.user.result</code>. 审核结果
+     */
+    public final TableField<UserRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(255), this, "审核结果");
 
     /**
      * Create a <code>zhulin.user</code> table reference

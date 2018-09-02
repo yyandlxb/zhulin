@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrder extends TableImpl<UserOrderRecord> {
 
-    private static final long serialVersionUID = 583517138;
+    private static final long serialVersionUID = 1028224638;
 
     /**
      * The reference instance of <code>zhulin.user_order</code>
@@ -61,34 +61,19 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     public final TableField<UserOrderRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>zhulin.user_order.order_id</code>. 订单号id
-     */
-    public final TableField<UserOrderRecord, Integer> ORDER_ID = createField("order_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "订单号id");
-
-    /**
      * The column <code>zhulin.user_order.order_code</code>. 订单号
      */
     public final TableField<UserOrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255), this, "订单号");
 
     /**
-     * The column <code>zhulin.user_order.order_status</code>. 0-待预约，1：待完成 2：已完成，3：拒绝
+     * The column <code>zhulin.user_order.reserve_total</code>. 预定的文章数量
      */
-    public final TableField<UserOrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT, this, "0-待预约，1：待完成 2：已完成，3：拒绝");
+    public final TableField<UserOrderRecord, Integer> RESERVE_TOTAL = createField("reserve_total", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "预定的文章数量");
 
     /**
-     * The column <code>zhulin.user_order.user_id</code>. 用户id
+     * The column <code>zhulin.user_order.complete</code>. 完成文章数量
      */
-    public final TableField<UserOrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
-
-    /**
-     * The column <code>zhulin.user_order.user_total</code>. 已上传数量
-     */
-    public final TableField<UserOrderRecord, Integer> USER_TOTAL = createField("user_total", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "已上传数量");
-
-    /**
-     * The column <code>zhulin.user_order.notes</code>. 备注
-     */
-    public final TableField<UserOrderRecord, String> NOTES = createField("notes", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "备注");
+    public final TableField<UserOrderRecord, Integer> COMPLETE = createField("complete", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "完成文章数量");
 
     /**
      * The column <code>zhulin.user_order.created_at</code>.
@@ -101,9 +86,14 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>zhulin.user_order.accept_total</code>. 接受文章的数量
+     * The column <code>zhulin.user_order.user_id</code>. 用户id
      */
-    public final TableField<UserOrderRecord, Integer> ACCEPT_TOTAL = createField("accept_total", org.jooq.impl.SQLDataType.INTEGER, this, "接受文章的数量");
+    public final TableField<UserOrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
+
+    /**
+     * The column <code>zhulin.user_order.status</code>. 0待预约，1-预约成功
+     */
+    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-预约成功");
 
     /**
      * Create a <code>zhulin.user_order</code> table reference

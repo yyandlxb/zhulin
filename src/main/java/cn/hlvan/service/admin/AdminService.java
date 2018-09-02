@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import static cn.hlvan.constant.UserStatus.AUDUTING_FAIL;
 import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
+import static cn.hlvan.constant.UserStatus.DISABLED;
 import static cn.hlvan.manager.database.Tables.USER;
 
 @Service
@@ -31,4 +32,10 @@ public class AdminService {
         logger.info("审核失败");
         return dsl.update(USER).set(USER.STATUS,AUDUTING_FAIL).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
+
+    public Integer delete(Integer[] ids, AuthorizedUser user) {
+        logger.info("删除");
+        return dsl.update(USER).set(USER.STATUS,DISABLED).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
+    }
+
 }

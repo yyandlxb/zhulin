@@ -83,10 +83,16 @@ public class AdminUserController {
         return Reply.success().data(b);
     }
 
-    @GetMapping("/info")
+    @GetMapping("/detail")
     public Reply userInfo(Integer id){
         UserRecord userRecord = dsl.selectFrom(USER).where(USER.ID.eq(id)).fetchOneInto(UserRecord.class);
         return Reply.success().data(userRecord);
+    }
+
+    @PostMapping("/delete")
+    public Reply delete(Integer[] ids,@Authenticated AuthorizedUser user){
+        Integer b = adminService.delete(ids,user);
+        return Reply.success().data(b);
     }
 
 }

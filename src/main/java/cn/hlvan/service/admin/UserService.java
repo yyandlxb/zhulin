@@ -74,7 +74,6 @@ public class UserService {
         private String profession;//职业
         private String good;//擅长领域
         private Integer fullTime;//工作类型 0-全职，1-兼职
-        private String payPicture;//支付宝二维码
     }
 
     @Data

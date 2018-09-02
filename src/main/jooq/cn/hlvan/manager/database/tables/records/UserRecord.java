@@ -27,7 +27,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> {
 
-    private static final long serialVersionUID = -2023484166;
+    private static final long serialVersionUID = 1145282018;
 
     /**
      * Setter for <code>zhulin.user.id</code>. 用户id
@@ -389,6 +389,21 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         return (String) get(23);
     }
 
+    /**
+     * Setter for <code>zhulin.user.result</code>. 审核结果
+     */
+    public UserRecord setResult(String value) {
+        set(24, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>zhulin.user.result</code>. 审核结果
+     */
+    public String getResult() {
+        return (String) get(24);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -415,7 +430,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte status, Integer creditLevel, Byte type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel, String email) {
+    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte status, Integer creditLevel, Byte type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel, String email, String result) {
         super(User.USER);
 
         set(0, id);
@@ -442,5 +457,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         set(21, payPicture);
         set(22, startLevel);
         set(23, email);
+        set(24, result);
     }
 }
