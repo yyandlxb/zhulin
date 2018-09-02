@@ -6,6 +6,8 @@ import cn.hlvan.service.merchant.OrderService;
 import cn.hlvan.user.controller.AuthorizedUser;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
+import cn.hlvan.view.MerchantOrderDetail;
+import cn.hlvan.view.UserOrder;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -69,8 +71,20 @@ public class OrderController {
 
     @GetMapping("/detail")
     public Reply list(@RequestParam Integer id){
+        MerchantOrderDetail merchantOrderDetail = new MerchantOrderDetail();
         OrderRecord orderRecord = dsl.selectFrom(ORDER).where(ORDER.ID.eq(id)).fetchSingleInto(OrderRecord.class);
-        return Reply.success().data(orderRecord);
+        merchantOrderDetail.setOrderRecord(orderRecord);
+
+        List<UserOrder> userOrders = dsl.select(ORDER.fields())
+                                        .select(USER_ORDER.COMPLETE, USER_ORDER.RESERVE_TOTAL,USER_ORDER.ID.as("userOrderId"))
+                                        .from(USER_ORDER)
+                                        .innerJoin(ORDER)
+                                        .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
+                                        .and(USER_ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
+                                        .and(USER_ORDER.STATUS.eq(Byte.valueOf("1")))
+                                        .fetchInto(UserOrder.class);
+        merchantOrderDetail.setUserOrders(userOrders);
+        return Reply.success().data(merchantOrderDetail);
     }
     @PostMapping("/delete")
     public Reply delete(@RequestParam Integer[] ids,@Authenticated AuthorizedUser user){
