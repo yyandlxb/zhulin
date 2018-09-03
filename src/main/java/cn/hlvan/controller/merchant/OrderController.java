@@ -1,7 +1,5 @@
 package cn.hlvan.controller.merchant;
 
-import cn.hlvan.controller.admin.AdminController;
-import cn.hlvan.manager.database.tables.Order;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.merchant.OrderService;
@@ -31,7 +29,6 @@ public class OrderController {
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
-
     /**
      * 添加订单
      */
