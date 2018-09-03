@@ -1,4 +1,4 @@
-package cn.hlvan.service.merchant;
+package cn.hlvan.service;
 
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
@@ -7,7 +7,6 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +63,10 @@ public class OrderService {
         String endTime = orderForm.getEndTime();
         if (StringUtils.isNotBlank(startTime)) {
             LocalDateTime end = LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX);
-            list.add(ORDER.CREATED_AT.lessThan(Timestamp.valueOf(end)));
+            list.add(ORDER.CREATED_AT.lessOrEqual(Timestamp.valueOf(end)));
         }
         Integer status = orderForm.getStatus();
         if (null != status) {
-
             list.add(ORDER.ORDER_STATUS.eq(status.byteValue()));
         }
         String orderCode = orderForm.getOrderCode();
