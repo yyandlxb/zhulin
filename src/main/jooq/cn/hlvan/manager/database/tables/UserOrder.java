@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrder extends TableImpl<UserOrderRecord> {
 
-    private static final long serialVersionUID = 1028224638;
+    private static final long serialVersionUID = -1965618594;
 
     /**
      * The reference instance of <code>zhulin.user_order</code>
@@ -78,12 +78,12 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     /**
      * The column <code>zhulin.user_order.created_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.user_order.updated_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.user_order.user_id</code>. 用户id

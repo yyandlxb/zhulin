@@ -6,7 +6,7 @@ package cn.hlvan.manager.database;
 
 import cn.hlvan.manager.database.tables.EssayType;
 import cn.hlvan.manager.database.tables.Order;
-import cn.hlvan.manager.database.tables.OrderEassy;
+import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
 import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
@@ -16,7 +16,7 @@ import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.UserPermission;
 import cn.hlvan.manager.database.tables.UserRole;
 import cn.hlvan.manager.database.tables.records.EssayTypeRecord;
-import cn.hlvan.manager.database.tables.records.OrderEassyRecord;
+import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.PermissionRecord;
 import cn.hlvan.manager.database.tables.records.PictureRecord;
@@ -54,7 +54,7 @@ public class Keys {
 
     public static final Identity<EssayTypeRecord, Integer> IDENTITY_ESSAY_TYPE = Identities0.IDENTITY_ESSAY_TYPE;
     public static final Identity<OrderRecord, Integer> IDENTITY_ORDER = Identities0.IDENTITY_ORDER;
-    public static final Identity<OrderEassyRecord, Integer> IDENTITY_ORDER_EASSY = Identities0.IDENTITY_ORDER_EASSY;
+    public static final Identity<OrderEssayRecord, Integer> IDENTITY_ORDER_ESSAY = Identities0.IDENTITY_ORDER_ESSAY;
     public static final Identity<PermissionRecord, Integer> IDENTITY_PERMISSION = Identities0.IDENTITY_PERMISSION;
     public static final Identity<PictureRecord, Integer> IDENTITY_PICTURE = Identities0.IDENTITY_PICTURE;
     public static final Identity<RoleRecord, Integer> IDENTITY_ROLE = Identities0.IDENTITY_ROLE;
@@ -70,7 +70,7 @@ public class Keys {
 
     public static final UniqueKey<EssayTypeRecord> KEY_ESSAY_TYPE_PRIMARY = UniqueKeys0.KEY_ESSAY_TYPE_PRIMARY;
     public static final UniqueKey<OrderRecord> KEY_ORDER_PRIMARY = UniqueKeys0.KEY_ORDER_PRIMARY;
-    public static final UniqueKey<OrderEassyRecord> KEY_ORDER_EASSY_PRIMARY = UniqueKeys0.KEY_ORDER_EASSY_PRIMARY;
+    public static final UniqueKey<OrderEssayRecord> KEY_ORDER_ESSAY_PRIMARY = UniqueKeys0.KEY_ORDER_ESSAY_PRIMARY;
     public static final UniqueKey<PermissionRecord> KEY_PERMISSION_PRIMARY = UniqueKeys0.KEY_PERMISSION_PRIMARY;
     public static final UniqueKey<PermissionRecord> KEY_PERMISSION_UK_CODE_SYSTEM = UniqueKeys0.KEY_PERMISSION_UK_CODE_SYSTEM;
     public static final UniqueKey<PictureRecord> KEY_PICTURE_PRIMARY = UniqueKeys0.KEY_PICTURE_PRIMARY;
@@ -95,7 +95,7 @@ public class Keys {
     private static class Identities0 {
         public static Identity<EssayTypeRecord, Integer> IDENTITY_ESSAY_TYPE = Internal.createIdentity(EssayType.ESSAY_TYPE, EssayType.ESSAY_TYPE.ID);
         public static Identity<OrderRecord, Integer> IDENTITY_ORDER = Internal.createIdentity(Order.ORDER, Order.ORDER.ID);
-        public static Identity<OrderEassyRecord, Integer> IDENTITY_ORDER_EASSY = Internal.createIdentity(OrderEassy.ORDER_EASSY, OrderEassy.ORDER_EASSY.ID);
+        public static Identity<OrderEssayRecord, Integer> IDENTITY_ORDER_ESSAY = Internal.createIdentity(OrderEssay.ORDER_ESSAY, OrderEssay.ORDER_ESSAY.ID);
         public static Identity<PermissionRecord, Integer> IDENTITY_PERMISSION = Internal.createIdentity(Permission.PERMISSION, Permission.PERMISSION.ID);
         public static Identity<PictureRecord, Integer> IDENTITY_PICTURE = Internal.createIdentity(Picture.PICTURE, Picture.PICTURE.ID);
         public static Identity<RoleRecord, Integer> IDENTITY_ROLE = Internal.createIdentity(Role.ROLE, Role.ROLE.ID);
@@ -109,7 +109,7 @@ public class Keys {
     private static class UniqueKeys0 {
         public static final UniqueKey<EssayTypeRecord> KEY_ESSAY_TYPE_PRIMARY = Internal.createUniqueKey(EssayType.ESSAY_TYPE, "KEY_essay_type_PRIMARY", EssayType.ESSAY_TYPE.ID);
         public static final UniqueKey<OrderRecord> KEY_ORDER_PRIMARY = Internal.createUniqueKey(Order.ORDER, "KEY_order_PRIMARY", Order.ORDER.ID);
-        public static final UniqueKey<OrderEassyRecord> KEY_ORDER_EASSY_PRIMARY = Internal.createUniqueKey(OrderEassy.ORDER_EASSY, "KEY_order_eassy_PRIMARY", OrderEassy.ORDER_EASSY.ID);
+        public static final UniqueKey<OrderEssayRecord> KEY_ORDER_ESSAY_PRIMARY = Internal.createUniqueKey(OrderEssay.ORDER_ESSAY, "KEY_order_essay_PRIMARY", OrderEssay.ORDER_ESSAY.ID);
         public static final UniqueKey<PermissionRecord> KEY_PERMISSION_PRIMARY = Internal.createUniqueKey(Permission.PERMISSION, "KEY_permission_PRIMARY", Permission.PERMISSION.ID);
         public static final UniqueKey<PermissionRecord> KEY_PERMISSION_UK_CODE_SYSTEM = Internal.createUniqueKey(Permission.PERMISSION, "KEY_permission_uk_code_system", Permission.PERMISSION.CODE, Permission.PERMISSION.SYSTEM_ID);
         public static final UniqueKey<PictureRecord> KEY_PICTURE_PRIMARY = Internal.createUniqueKey(Picture.PICTURE, "KEY_picture_PRIMARY", Picture.PICTURE.ID);

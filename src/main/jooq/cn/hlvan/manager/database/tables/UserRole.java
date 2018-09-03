@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRole extends TableImpl<UserRoleRecord> {
 
-    private static final long serialVersionUID = 2084119087;
+    private static final long serialVersionUID = 278239124;
 
     /**
      * The reference instance of <code>zhulin.user_role</code>
@@ -73,7 +73,7 @@ public class UserRole extends TableImpl<UserRoleRecord> {
     /**
      * The column <code>zhulin.user_role.create_at</code>.
      */
-    public final TableField<UserRoleRecord, Timestamp> CREATE_AT = createField("create_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserRoleRecord, Timestamp> CREATE_AT = createField("create_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>zhulin.user_role</code> table reference

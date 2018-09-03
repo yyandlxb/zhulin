@@ -6,7 +6,7 @@ package cn.hlvan.manager.database;
 
 import cn.hlvan.manager.database.tables.EssayType;
 import cn.hlvan.manager.database.tables.Order;
-import cn.hlvan.manager.database.tables.OrderEassy;
+import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
 import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
@@ -42,7 +42,7 @@ public class Indexes {
 
     public static final Index ESSAY_TYPE_PRIMARY = Indexes0.ESSAY_TYPE_PRIMARY;
     public static final Index ORDER_PRIMARY = Indexes0.ORDER_PRIMARY;
-    public static final Index ORDER_EASSY_PRIMARY = Indexes0.ORDER_EASSY_PRIMARY;
+    public static final Index ORDER_ESSAY_PRIMARY = Indexes0.ORDER_ESSAY_PRIMARY;
     public static final Index PERMISSION_PRIMARY = Indexes0.PERMISSION_PRIMARY;
     public static final Index PERMISSION_UK_CODE_SYSTEM = Indexes0.PERMISSION_UK_CODE_SYSTEM;
     public static final Index PICTURE_PRIMARY = Indexes0.PICTURE_PRIMARY;
@@ -62,7 +62,7 @@ public class Indexes {
     private static class Indexes0 {
         public static Index ESSAY_TYPE_PRIMARY = Internal.createIndex("PRIMARY", EssayType.ESSAY_TYPE, new OrderField[] { EssayType.ESSAY_TYPE.ID }, true);
         public static Index ORDER_PRIMARY = Internal.createIndex("PRIMARY", Order.ORDER, new OrderField[] { Order.ORDER.ID }, true);
-        public static Index ORDER_EASSY_PRIMARY = Internal.createIndex("PRIMARY", OrderEassy.ORDER_EASSY, new OrderField[] { OrderEassy.ORDER_EASSY.ID }, true);
+        public static Index ORDER_ESSAY_PRIMARY = Internal.createIndex("PRIMARY", OrderEssay.ORDER_ESSAY, new OrderField[] { OrderEssay.ORDER_ESSAY.ID }, true);
         public static Index PERMISSION_PRIMARY = Internal.createIndex("PRIMARY", Permission.PERMISSION, new OrderField[] { Permission.PERMISSION.ID }, true);
         public static Index PERMISSION_UK_CODE_SYSTEM = Internal.createIndex("uk_code_system", Permission.PERMISSION, new OrderField[] { Permission.PERMISSION.CODE, Permission.PERMISSION.SYSTEM_ID }, true);
         public static Index PICTURE_PRIMARY = Internal.createIndex("PRIMARY", Picture.PICTURE, new OrderField[] { Picture.PICTURE.ID }, true);

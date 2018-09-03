@@ -6,7 +6,7 @@ package cn.hlvan.manager.database;
 
 import cn.hlvan.manager.database.tables.EssayType;
 import cn.hlvan.manager.database.tables.Order;
-import cn.hlvan.manager.database.tables.OrderEassy;
+import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
 import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
@@ -40,7 +40,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zhulin extends SchemaImpl {
 
-    private static final long serialVersionUID = 266986341;
+    private static final long serialVersionUID = 493120613;
 
     /**
      * The reference instance of <code>zhulin</code>
@@ -58,9 +58,9 @@ public class Zhulin extends SchemaImpl {
     public final Order ORDER = cn.hlvan.manager.database.tables.Order.ORDER;
 
     /**
-     * The table <code>zhulin.order_eassy</code>.
+     * The table <code>zhulin.order_essay</code>.
      */
-    public final OrderEassy ORDER_EASSY = cn.hlvan.manager.database.tables.OrderEassy.ORDER_EASSY;
+    public final OrderEssay ORDER_ESSAY = cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 
     /**
      * The table <code>zhulin.permission</code>.
@@ -129,7 +129,7 @@ public class Zhulin extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             EssayType.ESSAY_TYPE,
             Order.ORDER,
-            OrderEassy.ORDER_EASSY,
+            OrderEssay.ORDER_ESSAY,
             Permission.PERMISSION,
             Picture.PICTURE,
             Role.ROLE,

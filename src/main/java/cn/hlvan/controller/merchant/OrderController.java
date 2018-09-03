@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
+import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 import static org.jooq.impl.DSL.sum;
 
@@ -75,13 +76,13 @@ public class OrderController {
         OrderRecord orderRecord = dsl.selectFrom(ORDER).where(ORDER.ID.eq(id)).fetchSingleInto(OrderRecord.class);
         merchantOrderDetail.setOrderRecord(orderRecord);
 
-        List<UserOrder> userOrders = dsl.select(ORDER.fields())
-                                        .select(USER_ORDER.COMPLETE, USER_ORDER.RESERVE_TOTAL,USER_ORDER.ID.as("userOrderId"))
-                                        .from(USER_ORDER)
-                                        .innerJoin(ORDER)
+        List<UserOrder> userOrders = dsl.select(ORDER_ESSAY.fields())
+                                        .from(ORDER)
+                                        .innerJoin(USER_ORDER)
                                         .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
+                                        .innerJoin(ORDER_ESSAY).on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
                                         .and(USER_ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
-                                        .and(USER_ORDER.STATUS.eq(Byte.valueOf("1")))
+                                        .and(USER_ORDER.STATUS.eq(Byte.valueOf("1")))//管理员审核成功
                                         .fetchInto(UserOrder.class);
         merchantOrderDetail.setUserOrders(userOrders);
         return Reply.success().data(merchantOrderDetail);

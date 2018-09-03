@@ -6,7 +6,7 @@ package cn.hlvan.manager.database;
 
 import cn.hlvan.manager.database.tables.EssayType;
 import cn.hlvan.manager.database.tables.Order;
-import cn.hlvan.manager.database.tables.OrderEassy;
+import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
 import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
@@ -43,9 +43,9 @@ public class Tables {
     public static final Order ORDER = cn.hlvan.manager.database.tables.Order.ORDER;
 
     /**
-     * The table <code>zhulin.order_eassy</code>.
+     * The table <code>zhulin.order_essay</code>.
      */
-    public static final OrderEassy ORDER_EASSY = cn.hlvan.manager.database.tables.OrderEassy.ORDER_EASSY;
+    public static final OrderEssay ORDER_ESSAY = cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 
     /**
      * The table <code>zhulin.permission</code>.
