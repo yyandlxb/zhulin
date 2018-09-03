@@ -1,17 +1,20 @@
 package cn.hlvan.service.merchant;
 
 import cn.hlvan.constant.OrderStatus;
-import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +28,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
+import static cn.hlvan.manager.database.tables.User.USER;
 
 @Service
 public class OrderService {
 
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
     private DSLContext dsl;
-
+    private JavaMailSenderImpl javaMailSender;
+    @Autowired
+    public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+    @Value("${spring.mail.username}")
+    private String fromMail;
     @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
@@ -97,6 +107,21 @@ public class OrderService {
             userOrderRecord.setUserId(userId);
             userOrderRecord.setReserveTotal(reserveTotal);
             userOrderRecord.setStatus(Byte.valueOf("0"));
+            //减少订单中的文章数量
+            dsl.update(ORDER).set(ORDER.TOTAL,orderRecord.getTotal() - reserveTotal)
+               .where(ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
+               .execute();
+            //邮件通知
+            String s = dsl.select(USER.EMAIL).from(USER).where(USER.ID.eq(userId)).fetchOneInto(String.class);
+            if (StringUtils.isNotBlank(s)){
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(fromMail);
+                message.setTo(s);
+                message.setSubject("管理员分配任务");
+                message.setText("管理员分配了文章任务给您，请注意查收，订单号为："+orderRecord.getOrderCode()
+                                +"系统邮件，请勿回复");
+                javaMailSender.send(message);
+            }
             return dsl.executeInsert(userOrderRecord) > 0;
         }else {
             return false;

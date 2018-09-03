@@ -60,6 +60,7 @@ public class AdminUserController {
             userRecords = Collections.emptyList();
         } else {
             userRecords = dsl.selectFrom(USER).where(conditions)
+                             .limit((int) pageable.getOffset(), pageable.getPageSize())
                              .fetchInto(UserRecord.class);
         }
         return Reply.success().data(new Page<>(userRecords, pageable, count));
