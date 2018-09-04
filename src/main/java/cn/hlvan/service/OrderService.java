@@ -3,6 +3,7 @@ package cn.hlvan.service;
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
+import cn.hlvan.security.AuthorizedUser;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
@@ -26,8 +27,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.hlvan.constant.OrderStatus.PUBLICING;
+import static cn.hlvan.constant.WriterOrderStatus.APPOINT_SUCCESS;
+import static cn.hlvan.constant.WriterOrderStatus.WAIT_APPOINT;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.User.USER;
+import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @Service
 public class OrderService {
@@ -104,9 +109,10 @@ public class OrderService {
             userOrderRecord.setOrderCode(orderRecord.getOrderCode());
             userOrderRecord.setUserId(userId);
             userOrderRecord.setReserveTotal(reserveTotal);
-            userOrderRecord.setStatus(Byte.valueOf("0"));
+            userOrderRecord.setStatus(WAIT_APPOINT);
             //减少订单中的文章数量
             dsl.update(ORDER).set(ORDER.TOTAL,orderRecord.getTotal() - reserveTotal)
+                    .set(ORDER.APPOINT_TOTAL,orderRecord.getAppointTotal() + reserveTotal)
                .where(ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
                .execute();
             //邮件通知
@@ -126,13 +132,53 @@ public class OrderService {
         }
     }
 
+    @Transactional
+    public boolean addAppoint(Integer orderId, Integer total, AuthorizedUser user) {
+        OrderRecord orderRecords = dsl.selectFrom(ORDER)
+                .where(ORDER.ID.eq(orderId))
+                .and(ORDER.ORDER_STATUS.eq(PUBLICING))
+                .fetchSingleInto(OrderRecord.class);
+        //构造预约订单信息
+        UserOrderRecord userOrderRecord = new UserOrderRecord();
+        //查询是否已经预约过了
+        UserOrderRecord userOrder = dsl.selectFrom(USER_ORDER)
+                .where(USER_ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
+                .and(USER_ORDER.USER_ID.eq(user.getId())).fetchOneInto(UserOrderRecord.class);
+
+        Integer min = orderRecords.getTotal() -  orderRecords.getAppointTotal();
+        if (null != userOrder && orderRecords.getTotal() >= total ){
+
+            dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL,userOrder.getReserveTotal() + total)
+                    .where(USER_ORDER.ORDER_CODE.eq(userOrder.getOrderCode())).execute();
+            //减少订单中的文章数量
+            dsl.update(ORDER).set(ORDER.TOTAL,orderRecords.getTotal() - total)
+                    .set(ORDER.APPOINT_TOTAL,orderRecords.getAppointTotal() + total)
+                    .where(ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
+                    .execute();
+        }
+        if (null == userOrder && orderRecords.getTotal() >= total ){
+            userOrderRecord.setOrderCode(orderRecords.getOrderCode());
+            userOrderRecord.setReserveTotal(total);
+            userOrderRecord.setUserId(user.getId());
+            userOrderRecord.setStatus(APPOINT_SUCCESS);
+            dsl.executeInsert(userOrderRecord);
+            //减少订单中的文章数量
+            dsl.update(ORDER).set(ORDER.TOTAL,orderRecords.getTotal() - total)
+                    .set(ORDER.APPOINT_TOTAL,orderRecords.getAppointTotal() + total)
+                    .where(ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
+                    .execute();
+            return true;
+        }
+        return false;
+    }
+
     @Data
     public class OrderForm {
         @NotNull
         private Integer total;//文章数量
         private BigDecimal merchantPrice;//商户定价
         @NotNull
-        private String eassyType;//文章领域
+        private String essayType;//文章领域
         private String notes;//备注
         @NotNull
         private String orderTitle;//订单标题
@@ -158,4 +204,11 @@ public class OrderService {
 
     }
 
+    //写手确定预约
+
+    @Transactional
+    public boolean appoint(Integer id,Integer userId){
+       return dsl.update(USER_ORDER).set(USER_ORDER.STATUS,APPOINT_SUCCESS)
+               .where(USER_ORDER.ID.eq(id)).and(USER_ORDER.USER_ID.eq(userId)).execute() > 0 ;
+    }
 }

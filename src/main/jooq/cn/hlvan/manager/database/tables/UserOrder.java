@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrder extends TableImpl<UserOrderRecord> {
 
-    private static final long serialVersionUID = -452918688;
+    private static final long serialVersionUID = -1965618594;
 
     /**
      * The reference instance of <code>zhulin.user_order</code>
@@ -78,12 +78,12 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     /**
      * The column <code>zhulin.user_order.created_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.user_order.updated_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.user_order.user_id</code>. 用户id
@@ -91,9 +91,9 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     public final TableField<UserOrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
 
     /**
-     * The column <code>zhulin.user_order.status</code>. 0待预约，1-预约成功，3-删除
+     * The column <code>zhulin.user_order.status</code>. 0待预约，1-预约成功
      */
-    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-预约成功，3-删除");
+    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-预约成功");
 
     /**
      * Create a <code>zhulin.user_order</code> table reference

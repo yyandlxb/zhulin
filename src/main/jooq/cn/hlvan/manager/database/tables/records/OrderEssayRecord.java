@@ -30,7 +30,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> implements Record13<Integer, Integer, String, String, String, Double, Integer, Integer, String, Timestamp, Timestamp, Byte, String> {
 
-    private static final long serialVersionUID = -869820625;
+    private static final long serialVersionUID = -3740759;
 
     /**
      * Setter for <code>zhulin.order_essay.id</code>.
@@ -198,7 +198,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
     }
 
     /**
-     * Setter for <code>zhulin.order_essay.status</code>. 0-待审核，1-审核成功，2-退稿
+     * Setter for <code>zhulin.order_essay.status</code>. 0-待审核，1-
      */
     public OrderEssayRecord setStatus(Byte value) {
         set(11, value);
@@ -206,7 +206,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
     }
 
     /**
-     * Getter for <code>zhulin.order_essay.status</code>. 0-待审核，1-审核成功，2-退稿
+     * Getter for <code>zhulin.order_essay.status</code>. 0-待审核，1-
      */
     public Byte getStatus() {
         return (Byte) get(11);

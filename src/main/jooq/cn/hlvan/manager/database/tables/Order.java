@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = 945752491;
+    private static final long serialVersionUID = 1099476061;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -109,12 +109,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.created_at</code>.
      */
-    public final TableField<OrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<OrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.order.updated_at</code>.
      */
-    public final TableField<OrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+    public final TableField<OrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * The column <code>zhulin.order.order_title</code>. 文章标题
@@ -162,9 +162,9 @@ public class Order extends TableImpl<OrderRecord> {
     public final TableField<OrderRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "审核结果");
 
     /**
-     * The column <code>zhulin.order.bespoke_total</code>. 已预约数量
+     * The column <code>zhulin.order.appoint_total</code>. 已预约数量
      */
-    public final TableField<OrderRecord, Integer> BESPOKE_TOTAL = createField("bespoke_total", org.jooq.impl.SQLDataType.INTEGER, this, "已预约数量");
+    public final TableField<OrderRecord, Integer> APPOINT_TOTAL = createField("appoint_total", org.jooq.impl.SQLDataType.INTEGER, this, "已预约数量");
 
     /**
      * Create a <code>zhulin.order</code> table reference

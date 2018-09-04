@@ -31,7 +31,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Record22<Integer, String, Byte, Byte, Integer, Integer, BigDecimal, BigDecimal, String, String, Timestamp, Timestamp, String, Double, Integer, Byte, Timestamp, String, Integer, String, String, Integer> {
 
-    private static final long serialVersionUID = -1924033240;
+    private static final long serialVersionUID = 507056776;
 
     /**
      * Setter for <code>zhulin.order.id</code>.
@@ -349,17 +349,17 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
     }
 
     /**
-     * Setter for <code>zhulin.order.bespoke_total</code>. 已预约数量
+     * Setter for <code>zhulin.order.appoint_total</code>. 已预约数量
      */
-    public OrderRecord setBespokeTotal(Integer value) {
+    public OrderRecord setAppointTotal(Integer value) {
         set(21, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.order.bespoke_total</code>. 已预约数量
+     * Getter for <code>zhulin.order.appoint_total</code>. 已预约数量
      */
-    public Integer getBespokeTotal() {
+    public Integer getAppointTotal() {
         return (Integer) get(21);
     }
 
@@ -568,7 +568,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
      */
     @Override
     public Field<Integer> field22() {
-        return Order.ORDER.BESPOKE_TOTAL;
+        return Order.ORDER.APPOINT_TOTAL;
     }
 
     /**
@@ -744,7 +744,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
      */
     @Override
     public Integer component22() {
-        return getBespokeTotal();
+        return getAppointTotal();
     }
 
     /**
@@ -920,7 +920,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
      */
     @Override
     public Integer value22() {
-        return getBespokeTotal();
+        return getAppointTotal();
     }
 
     /**
@@ -1117,7 +1117,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
      */
     @Override
     public OrderRecord value22(Integer value) {
-        setBespokeTotal(value);
+        setAppointTotal(value);
         return this;
     }
 
@@ -1165,7 +1165,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
     /**
      * Create a detached, initialised OrderRecord
      */
-    public OrderRecord(Integer id, String orderCode, Byte orderStatus, Byte payType, Integer userId, Integer total, BigDecimal merchantPrice, BigDecimal adminPrice, String eassyType, String notes, Timestamp createdAt, Timestamp updatedAt, String orderTitle, Double originalLevel, Integer picture, Byte type, Timestamp endTime, String require, Integer eassyTotal, String wordCount, String result, Integer bespokeTotal) {
+    public OrderRecord(Integer id, String orderCode, Byte orderStatus, Byte payType, Integer userId, Integer total, BigDecimal merchantPrice, BigDecimal adminPrice, String eassyType, String notes, Timestamp createdAt, Timestamp updatedAt, String orderTitle, Double originalLevel, Integer picture, Byte type, Timestamp endTime, String require, Integer eassyTotal, String wordCount, String result, Integer appointTotal) {
         super(Order.ORDER);
 
         set(0, id);
@@ -1189,6 +1189,6 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> implements Rec
         set(18, eassyTotal);
         set(19, wordCount);
         set(20, result);
-        set(21, bespokeTotal);
+        set(21, appointTotal);
     }
 }
