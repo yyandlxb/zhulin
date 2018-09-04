@@ -1,4 +1,4 @@
-package cn.hlvan.user.controller;
+package cn.hlvan.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

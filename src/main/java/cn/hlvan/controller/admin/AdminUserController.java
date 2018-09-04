@@ -3,7 +3,7 @@ package cn.hlvan.controller.admin;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.admin.AdminService;
-import cn.hlvan.user.controller.AuthorizedUser;
+import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
 import org.apache.commons.lang3.StringUtils;

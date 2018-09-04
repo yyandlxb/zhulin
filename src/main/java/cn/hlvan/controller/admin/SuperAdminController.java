@@ -110,7 +110,7 @@ public class SuperAdminController {
         if (b){
             return Reply.success();
         }else {
-            return Reply.fail().message("更换商家失败");
+            return Reply.fail().message("更换管理员失败");
         }
 
     }

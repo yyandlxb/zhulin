@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEssay extends TableImpl<OrderEssayRecord> {
 
-    private static final long serialVersionUID = 1730681974;
+    private static final long serialVersionUID = -1437186396;
 
     /**
      * The reference instance of <code>zhulin.order_essay</code>
@@ -103,17 +103,17 @@ public class OrderEssay extends TableImpl<OrderEssayRecord> {
     /**
      * The column <code>zhulin.order_essay.created_at</code>.
      */
-    public final TableField<OrderEssayRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<OrderEssayRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.order_essay.updated_at</code>.
      */
-    public final TableField<OrderEssayRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<OrderEssayRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>zhulin.order_essay.status</code>. 0-待审核，1-
+     * The column <code>zhulin.order_essay.status</code>. 0-待审核，1-审核成功，2-退稿
      */
-    public final TableField<OrderEssayRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待审核，1-");
+    public final TableField<OrderEssayRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待审核，1-审核成功，2-退稿");
 
     /**
      * The column <code>zhulin.order_essay.result</code>. 审核结果

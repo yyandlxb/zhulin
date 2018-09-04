@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class EssayType extends TableImpl<EssayTypeRecord> {
 
-    private static final long serialVersionUID = -1538064025;
+    private static final long serialVersionUID = 852034951;
 
     /**
      * The reference instance of <code>zhulin.essay_type</code>
@@ -68,12 +68,12 @@ public class EssayType extends TableImpl<EssayTypeRecord> {
     /**
      * The column <code>zhulin.essay_type.created_at</code>.
      */
-    public final TableField<EssayTypeRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<EssayTypeRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.essay_type.updated_at</code>.
      */
-    public final TableField<EssayTypeRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<EssayTypeRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>zhulin.essay_type</code> table reference

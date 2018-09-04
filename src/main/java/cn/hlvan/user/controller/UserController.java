@@ -3,6 +3,7 @@ package cn.hlvan.user.controller;
 import cn.hlvan.constant.UserStatus;
 import cn.hlvan.constant.UserType;
 import cn.hlvan.manager.database.tables.records.UserRecord;
+import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.security.session.SessionManager;
 import cn.hlvan.service.Message;
@@ -16,11 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -89,9 +86,6 @@ public class UserController {
         }
         sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(), u.getId(), u.getAccount(),
             Integer.parseInt(u.getType()), u.getStatus()));
-        //登录用户数据存在session中
-//        HttpSession session = request.getSession(true);
-//        session.setAttribute(Authenticated.class.getName(),u);
 
         return Reply.success();
     }

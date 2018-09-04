@@ -30,7 +30,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrderRecord extends UpdatableRecordImpl<UserOrderRecord> implements Record8<Integer, String, Integer, Integer, Timestamp, Timestamp, Integer, Byte> {
 
-    private static final long serialVersionUID = -232861713;
+    private static final long serialVersionUID = 2046703205;
 
     /**
      * Setter for <code>zhulin.user_order.id</code>.
@@ -138,7 +138,7 @@ public class UserOrderRecord extends UpdatableRecordImpl<UserOrderRecord> implem
     }
 
     /**
-     * Setter for <code>zhulin.user_order.status</code>. 0待预约，1-预约成功
+     * Setter for <code>zhulin.user_order.status</code>. 0待预约，1-预约成功，3-删除
      */
     public UserOrderRecord setStatus(Byte value) {
         set(7, value);
@@ -146,7 +146,7 @@ public class UserOrderRecord extends UpdatableRecordImpl<UserOrderRecord> implem
     }
 
     /**
-     * Getter for <code>zhulin.user_order.status</code>. 0待预约，1-预约成功
+     * Getter for <code>zhulin.user_order.status</code>. 0待预约，1-预约成功，3-删除
      */
     public Byte getStatus() {
         return (Byte) get(7);

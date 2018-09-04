@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Permission extends TableImpl<PermissionRecord> {
 
-    private static final long serialVersionUID = 968653488;
+    private static final long serialVersionUID = 232829946;
 
     /**
      * The reference instance of <code>zhulin.permission</code>
@@ -88,12 +88,12 @@ public class Permission extends TableImpl<PermissionRecord> {
     /**
      * The column <code>zhulin.permission.created_at</code>.
      */
-    public final TableField<PermissionRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<PermissionRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.permission.updated_at</code>.
      */
-    public final TableField<PermissionRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<PermissionRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>zhulin.permission</code> table reference

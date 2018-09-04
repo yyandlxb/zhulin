@@ -1,7 +1,7 @@
 package cn.hlvan.service.admin;
 
 import cn.hlvan.controller.admin.AdminUserController;
-import cn.hlvan.user.controller.AuthorizedUser;
+import cn.hlvan.security.AuthorizedUser;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
