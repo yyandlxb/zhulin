@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static cn.hlvan.constant.OrderEssayStatus.AUDITING_SUCCESS;
+import static cn.hlvan.constant.OrderEssayStatus.*;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.User.USER;
@@ -83,7 +83,8 @@ public class PublicOrderCotroller {
         List<Condition> conditions = new ArrayList<>();
         Integer type = user.getType();
         if (type.equals(UserType.MERCHANT)) {
-            conditions.add(ORDER_ESSAY.STATUS.eq(AUDITING_SUCCESS));//管理员审核成功
+            conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
+            .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)).or(ORDER_ESSAY.STATUS.eq(ALREADY_PAY)));
         }
         List<OrderEssayRecord> OrderEssayRecords = dsl.select(ORDER_ESSAY.fields())
                                                       .from(USER_ORDER)
@@ -91,9 +92,12 @@ public class PublicOrderCotroller {
                                                       .on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
                                                       .where(conditions)
                                                       .and(USER_ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
+                                                      .orderBy(USER_ORDER.UPDATED_AT.desc())
                                                       .fetchInto(OrderEssayRecord.class);
         merchantOrderDetail.setOrderEssayRecords(OrderEssayRecords);
         return Reply.success().data(merchantOrderDetail);
     }
+
+    //创建文章
 
 }
