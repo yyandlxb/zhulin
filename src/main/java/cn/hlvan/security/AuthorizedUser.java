@@ -17,5 +17,6 @@ public class AuthorizedUser implements Serializable{
     private String account;
     private Integer type;
     private Integer status;
+    private Integer pid;
 
 }

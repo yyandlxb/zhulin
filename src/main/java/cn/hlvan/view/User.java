@@ -14,4 +14,5 @@ public class User {
     private String msgid;
     private String code;
     private String validCode;
+    private Integer pid;
 }

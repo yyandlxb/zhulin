@@ -1,6 +1,7 @@
 package cn.hlvan.service;
 
 import cn.hlvan.constant.OrderStatus;
+import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import cn.hlvan.security.AuthorizedUser;
@@ -30,6 +31,7 @@ import java.util.List;
 import static cn.hlvan.constant.OrderStatus.PUBLICING;
 import static cn.hlvan.constant.WriterOrderStatus.APPOINT_SUCCESS;
 import static cn.hlvan.constant.WriterOrderStatus.WAIT_APPOINT;
+import static cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.User.USER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
@@ -70,9 +72,9 @@ public class OrderService {
             LocalDateTime end = LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX);
             list.add(ORDER.CREATED_AT.lessOrEqual(Timestamp.valueOf(end)));
         }
-        Integer status = orderForm.getStatus();
+        Byte status = orderForm.getStatus();
         if (null != status) {
-            list.add(ORDER.ORDER_STATUS.eq(status.byteValue()));
+            list.add(ORDER.ORDER_STATUS.eq(status));
         }
         String orderCode = orderForm.getOrderCode();
         if (StringUtils.isNotBlank(orderCode)) {
@@ -172,6 +174,17 @@ public class OrderService {
         return false;
     }
 
+    public boolean deleteAppoint(Integer userOrderId, Integer total, AuthorizedUser user) {
+        List<LimitTimeRecord> limitTimeRecords = dsl.selectFrom(LIMIT_TIME).fetchInto(LimitTimeRecord.class);
+        if (null != limitTimeRecords && limitTimeRecords.size() >0){
+            //判断是否已经超过了截止时间
+            LimitTimeRecord limitTimeRecord = limitTimeRecords.get(0);
+
+        }
+
+        return true;
+    }
+
     @Data
     public class OrderForm {
         @NotNull
@@ -200,7 +213,7 @@ public class OrderService {
         private String endTime;
 
         private String orderCode;
-        private Integer status;
+        private Byte status;
 
     }
 

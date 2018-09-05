@@ -4,7 +4,7 @@
 package cn.hlvan.manager.database;
 
 
-import cn.hlvan.manager.database.tables.EssayType;
+import cn.hlvan.manager.database.tables.LimitTime;
 import cn.hlvan.manager.database.tables.Order;
 import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
@@ -40,7 +40,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zhulin extends SchemaImpl {
 
-    private static final long serialVersionUID = 493120613;
+    private static final long serialVersionUID = -1590439198;
 
     /**
      * The reference instance of <code>zhulin</code>
@@ -50,7 +50,7 @@ public class Zhulin extends SchemaImpl {
     /**
      * 文章领域
      */
-    public final EssayType ESSAY_TYPE = cn.hlvan.manager.database.tables.EssayType.ESSAY_TYPE;
+    public final LimitTime LIMIT_TIME = cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
 
     /**
      * The table <code>zhulin.order</code>.
@@ -127,7 +127,7 @@ public class Zhulin extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
-            EssayType.ESSAY_TYPE,
+            LimitTime.LIMIT_TIME,
             Order.ORDER,
             OrderEssay.ORDER_ESSAY,
             Permission.PERMISSION,

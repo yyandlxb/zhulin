@@ -4,7 +4,7 @@
 package cn.hlvan.manager.database;
 
 
-import cn.hlvan.manager.database.tables.EssayType;
+import cn.hlvan.manager.database.tables.LimitTime;
 import cn.hlvan.manager.database.tables.Order;
 import cn.hlvan.manager.database.tables.OrderEssay;
 import cn.hlvan.manager.database.tables.Permission;
@@ -35,7 +35,7 @@ public class Tables {
     /**
      * 文章领域
      */
-    public static final EssayType ESSAY_TYPE = cn.hlvan.manager.database.tables.EssayType.ESSAY_TYPE;
+    public static final LimitTime LIMIT_TIME = cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
 
     /**
      * The table <code>zhulin.order</code>.

@@ -1,9 +1,9 @@
 package cn.hlvan.controller.admin;
 
 import cn.hlvan.manager.database.tables.records.OrderRecord;
+import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
-import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
 import org.jooq.Condition;
@@ -18,8 +18,6 @@ import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.User.USER;
-import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
-import static org.jooq.impl.DSL.sum;
 
 @RestController("adminOrderController")
 @RequestMapping("/admin/merchant/order")
@@ -36,7 +34,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/list")
+  /*  @GetMapping("/list")
     public Reply auditingOrderList(OrderService.OrderQueryForm orderForm, @Authenticated AuthorizedUser user, Pageable pageable){
         List<Condition> conditions = orderService.buildConditions(orderForm);
         conditions.add(USER.PID.eq(user.getId()) );
@@ -58,9 +56,9 @@ public class OrderController {
     public Reply list(@RequestParam Integer id){
         OrderRecord orderRecord = dsl.selectFrom(ORDER).where(ORDER.ID.eq(id)).fetchSingleInto(OrderRecord.class);
         return Reply.success().data(orderRecord);
-    }
+    }*/
     @PostMapping("/auditing")
-    public Reply auditing(@RequestParam Integer id, String status, String result, @RequestParam BigDecimal price){
+    public Reply auditing(@RequestParam Integer id, String status, String result, BigDecimal price){
         boolean b = orderService.auditing(id,status,result,price);
         if (b){
             return Reply.success();
@@ -77,5 +75,4 @@ public class OrderController {
             return Reply.fail().message("分配失败");
         }
     }
-
 }

@@ -37,48 +37,49 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    //订单列表
-    @GetMapping("/list")
-    public Reply receiveOrder(OrderService.OrderQueryForm orderForm, @Authenticated AuthorizedUser user, Pageable pageable) {
-        orderForm.setStatus(1);
-        List<Condition> conditions = orderService.buildConditions(orderForm);
-        conditions.add(USER.PID.eq(user.getId()));
-        int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
-        List<OrderRecord> orderRecords;
-        if (pageable.getOffset() >= count) {
-            orderRecords = Collections.emptyList();
-        } else {
-            orderRecords = dsl.select(ORDER.fields()).from(ORDER)
-                    .innerJoin(USER).on(ORDER.USER_ID.eq(USER.ID))
-                    .where(conditions)
-                    .orderBy(ORDER.ID.desc())
-                    .limit((int) pageable.getOffset(), pageable.getPageSize())
-                    .fetchInto(OrderRecord.class);
-        }
-        return Reply.success().data(new Page<>(orderRecords, pageable, count));
-    }
-
+    /* //订单列表
+     @GetMapping("/list")
+     public Reply receiveOrder(OrderService.OrderQueryForm orderForm, @Authenticated AuthorizedUser user, Pageable pageable) {
+         orderForm.setStatus(1);
+         List<Condition> conditions = orderService.buildConditions(orderForm);
+         conditions.add(USER.PID.eq(user.getPid()));
+         int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
+         List<OrderRecord> orderRecords;
+         if (pageable.getOffset() >= count) {
+             orderRecords = Collections.emptyList();
+         } else {
+             orderRecords = dsl.select(ORDER.fields()).from(ORDER)
+                     .innerJoin(USER).on(ORDER.USER_ID.eq(USER.ID))
+                     .where(conditions)
+                     .orderBy(ORDER.ID.desc())
+                     .limit((int) pageable.getOffset(), pageable.getPageSize())
+                     .fetchInto(OrderRecord.class);
+         }
+         return Reply.success().data(new Page<>(orderRecords, pageable, count));
+     }
+ */
     //预约列表
     @GetMapping("/appoint/list")
     public Reply appointmentList(@Authenticated AuthorizedUser user, Pageable pageable) {
 
         Integer count = dsl.selectCount().from(USER_ORDER).innerJoin(USER_ORDER)
-                .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
-                .and(USER_ORDER.USER_ID.eq(user.getId())).fetchOne().value1();
+                           .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
+                           .and(USER_ORDER.USER_ID.eq(user.getId())).fetchOne().value1();
         List<UserOrder> userOrders;
         if (pageable.getOffset() > count) {
             userOrders = Collections.emptyList();
         } else {
 
-            userOrders = dsl.select(ORDER.ADMIN_PRICE, ORDER.APPOINT_TOTAL, ORDER.ORDER_TITLE, ORDER.ORIGINAL_LEVEL, ORDER.EASSY_TYPE)
-                    .select(USER_ORDER.RESERVE_TOTAL, USER_ORDER.COMPLETE, USER_ORDER.STATUS.as("userOrderStatus")
-                            , USER_ORDER.ID.as("userOrderId"))
-                    .from(USER_ORDER).innerJoin(USER_ORDER)
-                    .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
-                    .and(USER_ORDER.USER_ID.eq(user.getId()))
-                    .orderBy(USER_ORDER.STATUS.desc())
-                    .limit((int) pageable.getOffset(), pageable.getPageSize())
-                    .fetchInto(UserOrder.class);
+            userOrders = dsl.select(ORDER.ADMIN_PRICE, ORDER.APPOINT_TOTAL, ORDER.ORDER_TITLE, ORDER.ORIGINAL_LEVEL,
+                ORDER.EASSY_TYPE)
+                            .select(USER_ORDER.RESERVE_TOTAL, USER_ORDER.COMPLETE, USER_ORDER.STATUS.as("userOrderStatus")
+                                , USER_ORDER.ID.as("userOrderId"))
+                            .from(USER_ORDER).innerJoin(USER_ORDER)
+                            .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
+                            .and(USER_ORDER.USER_ID.eq(user.getId()))
+                            .orderBy(USER_ORDER.STATUS.desc())
+                            .limit((int) pageable.getOffset(), pageable.getPageSize())
+                            .fetchInto(UserOrder.class);
         }
         return Reply.success().data(new Page<>(userOrders, pageable, count));
 
@@ -86,7 +87,7 @@ public class OrderController {
 
     //确定预约
     @PostMapping("/appoint")
-    public Reply sureAppoint(Integer userOrderId, @Authenticated AuthorizedUser user) {
+    public Reply sureAppoint(@RequestParam Integer userOrderId, @Authenticated AuthorizedUser user) {
 
         boolean appoint = orderService.appoint(userOrderId, user.getId());
         if (appoint) {
@@ -97,11 +98,11 @@ public class OrderController {
     }
 
     //添加预约
-    @PostMapping("/add")
+    @PostMapping("/create")
     public Reply writerAppointAdd(@RequestParam Integer orderId, @RequestParam Integer total,
                                   @Authenticated AuthorizedUser user) {
 
-        boolean b = orderService.addAppoint(orderId,total,user);
+        boolean b = orderService.addAppoint(orderId, total, user);
         if (b) {
             return Reply.success();
         } else {
@@ -109,6 +110,17 @@ public class OrderController {
         }
     }
 
+    //手动取消预约
+    @PostMapping("/delete")
+    public Reply writerAppointDelete(@RequestParam Integer userOrderId, @RequestParam Integer total,
+                                     @Authenticated AuthorizedUser user) {
 
+        boolean b = orderService.deleteAppoint(userOrderId, total, user);
+        if (b) {
+            return Reply.success();
+        } else {
+            return Reply.fail().message("预约失败");
+        }
+    }
 
 }

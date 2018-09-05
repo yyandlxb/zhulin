@@ -85,7 +85,7 @@ public class UserController {
             return Reply.fail().message("用户名或密码错误");
         }
         sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(), u.getId(), u.getAccount(),
-            Integer.parseInt(u.getType()), u.getStatus()));
+            Integer.parseInt(u.getType()), u.getStatus(),u.getPid()));
 
         return Reply.success();
     }
