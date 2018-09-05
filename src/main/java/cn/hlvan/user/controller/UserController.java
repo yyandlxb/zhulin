@@ -69,9 +69,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/sign_in", consumes = "application/json")
+    @PostMapping(value = "/sign_in")
     @ResponseBody
-    public Reply signIn(@RequestBody User user, HttpServletRequest request) {
+    public Reply signIn(User user, HttpServletRequest request) {
 
         String pw = DigestUtils.md5Hex(user.getPassword());
 
