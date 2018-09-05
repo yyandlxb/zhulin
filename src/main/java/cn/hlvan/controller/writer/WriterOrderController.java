@@ -1,13 +1,11 @@
 package cn.hlvan.controller.writer;
 
-import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.UserOrder;
-import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
-import static cn.hlvan.manager.database.tables.User.USER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @RestController("writerOrderController")
 @RequestMapping("/writer/order")
-public class OrderController {
+public class WriterOrderController {
     private DSLContext dsl;
 
     @Autowired
@@ -37,27 +34,6 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    /* //订单列表
-     @GetMapping("/list")
-     public Reply receiveOrder(OrderService.OrderQueryForm orderForm, @Authenticated AuthorizedUser user, Pageable pageable) {
-         orderForm.setStatus(1);
-         List<Condition> conditions = orderService.buildConditions(orderForm);
-         conditions.add(USER.PID.eq(user.getPid()));
-         int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
-         List<OrderRecord> orderRecords;
-         if (pageable.getOffset() >= count) {
-             orderRecords = Collections.emptyList();
-         } else {
-             orderRecords = dsl.select(ORDER.fields()).from(ORDER)
-                     .innerJoin(USER).on(ORDER.USER_ID.eq(USER.ID))
-                     .where(conditions)
-                     .orderBy(ORDER.ID.desc())
-                     .limit((int) pageable.getOffset(), pageable.getPageSize())
-                     .fetchInto(OrderRecord.class);
-         }
-         return Reply.success().data(new Page<>(orderRecords, pageable, count));
-     }
- */
     //预约列表
     @GetMapping("/appoint/list")
     public Reply appointmentList(@Authenticated AuthorizedUser user, Pageable pageable) {
@@ -114,13 +90,8 @@ public class OrderController {
     @PostMapping("/delete")
     public Reply writerAppointDelete(@RequestParam Integer userOrderId, @RequestParam Integer total,
                                      @Authenticated AuthorizedUser user) {
-
-        boolean b = orderService.deleteAppoint(userOrderId, total, user);
-        if (b) {
-            return Reply.success();
-        } else {
-            return Reply.fail().message("预约失败");
-        }
+        orderService.deleteAppoint(userOrderId, total, user);
+        return Reply.success();
     }
 
 }

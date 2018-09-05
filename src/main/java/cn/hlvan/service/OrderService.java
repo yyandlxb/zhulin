@@ -1,14 +1,17 @@
 package cn.hlvan.service;
 
 import cn.hlvan.constant.OrderStatus;
+import cn.hlvan.exception.ApplicationException;
 import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.view.UserOrder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,10 +98,11 @@ public class OrderService {
                   .execute();
     }
 
-    public boolean auditing(Integer id, String status, String result, BigDecimal price) {
+    public boolean auditing(Integer id, String status, String result, BigDecimal price,LocalDateTime endTime) {
 
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, Byte.valueOf(status))
                   .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
+                  .set(ORDER.ADMIN_END_TIME,Timestamp.valueOf(endTime))
                   .where(ORDER.ID.eq(id)).execute() > 0;
     }
 
@@ -142,23 +146,7 @@ public class OrderService {
                 .fetchSingleInto(OrderRecord.class);
         //构造预约订单信息
         UserOrderRecord userOrderRecord = new UserOrderRecord();
-        //查询是否已经预约过了
-        UserOrderRecord userOrder = dsl.selectFrom(USER_ORDER)
-                .where(USER_ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
-                .and(USER_ORDER.USER_ID.eq(user.getId())).fetchOneInto(UserOrderRecord.class);
-
-        Integer min = orderRecords.getTotal() -  orderRecords.getAppointTotal();
-        if (null != userOrder && orderRecords.getTotal() >= total ){
-
-            dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL,userOrder.getReserveTotal() + total)
-                    .where(USER_ORDER.ORDER_CODE.eq(userOrder.getOrderCode())).execute();
-            //减少订单中的文章数量
-            dsl.update(ORDER).set(ORDER.TOTAL,orderRecords.getTotal() - total)
-                    .set(ORDER.APPOINT_TOTAL,orderRecords.getAppointTotal() + total)
-                    .where(ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
-                    .execute();
-        }
-        if (null == userOrder && orderRecords.getTotal() >= total ){
+        if (null != orderRecords && orderRecords.getTotal() >= total ){
             userOrderRecord.setOrderCode(orderRecords.getOrderCode());
             userOrderRecord.setReserveTotal(total);
             userOrderRecord.setUserId(user.getId());
@@ -174,15 +162,38 @@ public class OrderService {
         return false;
     }
 
-    public boolean deleteAppoint(Integer userOrderId, Integer total, AuthorizedUser user) {
+    @Transactional
+    public void deleteAppoint(Integer userOrderId, Integer total, AuthorizedUser user) {
         List<LimitTimeRecord> limitTimeRecords = dsl.selectFrom(LIMIT_TIME).fetchInto(LimitTimeRecord.class);
         if (null != limitTimeRecords && limitTimeRecords.size() >0){
             //判断是否已经超过了截止时间
-            LimitTimeRecord limitTimeRecord = limitTimeRecords.get(0);
+            Integer hours = limitTimeRecords.get(0).getLimitTime();
+            UserOrder orderRecord = dsl.select(ORDER.ADMIN_END_TIME)
+                                         .select(USER_ORDER.COMPLETE,USER_ORDER.RESERVE_TOTAL)
+                                         .from(USER_ORDER).innerJoin(ORDER)
+                                         .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
+                                         .and(USER_ORDER.ID.eq(userOrderId)).fetchSingleInto(UserOrder.class);
+            int i = LocalDateTime.now().toLocalTime().plusHours(hours)
+                                 .compareTo(orderRecord.getAdminEndTime().toLocalDateTime().toLocalTime());
+
+            if (orderRecord.getReserveTotal() >= total && total <= orderRecord.getComplete()){
+                //超过了截稿时间
+                if (i > 0){
+                    //查询用户
+                    Integer level = dsl.select(USER.CREDIT_LEVEL)
+                                       .from(USER).where(USER.ID.eq(user.getId()))
+                                       .fetchOneInto(Integer.class);
+                    dsl.update(USER).set(USER.CREDIT_LEVEL,level - 1).where(USER.ID.eq(user.getId())).execute();
+                }
+                dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL,orderRecord.getReserveTotal() - total)
+                   .where(USER_ORDER.ID.eq(userOrderId)).execute();
+
+            }else {
+                throw new ApplicationException("取消失败，取消的数量大于预约数量");
+            }
 
         }
 
-        return true;
     }
 
     @Data

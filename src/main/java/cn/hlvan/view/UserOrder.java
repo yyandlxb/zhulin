@@ -3,6 +3,7 @@ package cn.hlvan.view;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 public class UserOrder {
@@ -16,4 +17,5 @@ public class UserOrder {
     private Integer complete;//已完成数量
     private Integer reserveTotal;//预约成功的数量
     private Byte userOrderStatus;//用户预定订单的状态
+    private Timestamp adminEndTime;//用户预定订单的状态
 }
