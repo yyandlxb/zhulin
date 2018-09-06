@@ -23,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.UUID;
@@ -41,7 +43,11 @@ public class UserController {
     @Value("${file.path}")
     private String path;
     private Message message;
-
+    private int sessionTimeout;
+    @Value("${session.timeout.merchant-web}")
+    public void setSessionTimeout(int sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
     @Autowired
     public void setMessage(Message message) {
         this.message = message;
@@ -71,7 +77,7 @@ public class UserController {
 
     @PostMapping("/sign_in")
     @ResponseBody
-    public Reply signIn(@RequestBody User user, HttpServletRequest request) {
+    public Reply signIn(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
 
         String pw = DigestUtils.md5Hex(user.getPassword());
 
@@ -86,7 +92,14 @@ public class UserController {
         }
         sessionManager.bind(request.getSession(true), new AuthorizedUser(u.getName(), u.getId(), u.getAccount(),
             Integer.parseInt(u.getType()), u.getStatus(),u.getPid()));
+        request.getSession().setMaxInactiveInterval(sessionTimeout);
 
+//        String session_id = request.getSession().getId();
+//        Cookie cookie = new Cookie("JSESSIONID", session_id);//session_id默认是存放在一个name为JSESSIOINID里面的
+//        cookie.setPath("/");
+//        cookie.setMaxAge(30 * 60);// 30 分钟
+//        cookie.setDomain("localhost");
+//        response.addCookie(cookie);
         return Reply.success();
     }
 

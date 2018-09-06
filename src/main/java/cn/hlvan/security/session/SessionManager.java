@@ -100,7 +100,7 @@ public class SessionManager extends HandlerInterceptorAdapter implements Handler
     public void bind(HttpSession session, Object userId) {
         session.setAttribute(Authenticated.class.getName(), userId);
 //        session.setAttribute(FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME, getIndexValue(userId));
-        session.setMaxInactiveInterval(1800);
+//        session.setMaxInactiveInterval(1800);
     }
 
     @SuppressWarnings("unused")
