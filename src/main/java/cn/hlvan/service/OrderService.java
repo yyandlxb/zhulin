@@ -22,6 +22,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -211,18 +212,16 @@ public class OrderService {
 
     @Data
     public class OrderForm {
-        @NotNull
+
         private Integer total;//文章数量
         private BigDecimal merchantPrice;//商户定价
-        @NotNull
+        @NotBlank
         private String essayType;//文章领域
         private String notes;//备注
-        @NotNull
         private String orderTitle;//订单标题
         private Double originalLevel;//原创度要求
         private Integer picture;//图片数量要求
         private Byte type;//类型 0-流量文，1-养号文
-        @NotNull
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate endTime;//截止交稿时间
         private String require;//要求

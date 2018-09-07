@@ -46,7 +46,7 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/update")
-    public Reply update(@Valid OrderService.OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
+    public Reply update(OrderService.OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setId(id);
         orderRecord.from(orderForm);
@@ -78,7 +78,7 @@ public class MerchantOrderController {
      * 添加订单
      */
     @PostMapping("/create")
-    public Reply addOrder(OrderService.OrderForm orderFrom, @Authenticated AuthorizedUser user) {
+    public Reply addOrder( @Valid OrderService.OrderForm orderFrom, @Authenticated AuthorizedUser user) {
 
         Boolean b = orderService.addOrder(orderFrom,user.getId());
 //        logger.info("订单添加成功" + orderFrom.getOrderCode());
