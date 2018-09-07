@@ -75,8 +75,8 @@ public class MerchantOrderController {
     /**
      * 添加订单
      */
-    @GetMapping("/create")
-    public Reply addOrder(@Valid OrderForm orderFrom, @Authenticated AuthorizedUser user) {
+    @PostMapping("/create")
+    public Reply addOrder(@RequestBody OrderForm orderFrom, @Authenticated AuthorizedUser user) {
 
         Boolean b = orderService.addOrder(orderFrom,user.getId());
 //        logger.info("订单添加成功" + orderFrom.getOrderCode());
