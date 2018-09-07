@@ -8,10 +8,10 @@ import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.view.UserOrder;
 import lombok.Data;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +57,21 @@ public class OrderService {
     }
 
     @Transactional
-    public Boolean addOrder(OrderRecord orderRecord) {
-
+    public Boolean addOrder(OrderForm orderFrom,Integer id) {
+        OrderRecord orderRecord = new OrderRecord();
+        orderRecord.setOrderCode(System.currentTimeMillis() + RandomStringUtils.randomNumeric(3));
+        orderRecord.setUserId(id);
+        orderRecord.setTotal(orderFrom.getTotal());
+        orderRecord.setMerchantPrice(orderFrom.getMerchantPrice());
+        orderRecord.setEassyType(orderFrom.getEssayType());
+        orderRecord.setNotes(orderFrom.getNotes());
+        orderRecord.setOrderTitle(orderFrom.getOrderTitle());
+        orderRecord.setOriginalLevel(orderFrom.getOriginalLevel());
+        orderRecord.setPicture(orderFrom.getPicture());
+        orderRecord.setType(orderFrom.getType());
+        orderRecord.setEndTime(Timestamp.valueOf(LocalDateTime.of(orderFrom.getEndTime(), LocalTime.MIN)));
+        orderRecord.setRequire(orderFrom.getRequire());
+        orderRecord.setWordCount(orderFrom.getWordCount());
         return dsl.executeInsert(orderRecord) > 0;
     }
 

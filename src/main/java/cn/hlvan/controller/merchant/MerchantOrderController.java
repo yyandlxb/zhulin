@@ -5,7 +5,6 @@ import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Reply;
-import org.apache.commons.lang.RandomStringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import javax.validation.Valid;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
@@ -49,7 +46,7 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/update")
-    public Reply update(OrderService.OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
+    public Reply update(@Valid OrderService.OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setId(id);
         orderRecord.from(orderForm);
@@ -82,22 +79,9 @@ public class MerchantOrderController {
      */
     @PostMapping("/create")
     public Reply addOrder(OrderService.OrderForm orderFrom, @Authenticated AuthorizedUser user) {
-        OrderRecord orderRecord = new OrderRecord();
-        orderRecord.setOrderCode(System.currentTimeMillis() + RandomStringUtils.randomNumeric(3));
-        orderRecord.setUserId(user.getId());
-        orderRecord.setTotal(orderFrom.getTotal());
-        orderRecord.setMerchantPrice(orderFrom.getMerchantPrice());
-        orderRecord.setEassyType(orderFrom.getEssayType());
-        orderRecord.setNotes(orderFrom.getNotes());
-        orderRecord.setOrderTitle(orderFrom.getOrderTitle());
-        orderRecord.setOriginalLevel(orderFrom.getOriginalLevel());
-        orderRecord.setPicture(orderFrom.getPicture());
-        orderRecord.setType(orderFrom.getType());
-        orderRecord.setEndTime(Timestamp.valueOf(LocalDateTime.of(orderFrom.getEndTime(), LocalTime.MIN)));
-        orderRecord.setRequire(orderFrom.getRequire());
-        orderRecord.setWordCount(orderFrom.getWordCount());
-        Boolean b = orderService.addOrder(orderRecord);
-        logger.info("订单添加成功" + orderRecord.getOrderCode());
+
+        Boolean b = orderService.addOrder(orderFrom,user.getId());
+//        logger.info("订单添加成功" + orderFrom.getOrderCode());
         if (b) {
             return Reply.success();
         } else {
