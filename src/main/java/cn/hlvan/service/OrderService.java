@@ -2,6 +2,7 @@ package cn.hlvan.service;
 
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.exception.ApplicationException;
+import cn.hlvan.form.OrderForm;
 import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
@@ -16,14 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -58,7 +56,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Boolean addOrder(OrderForm orderFrom,Integer id) {
+    public Boolean addOrder(OrderForm orderFrom, Integer id) {
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setOrderCode(System.currentTimeMillis() + RandomStringUtils.randomNumeric(3));
         orderRecord.setUserId(id);
@@ -210,7 +208,7 @@ public class OrderService {
 
     }
 
-    @Data
+/*    @Data
     public class OrderForm {
 
         private Integer total;//文章数量
@@ -227,7 +225,7 @@ public class OrderService {
         private String require;//要求
         private String wordCount;//字数要求
 
-    }
+    }*/
 
     @Data
     public class OrderQueryForm {

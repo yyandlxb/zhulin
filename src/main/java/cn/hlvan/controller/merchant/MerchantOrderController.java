@@ -1,5 +1,6 @@
 package cn.hlvan.controller.merchant;
 
+import cn.hlvan.form.OrderForm;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
@@ -9,10 +10,7 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -46,7 +44,7 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/update")
-    public Reply update(OrderService.OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
+    public Reply update(OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setId(id);
         orderRecord.from(orderForm);
@@ -77,8 +75,8 @@ public class MerchantOrderController {
     /**
      * 添加订单
      */
-    @PostMapping("/create")
-    public Reply addOrder( @Valid OrderService.OrderForm orderFrom, @Authenticated AuthorizedUser user) {
+    @GetMapping("/create")
+    public Reply addOrder(@Valid OrderForm orderFrom, @Authenticated AuthorizedUser user) {
 
         Boolean b = orderService.addOrder(orderFrom,user.getId());
 //        logger.info("订单添加成功" + orderFrom.getOrderCode());
