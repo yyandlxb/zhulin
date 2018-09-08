@@ -84,7 +84,7 @@ public class PublicOrderCotroller {
             conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
             .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)).or(ORDER_ESSAY.STATUS.eq(ALREADY_PAY)));
         }
-        List<OrderEssayRecord> OrderEssayRecords = dsl.select(ORDER_ESSAY.fields())
+        List<OrderEssayRecord> orderEssayRecords = dsl.select(ORDER_ESSAY.fields())
                                                       .from(USER_ORDER)
                                                       .innerJoin(ORDER_ESSAY)
                                                       .on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
@@ -92,7 +92,7 @@ public class PublicOrderCotroller {
                                                       .and(USER_ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
                                                       .orderBy(USER_ORDER.UPDATED_AT.desc())
                                                       .fetchInto(OrderEssayRecord.class);
-        merchantOrderDetail.setOrderEssayRecords(OrderEssayRecords);
+        merchantOrderDetail.setOrderEssayRecords(orderEssayRecords);
         return Reply.success().data(merchantOrderDetail);
     }
 
