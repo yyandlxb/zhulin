@@ -21,12 +21,20 @@ public class RequestJsonHandlerMethodArgumentResolver implements HandlerMethodAr
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         RequestJson requestJson = parameter.getParameterAnnotation(RequestJson.class);
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        BufferedReader reader = request.getReader();
-        StringBuilder sb = new StringBuilder();
-        char[] buf = new char[1024];
-        int rd;
-        while ((rd = reader.read(buf)) != -1) {
-            sb.append(buf, 0, rd);
+        StringBuilder sb = (StringBuilder) request.getAttribute(request.getSession().getId());
+        if (null != sb){
+            JSONObject jsonObject = JSONObject.parseObject(sb.toString());
+            String value = requestJson.value();
+            return jsonObject.get(value);
+        }else {
+            BufferedReader reader = request.getReader();
+            sb = new StringBuilder();
+            char[] buf = new char[1024];
+            int rd;
+            while ((rd = reader.read(buf)) != -1) {
+                sb.append(buf, 0, rd);
+            }
+            request.setAttribute(request.getSession().getId(),sb);
         }
         JSONObject jsonObject = JSONObject.parseObject(sb.toString());
         String value = requestJson.value();
