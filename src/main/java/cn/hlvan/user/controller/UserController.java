@@ -113,7 +113,6 @@ public class UserController {
                 user.setCode(user.getPhoneNumber());
                 userRecord.setType(Byte.valueOf(user.getType()));
                 userRecord.setPid(userR.getPid());
-                userRecord.setName(user.getName());
                 userRecord.setNumber(UUID.randomUUID().toString());
                 userService.addUser(userRecord);
             }else {
@@ -122,7 +121,7 @@ public class UserController {
         } else {
             return Reply.fail().message("验证码不正确");
         }
-        return Reply.fail().message("注册失败");
+        return Reply.success();
     }
 
     @PostMapping(value = "/send_code", consumes = "application/json")
