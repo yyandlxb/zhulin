@@ -242,6 +242,7 @@ public class UserController {
         }
     }
     @PostMapping("/file/upload")
+    @ResponseBody
     public Reply preview(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return Reply.fail().message("上传文件失败");
