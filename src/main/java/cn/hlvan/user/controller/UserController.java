@@ -224,7 +224,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/info")
+    @GetMapping("/info")
     @ResponseBody
     public Reply userInfo(@Authenticated AuthorizedUser user) {
         UserRecord userRecord = dsl.selectFrom(USER).where(USER.ID.eq(user.getId())).fetchSingleInto(UserRecord.class);
