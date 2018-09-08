@@ -2,6 +2,7 @@ package cn.hlvan.controller;
 
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.constant.UserType;
+import cn.hlvan.form.AuditingEssayForm;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
@@ -14,10 +15,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +96,17 @@ public class PublicOrderCotroller {
         return Reply.success().data(merchantOrderDetail);
     }
 
-    //创建文章
+    //审核文章
+    @PostMapping("/auditing/essay")
+    public Reply auditingEssay( @Authenticated AuthorizedUser user,@RequestBody AuditingEssayForm auditingEssayForm){
+        auditingEssayForm.setUserId(user.getId());
+        boolean b = orderService.auditingEssay(auditingEssayForm);
+        if (b){
+            return Reply.success();
+        }else {
+            return Reply.fail().message("审核失败");
+        }
+
+    }
 
 }

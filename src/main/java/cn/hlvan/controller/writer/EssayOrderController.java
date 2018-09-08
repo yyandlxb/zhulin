@@ -34,7 +34,8 @@ public class EssayOrderController {
 
     @PostMapping("/create")
     public Reply addEssay(@RequestJson(value = "fileName") String fileName, @Authenticated AuthorizedUser user,
-                          @RequestJson(value = "userOrderId") Integer userOrderId, @RequestJson(value = "essayTitle") String essayTitle) {
+                          @RequestJson(value = "userOrderId") Integer userOrderId,
+                          @RequestJson(value = "essayTitle") String essayTitle) {
         try {
             boolean b = essayOrderService.createEssay(fileName, user.getId(), userOrderId, essayTitle);
             if (b) {

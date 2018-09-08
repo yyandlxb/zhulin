@@ -2,6 +2,7 @@ package cn.hlvan.service;
 
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.exception.ApplicationException;
+import cn.hlvan.form.AuditingEssayForm;
 import cn.hlvan.form.OrderForm;
 import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
@@ -35,6 +36,7 @@ import static cn.hlvan.constant.WriterOrderStatus.APPOINT_SUCCESS;
 import static cn.hlvan.constant.WriterOrderStatus.WAIT_APPOINT;
 import static cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
+import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.User.USER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
@@ -44,12 +46,15 @@ public class OrderService {
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
     private DSLContext dsl;
     private JavaMailSenderImpl javaMailSender;
+
     @Autowired
     public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
+
     @Value("${spring.mail.username}")
     private String fromMail;
+
     @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
@@ -110,11 +115,11 @@ public class OrderService {
                   .execute();
     }
 
-    public boolean auditing(Integer id, String status, String result, BigDecimal price,LocalDateTime endTime) {
+    public boolean auditing(Integer id, String status, String result, BigDecimal price, LocalDateTime endTime) {
 
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, Byte.valueOf(status))
                   .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
-                  .set(ORDER.ADMIN_END_TIME,Timestamp.valueOf(endTime))
+                  .set(ORDER.ADMIN_END_TIME, Timestamp.valueOf(endTime))
                   .where(ORDER.ID.eq(id)).execute() > 0;
     }
 
@@ -122,30 +127,30 @@ public class OrderService {
     public boolean distribute(String orderId, Integer reserveTotal, Integer userId) {
         //查询订单还有多少文章
         OrderRecord orderRecord = dsl.select(ORDER.fields()).from(ORDER).where(ORDER.ORDER_CODE.eq(orderId)).fetchSingleInto(OrderRecord.class);
-        if (orderRecord.getTotal() >= reserveTotal){
+        if (orderRecord.getTotal() >= reserveTotal) {
             UserOrderRecord userOrderRecord = new UserOrderRecord();
             userOrderRecord.setOrderCode(orderRecord.getOrderCode());
             userOrderRecord.setUserId(userId);
             userOrderRecord.setReserveTotal(reserveTotal);
             userOrderRecord.setStatus(WAIT_APPOINT);
             //减少订单中的文章数量
-            dsl.update(ORDER).set(ORDER.TOTAL,orderRecord.getTotal() - reserveTotal)
-                    .set(ORDER.APPOINT_TOTAL,orderRecord.getAppointTotal() + reserveTotal)
+            dsl.update(ORDER).set(ORDER.TOTAL, orderRecord.getTotal() - reserveTotal)
+               .set(ORDER.APPOINT_TOTAL, orderRecord.getAppointTotal() + reserveTotal)
                .where(ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()))
                .execute();
             //邮件通知
             String s = dsl.select(USER.EMAIL).from(USER).where(USER.ID.eq(userId)).fetchOneInto(String.class);
-            if (StringUtils.isNotBlank(s)){
+            if (StringUtils.isNotBlank(s)) {
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setFrom(fromMail);
                 message.setTo(s);
                 message.setSubject("管理员分配任务");
-                message.setText("管理员分配了文章任务给您，请注意查收，订单号为："+orderRecord.getOrderCode()
-                                +"系统邮件，请勿回复");
+                message.setText("管理员分配了文章任务给您，请注意查收，订单号为：" + orderRecord.getOrderCode()
+                                + "系统邮件，请勿回复");
                 javaMailSender.send(message);
             }
             return dsl.executeInsert(userOrderRecord) > 0;
-        }else {
+        } else {
             return false;
         }
     }
@@ -153,22 +158,22 @@ public class OrderService {
     @Transactional
     public boolean addAppoint(Integer orderId, Integer total, AuthorizedUser user) {
         OrderRecord orderRecords = dsl.selectFrom(ORDER)
-                .where(ORDER.ID.eq(orderId))
-                .and(ORDER.ORDER_STATUS.eq(PUBLICING))
-                .fetchSingleInto(OrderRecord.class);
+                                      .where(ORDER.ID.eq(orderId))
+                                      .and(ORDER.ORDER_STATUS.eq(PUBLICING))
+                                      .fetchSingleInto(OrderRecord.class);
         //构造预约订单信息
         UserOrderRecord userOrderRecord = new UserOrderRecord();
-        if (null != orderRecords && orderRecords.getTotal() >= total ){
+        if (null != orderRecords && orderRecords.getTotal() >= total) {
             userOrderRecord.setOrderCode(orderRecords.getOrderCode());
             userOrderRecord.setReserveTotal(total);
             userOrderRecord.setUserId(user.getId());
             userOrderRecord.setStatus(APPOINT_SUCCESS);
             dsl.executeInsert(userOrderRecord);
             //减少订单中的文章数量
-            dsl.update(ORDER).set(ORDER.TOTAL,orderRecords.getTotal() - total)
-                    .set(ORDER.APPOINT_TOTAL,orderRecords.getAppointTotal() + total)
-                    .where(ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
-                    .execute();
+            dsl.update(ORDER).set(ORDER.TOTAL, orderRecords.getTotal() - total)
+               .set(ORDER.APPOINT_TOTAL, orderRecords.getAppointTotal() + total)
+               .where(ORDER.ORDER_CODE.eq(orderRecords.getOrderCode()))
+               .execute();
             return true;
         }
         return false;
@@ -177,34 +182,44 @@ public class OrderService {
     @Transactional
     public void deleteAppoint(Integer userOrderId, Integer total, AuthorizedUser user) {
         List<LimitTimeRecord> limitTimeRecords = dsl.selectFrom(LIMIT_TIME).fetchInto(LimitTimeRecord.class);
-        if (null != limitTimeRecords && limitTimeRecords.size() >0){
+        if (null != limitTimeRecords && limitTimeRecords.size() > 0) {
             //判断是否已经超过了截止时间
             Integer hours = limitTimeRecords.get(0).getLimitTime();
             UserOrder orderRecord = dsl.select(ORDER.ADMIN_END_TIME)
-                                         .select(USER_ORDER.COMPLETE,USER_ORDER.RESERVE_TOTAL)
-                                         .from(USER_ORDER).innerJoin(ORDER)
-                                         .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
-                                         .and(USER_ORDER.ID.eq(userOrderId)).fetchSingleInto(UserOrder.class);
+                                       .select(USER_ORDER.COMPLETE, USER_ORDER.RESERVE_TOTAL)
+                                       .from(USER_ORDER).innerJoin(ORDER)
+                                       .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
+                                       .and(USER_ORDER.ID.eq(userOrderId)).fetchSingleInto(UserOrder.class);
             int i = LocalDateTime.now().toLocalTime().plusHours(hours)
                                  .compareTo(orderRecord.getAdminEndTime().toLocalDateTime().toLocalTime());
 
-            if (orderRecord.getReserveTotal() >= total && total <= orderRecord.getComplete()){
+            if (orderRecord.getReserveTotal() >= total && total <= orderRecord.getComplete()) {
                 //超过了截稿时间
-                if (i > 0){
+                if (i > 0) {
                     //查询用户
                     Integer level = dsl.select(USER.CREDIT_LEVEL)
                                        .from(USER).where(USER.ID.eq(user.getId()))
                                        .fetchOneInto(Integer.class);
-                    dsl.update(USER).set(USER.CREDIT_LEVEL,level - 1).where(USER.ID.eq(user.getId())).execute();
+                    dsl.update(USER).set(USER.CREDIT_LEVEL, level - 1).where(USER.ID.eq(user.getId())).execute();
                 }
-                dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL,orderRecord.getReserveTotal() - total)
+                dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL, orderRecord.getReserveTotal() - total)
                    .where(USER_ORDER.ID.eq(userOrderId)).execute();
 
-            }else {
+            } else {
                 throw new ApplicationException("取消失败，取消的数量大于预约数量");
             }
 
         }
+
+    }
+
+    //文章审核接口
+    public boolean auditingEssay(AuditingEssayForm auditingEssayForm) {
+
+        return dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.STATUS, auditingEssayForm.getStatus())
+                  .set(ORDER_ESSAY.RESULT, auditingEssayForm.getResult())
+                  .set(ORDER_ESSAY.ORIGINAL_LEVEL, auditingEssayForm.getOriginalLevel())
+                  .where(ORDER_ESSAY.ID.eq(auditingEssayForm.getId())).execute() > 0;
 
     }
 
@@ -241,8 +256,8 @@ public class OrderService {
     //写手确定预约
 
     @Transactional
-    public boolean appoint(Integer id,Integer userId){
-       return dsl.update(USER_ORDER).set(USER_ORDER.STATUS,APPOINT_SUCCESS)
-               .where(USER_ORDER.ID.eq(id)).and(USER_ORDER.USER_ID.eq(userId)).execute() > 0 ;
+    public boolean appoint(Integer id, Integer userId) {
+        return dsl.update(USER_ORDER).set(USER_ORDER.STATUS, APPOINT_SUCCESS)
+                  .where(USER_ORDER.ID.eq(id)).and(USER_ORDER.USER_ID.eq(userId)).execute() > 0;
     }
 }
