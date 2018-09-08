@@ -1,5 +1,6 @@
 package cn.hlvan.controller.merchant;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.form.OrderForm;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
@@ -38,8 +39,8 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/delete")
-    public Reply delete(@RequestBody @RequestParam Integer[] ids, @Authenticated AuthorizedUser user) {
-        Integer count = orderService.delete(ids, user.getId());
+    public Reply delete(@RequestJson(value = "id") Integer id, @Authenticated AuthorizedUser user) {
+        Integer count = orderService.delete(id, user.getId());
         return Reply.success().data(count);
     }
 

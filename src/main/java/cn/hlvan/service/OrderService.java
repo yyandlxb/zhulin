@@ -102,7 +102,7 @@ public class OrderService {
         return dsl.executeUpdate(orderRecord) > 0;
     }
 
-    public Integer delete(Integer[] ids, Integer userId) {
+    public Integer delete(Integer ids, Integer userId) {
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, OrderStatus.DELETE)
                   .where(ORDER.ORDER_STATUS.eq(OrderStatus.WAIT_AUDITING))
                   .and(ORDER.ID.in(ids))
