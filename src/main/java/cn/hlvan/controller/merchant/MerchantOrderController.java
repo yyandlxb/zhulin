@@ -38,13 +38,13 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/delete")
-    public Reply delete(@RequestParam Integer[] ids, @Authenticated AuthorizedUser user) {
+    public Reply delete(@RequestBody @RequestParam Integer[] ids, @Authenticated AuthorizedUser user) {
         Integer count = orderService.delete(ids, user.getId());
         return Reply.success().data(count);
     }
 
     @PostMapping("/update")
-    public Reply update(OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
+    public Reply update(@RequestBody OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
         OrderRecord orderRecord = new OrderRecord();
         orderRecord.setId(id);
         orderRecord.from(orderForm);

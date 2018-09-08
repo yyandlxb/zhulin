@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `limit_time`;
 CREATE TABLE `limit_time` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `limit_time` int(11) DEFAULT NULL COMMENT '限制小时',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章领域';
 
@@ -45,8 +45,8 @@ CREATE TABLE `order` (
   `admin_price` decimal(20,2) DEFAULT '0.00' COMMENT '管理员价格',
   `eassy_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文章领域',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `order_title` varchar(255) DEFAULT NULL COMMENT '文章标题',
   `original_level` double(10,2) DEFAULT '0.00' COMMENT '原创度',
   `picture` int(3) DEFAULT NULL COMMENT '图片数量要求',
@@ -56,7 +56,7 @@ CREATE TABLE `order` (
   `eassy_total` int(3) DEFAULT NULL COMMENT '文章数量',
   `word_count` varchar(8) DEFAULT NULL COMMENT '文章字数',
   `result` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '审核结果',
-  `appoint_total` int(2) DEFAULT NULL COMMENT '已预约数量',
+  `appoint_total` int(2) DEFAULT '0' COMMENT '已预约数量',
   `admin_end_time` timestamp NULL DEFAULT NULL COMMENT '管理员设定的截稿时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25736 DEFAULT CHARSET=utf8;
@@ -79,8 +79,8 @@ CREATE TABLE `order_essay` (
   `picture_total` int(5) DEFAULT NULL COMMENT '图片数量',
   `picture_id` int(11) DEFAULT NULL COMMENT '图片id',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` tinyint(1) DEFAULT '0' COMMENT '0-待管理员审核，1-商家退稿，2-收稿成功，3-商家已打款，4待商家审核，5商家退稿，6管理员已打款',
   `result` varchar(1024) DEFAULT NULL COMMENT '审核结果',
   PRIMARY KEY (`id`)
@@ -99,8 +99,8 @@ CREATE TABLE `permission` (
   `description` varchar(100) DEFAULT NULL COMMENT '权限描述',
   `system_id` int(11) NOT NULL COMMENT '系统id',
   `pid` int(11) NOT NULL COMMENT '父id',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code_system` (`code`,`system_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -117,8 +117,8 @@ CREATE TABLE `picture` (
   `picture_name` varchar(255) DEFAULT NULL COMMENT '图片名称',
   `order_eassy_id` int(11) DEFAULT NULL COMMENT '文章id',
   `notes` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -132,8 +132,8 @@ CREATE TABLE `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `name` varchar(50) NOT NULL COMMENT '角色名称',
   `enabled` bit(1) NOT NULL DEFAULT b'1',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -147,7 +147,7 @@ CREATE TABLE `role_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色权限id',
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `permission_id` int(11) NOT NULL COMMENT '权限id',
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -170,8 +170,8 @@ CREATE TABLE `user` (
   `credit_level` int(11) DEFAULT '100' COMMENT '信用等级',
   `type` tinyint(1) NOT NULL COMMENT '用户身份(1-超级管理员，2-管理员，3-商家，4-写手)',
   `pid` int(11) DEFAULT NULL COMMENT '用户所属id',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `number` varchar(60) DEFAULT NULL COMMENT '编号',
   `remark` text COMMENT '备注',
   `sex` int(2) DEFAULT NULL COMMENT '性别：0-男，1-女',
@@ -201,8 +201,8 @@ CREATE TABLE `user_order` (
   `order_code` varchar(255) DEFAULT NULL COMMENT '订单号',
   `reserve_total` int(5) NOT NULL COMMENT '预定的文章数量',
   `complete` int(5) NOT NULL COMMENT '完成文章数量',
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_id` int(11) DEFAULT NULL COMMENT '用户id',
   `status` tinyint(1) DEFAULT NULL COMMENT '0待预约，1-预约成功',
   PRIMARY KEY (`id`)
@@ -218,7 +218,7 @@ CREATE TABLE `user_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户权限id',
   `user_id` int(11) NOT NULL COMMENT '用户id',
   `permission_id` int(11) NOT NULL COMMENT '权限id',
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -232,7 +232,7 @@ CREATE TABLE `user_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户角色id',
   `role_id` int(11) NOT NULL COMMENT '角色id',
   `user_id` int(11) NOT NULL COMMENT '用户id',
-  `create_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
