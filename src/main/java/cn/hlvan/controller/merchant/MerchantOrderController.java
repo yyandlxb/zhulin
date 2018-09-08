@@ -17,6 +17,8 @@ import javax.validation.Valid;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
+import static org.jooq.impl.DSL.boolAnd;
+import static org.jooq.impl.DSL.e;
 import static org.jooq.impl.DSL.sum;
 
 @RestController("merchantOrderController")
@@ -86,5 +88,18 @@ public class MerchantOrderController {
         } else {
             return Reply.fail().message("订单添加失败");
         }
+    }
+
+    //催稿
+    @PostMapping("/urge/email")
+    public Reply sendMail(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
+
+        boolean b = orderService.urgeMail(id,user.getId());
+        if (b){
+            return Reply.success();
+        }else {
+            return Reply.fail().message("催稿失败");
+        }
+
     }
 }

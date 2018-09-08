@@ -18,4 +18,7 @@ public class UserOrder {
     private Integer reserveTotal;//预约成功的数量
     private Byte userOrderStatus;//用户预定订单的状态
     private Timestamp adminEndTime;//用户预定订单的状态
+    private String OrderCode;
+    private String email;
+    private Integer pid;
 }

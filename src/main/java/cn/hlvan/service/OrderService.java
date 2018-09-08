@@ -223,25 +223,39 @@ public class OrderService {
 
     }
 
-/*    @Data
-    public class OrderForm {
+    public boolean urgeMail(Integer id, Integer userId) {
+        //查询未完成订单的用户信息
+        List<UserOrder> userOrders = dsl.select(USER_ORDER.fields())
+                                        .select(USER.EMAIL,USER.PID)
+                                        .from(ORDER).innerJoin(USER_ORDER)
+                                        .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE)).innerJoin(USER)
+                                        .on(USER_ORDER.USER_ID.eq(USER.ID))
+                                        .and(ORDER.ID.eq(id))
+                                        .and(ORDER.USER_ID.eq(userId))
+                                        .and(USER_ORDER.RESERVE_TOTAL.notEqual(USER_ORDER.COMPLETE))
+                                        .fetchInto(UserOrder.class);
 
-        private Integer total;//文章数量
-        private BigDecimal merchantPrice;//商户定价
-        @NotBlank
-        private String essayType;//文章领域
-        private String notes;//备注
-        private String orderTitle;//订单标题
-        private Double originalLevel;//原创度要求
-        private Integer picture;//图片数量要求
-        private Byte type;//类型 0-流量文，1-养号文
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        private LocalDate endTime;//截止交稿时间
-        private String require;//要求
-        private String wordCount;//字数要求
+        if (userOrders != null && userOrders.size()>0){
 
-    }*/
-
+            //查询管理员信息
+            String s = dsl.select(USER.EMAIL).from(USER)
+                          .where(USER.ID.eq(userOrders.get(0).getPid())).fetchOneInto(String.class);
+            //发送邮件
+            for (UserOrder u : userOrders) {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(fromMail);
+                message.setTo(u.getEmail());
+                message.setBcc(s);
+                message.setSubject("催稿通知");
+                message.setText("你有订单未完成，订单号为：" + u.getOrderCode()
+                                + "系统邮件，请勿回复");
+                javaMailSender.send(message);
+            }
+        }else {
+            throw new ApplicationException("没有要催稿的用户");
+        }
+        return true;
+    }
     @Data
     public class OrderQueryForm {
         private Integer id;
