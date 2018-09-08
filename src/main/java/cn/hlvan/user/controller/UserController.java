@@ -109,11 +109,15 @@ public class UserController {
             userRecord.setPassword(DigestUtils.md5Hex(user.getPassword()));
             UserRecord userR = dsl.select(USER.fields()).from(USER).where(USER.CODE.eq(user.getCode()))
                                   .and(USER.TYPE.eq(UserType.MANAGER)).fetchOneInto(UserRecord.class);
-            user.setCode(user.getPhoneNumber());
-            userRecord.setType(Byte.valueOf(user.getType()));
-            userRecord.setPid(userR.getPid());
-            userRecord.setNumber(UUID.randomUUID().toString());
-            userService.addUser(userRecord);
+            if (null != userR){
+                user.setCode(user.getPhoneNumber());
+                userRecord.setType(Byte.valueOf(user.getType()));
+                userRecord.setPid(userR.getPid());
+                userRecord.setNumber(UUID.randomUUID().toString());
+                userService.addUser(userRecord);
+            }else {
+                return Reply.fail().message("邀请码错误");
+            }
         } else {
             return Reply.fail().message("验证码不正确");
         }
