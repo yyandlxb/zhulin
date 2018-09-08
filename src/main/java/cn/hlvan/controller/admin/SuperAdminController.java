@@ -57,15 +57,8 @@ public class SuperAdminController {
         userRecord.setPassword(DigestUtils.md5Hex(userForm.getPassword()));
         userRecord.setNumber(UUID.randomUUID().toString());
         userRecord.setType(UserType.MANAGER);
-        boolean exists =
-            dsl.selectOne()
-               .from(USER)
-               .where(USER.CODE.eq(userForm.getCode()))
-               .limit(1)
-               .fetchOptional()
-               .isPresent();
-
-        if (!exists)
+        Integer integer = dsl.selectCount().where(USER.CODE.eq(userForm.getCode())).fetchOne().value1();
+        if (integer > 0)
             return  Reply.fail().message("邀请码已存在");
         boolean b = userService.addUser(userRecord);
         if (b){
