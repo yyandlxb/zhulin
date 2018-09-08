@@ -1,5 +1,6 @@
 package cn.hlvan;
 
+import cn.hlvan.configure.RequestJsonHandlerMethodArgumentResolver;
 import cn.hlvan.configure.SqlDateTimeFormatAnnotationFormatterFactory;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import org.jooq.Query;
@@ -58,6 +59,7 @@ public class Bootstrap implements WebMvcConfigurer, Jackson2ObjectMapperBuilderC
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.addAll(Arrays.asList(this.argumentResolvers));
+        argumentResolvers.add(new RequestJsonHandlerMethodArgumentResolver());
     }
 
     @Override
