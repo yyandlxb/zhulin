@@ -1,5 +1,6 @@
 package cn.hlvan.controller.admin;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.admin.AdminService;
@@ -70,8 +71,8 @@ public class AdminUserController {
      * 审核成功
      */
     @PostMapping("/success")
-    public Reply auditingSuccess(Integer[] ids, @Authenticated AuthorizedUser user){
-        Integer b = adminService.updateSuccess(ids,user);
+    public Reply auditingSuccess(@RequestJson(value = "id") Integer id, @Authenticated AuthorizedUser user){
+        Integer b = adminService.updateSuccess(id,user);
         return Reply.success().data(b);
     }
 
@@ -79,8 +80,8 @@ public class AdminUserController {
      * 审核失败
      */
     @PostMapping("/fail")
-    public Reply auditingFail(Integer[] ids,@Authenticated AuthorizedUser user){
-        Integer b = adminService.updateFail(ids,user);
+    public Reply auditingFail(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
+        Integer b = adminService.updateFail(id,user);
         return Reply.success().data(b);
     }
 
@@ -91,8 +92,8 @@ public class AdminUserController {
     }
 
     @PostMapping("/delete")
-    public Reply delete(Integer[] ids,@Authenticated AuthorizedUser user){
-        Integer b = adminService.delete(ids,user);
+    public Reply delete(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
+        Integer b = adminService.delete(id,user);
         return Reply.success().data(b);
     }
 

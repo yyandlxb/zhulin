@@ -23,17 +23,17 @@ public class AdminService {
         this.dsl = dsl;
     }
 
-    public Integer updateSuccess(Integer[] ids, AuthorizedUser user) {
+    public Integer updateSuccess(Integer ids, AuthorizedUser user) {
         logger.info("审核成功");
         return dsl.update(USER).set(USER.STATUS,AUDUTING_SUCCESS).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 
-    public Integer updateFail(Integer[] ids, AuthorizedUser user) {
+    public Integer updateFail(Integer ids, AuthorizedUser user) {
         logger.info("审核失败");
         return dsl.update(USER).set(USER.STATUS,AUDUTING_FAIL).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 
-    public Integer delete(Integer[] ids, AuthorizedUser user) {
+    public Integer delete(Integer ids, AuthorizedUser user) {
         logger.info("删除");
         return dsl.update(USER).set(USER.STATUS,DISABLED).where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }

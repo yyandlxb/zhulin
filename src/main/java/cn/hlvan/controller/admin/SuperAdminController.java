@@ -1,6 +1,8 @@
 package cn.hlvan.controller.admin;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.constant.UserType;
+import cn.hlvan.form.UserForm;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.service.admin.UserService;
 import cn.hlvan.util.Reply;
@@ -47,19 +49,18 @@ public class SuperAdminController {
         return Reply.success().data(userRecords);
     }
     @PostMapping("/add")
-    public Reply addUser(@RequestParam String phoneNumber,@RequestParam String name,@RequestParam String password,
-                         @RequestParam String code) {
+    public Reply addUser(@RequestBody UserForm userForm) {
         UserRecord userRecord = new UserRecord();
-        userRecord.setAccount(phoneNumber);
-        userRecord.setName(name);
-        userRecord.setCode(code);
-        userRecord.setPassword(DigestUtils.md5Hex(password));
+        userRecord.setAccount(userForm.getPhoneNumber());
+        userRecord.setName(userForm.getName());
+        userRecord.setCode(userForm.getCode());
+        userRecord.setPassword(DigestUtils.md5Hex(userForm.getPassword()));
         userRecord.setNumber(UUID.randomUUID().toString());
         userRecord.setType(UserType.MANAGER);
         boolean exists =
             dsl.selectOne()
                .from(USER)
-               .where(USER.CODE.eq(code))
+               .where(USER.CODE.eq(userForm.getCode()))
                .limit(1)
                .fetchOptional()
                .isPresent();
@@ -74,7 +75,7 @@ public class SuperAdminController {
         }
     }
     @PostMapping("/delete")
-    public Reply delete(Integer id) {
+    public Reply delete(@RequestJson(value ="id") Integer id) {
         boolean b = userService.delete(id);
         return b ? Reply.success() : Reply.fail().message("删除失败");
     }
@@ -86,7 +87,7 @@ public class SuperAdminController {
         return Reply.success().data(userRecord);
     }
     @PostMapping("/update")
-    public Reply update(UserService.UserForm form) {
+    public Reply update(@RequestBody UserForm form) {
         UserRecord userRecord = new UserRecord();
         userRecord.setId(form.getId());
         if (StringUtils.isNotBlank(form.getName())){
@@ -104,7 +105,7 @@ public class SuperAdminController {
 
     //把商家或者写手分配至其它管理员
     @PostMapping("/update_admin")
-    public Reply distribute(Integer id,Integer adminId){
+    public Reply distribute(@RequestJson(value = "id") Integer id, @RequestJson(value = "adminId") Integer adminId){
 
         boolean b = userService.updateAdmin(id,adminId);
         if (b){

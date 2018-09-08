@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Data
 public class OrderForm {
+    private Integer id;
     private Integer total;//文章数量
     private BigDecimal merchantPrice;//商户定价
     @NotBlank

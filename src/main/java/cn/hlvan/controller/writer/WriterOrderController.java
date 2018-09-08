@@ -1,5 +1,6 @@
 package cn.hlvan.controller.writer;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
@@ -63,7 +64,7 @@ public class WriterOrderController {
 
     //确定预约
     @PostMapping("/appoint")
-    public Reply sureAppoint(@RequestParam Integer userOrderId, @Authenticated AuthorizedUser user) {
+    public Reply sureAppoint(@RequestJson(value = "userOrderId")Integer userOrderId, @Authenticated AuthorizedUser user) {
 
         boolean appoint = orderService.appoint(userOrderId, user.getId());
         if (appoint) {
@@ -75,7 +76,7 @@ public class WriterOrderController {
 
     //添加预约
     @PostMapping("/create")
-    public Reply writerAppointAdd(@RequestParam Integer orderId, @RequestParam Integer total,
+    public Reply writerAppointAdd(@RequestJson(value = "orderId") Integer orderId,@RequestJson(value = "total") Integer total,
                                   @Authenticated AuthorizedUser user) {
 
         boolean b = orderService.addAppoint(orderId, total, user);
@@ -88,7 +89,8 @@ public class WriterOrderController {
 
     //手动取消预约
     @PostMapping("/delete")
-    public Reply writerAppointDelete(@RequestParam Integer userOrderId, @RequestParam Integer total,
+    public Reply writerAppointDelete(@RequestJson(value = "userOrderId") Integer userOrderId,
+                                     @RequestJson(value = "total") Integer total,
                                      @Authenticated AuthorizedUser user) {
         orderService.deleteAppoint(userOrderId, total, user);
         return Reply.success();

@@ -1,5 +1,6 @@
 package cn.hlvan.controller.writer;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
@@ -8,7 +9,6 @@ import cn.hlvan.util.Reply;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,10 +33,10 @@ public class EssayOrderController {
     }
 
     @PostMapping("/create")
-    public Reply addEssay(@RequestParam("file") MultipartFile file, @Authenticated AuthorizedUser user,
-                          @RequestParam Integer userOrderId, @RequestParam String essayTitle) {
+    public Reply addEssay(@RequestJson(value = "fileName") String fileName, @Authenticated AuthorizedUser user,
+                          @RequestJson(value = "userOrderId") Integer userOrderId, @RequestJson(value = "essayTitle") String essayTitle) {
         try {
-            boolean b = essayOrderService.createEssay(file, user.getId(), userOrderId, essayTitle);
+            boolean b = essayOrderService.createEssay(fileName, user.getId(), userOrderId, essayTitle);
             if (b) {
                 return Reply.success();
             } else {
@@ -63,10 +63,11 @@ public class EssayOrderController {
     }
 
     @PostMapping("/update")
-    public Reply detail( @RequestParam("file") MultipartFile file, @Authenticated AuthorizedUser user,
-                         @RequestParam Integer essayOrderId, @RequestParam String essayTitle) {
+    public Reply detail(@RequestJson(value = "fileName") String fileName, @Authenticated AuthorizedUser user,
+                        @RequestJson(value = "essayOrderId") Integer essayOrderId,
+                        @RequestJson(value = "essayTitle") String essayTitle) {
         try {
-            boolean b = essayOrderService.updateEssay(file, user.getId(), essayOrderId, essayTitle);
+            boolean b = essayOrderService.updateEssay(fileName, user.getId(), essayOrderId, essayTitle);
             if (b) {
                 return Reply.success();
             } else {
@@ -78,7 +79,7 @@ public class EssayOrderController {
     }
 
     @PostMapping("/submit")
-    public Reply submit( @Authenticated AuthorizedUser user,@RequestParam Integer essayOrderId) {
+    public Reply submit( @Authenticated AuthorizedUser user,@RequestJson(value = "essayOrderId")Integer essayOrderId) {
         boolean b = essayOrderService.submit(user.getId(),essayOrderId);
         if (b){
             return Reply.success();

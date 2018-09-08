@@ -45,12 +45,12 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/update")
-    public Reply update(@RequestBody OrderForm orderForm, @RequestParam Integer id, @Authenticated AuthorizedUser user) {
+    public Reply update(@RequestBody OrderForm orderForm , @Authenticated AuthorizedUser user) {
         OrderRecord orderRecord = new OrderRecord();
-        orderRecord.setId(id);
+        orderRecord.setId(orderForm.getId());
         orderRecord.from(orderForm);
         OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
-                                .where(ORDER.ID.eq(id))
+                                .where(ORDER.ID.eq(orderForm.getId()))
                                 .and(ORDER.USER_ID.eq(user.getId()))
                                 .fetchSingleInto(OrderRecord.class);
 

@@ -1,7 +1,9 @@
 package cn.hlvan.user.controller;
 
+import cn.hlvan.configure.RequestJson;
 import cn.hlvan.constant.UserStatus;
 import cn.hlvan.constant.UserType;
+import cn.hlvan.form.UserMessage;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
@@ -94,12 +96,6 @@ public class UserController {
             Integer.parseInt(u.getType()), u.getStatus(),u.getPid()));
         request.getSession().setMaxInactiveInterval(sessionTimeout);
 
-//        String session_id = request.getSession().getId();
-//        Cookie cookie = new Cookie("JSESSIONID", session_id);//session_id默认是存放在一个name为JSESSIOINID里面的
-//        cookie.setPath("/");
-//        cookie.setMaxAge(30 * 60);// 30 分钟
-//        cookie.setDomain("localhost");
-//        response.addCookie(cookie);
         return Reply.success();
     }
 
@@ -151,7 +147,8 @@ public class UserController {
 
     @PostMapping("/password/update")
     @ResponseBody
-    public Reply updatePassword(@Authenticated AuthorizedUser user, String srcPassword, String password) {
+    public Reply updatePassword(@Authenticated AuthorizedUser user, @RequestJson(value = "srcPassword") String srcPassword,
+                                @RequestJson(value = "password") String password) {
         String pw = DigestUtils.md5Hex(srcPassword);
         User u = dsl.selectFrom(USER)
                     .where(USER.ID.eq(user.getId()))
@@ -170,7 +167,7 @@ public class UserController {
 
     @PostMapping("/password/forget")
     @ResponseBody
-    public Reply checkAccount(@RequestParam String phoneNumber, HttpServletRequest request) {
+    public Reply checkAccount(@RequestJson(value = "phoneNumber") String phoneNumber, HttpServletRequest request) {
         UserRecord userRecord = dsl.select(USER.fields()).from(USER).where(USER.ACCOUNT.eq(phoneNumber))
                                    .and(USER.STATUS.eq(UserStatus.AUDUTING_SUCCESS))
                                    .fetchOneInto(UserRecord.class);
@@ -190,8 +187,9 @@ public class UserController {
 
     @PostMapping("/reset")
     @ResponseBody
-    public Reply resetPassword(HttpServletRequest request, @RequestParam String phoneNumber, String password,
-                               String msgid, String validCode) {
+    public Reply resetPassword(HttpServletRequest request,@RequestJson(value = "phoneNumber") String phoneNumber,
+                               @RequestJson(value = "password") String password,@RequestJson(value = "msgid") String msgid,
+                               @RequestJson(value = "validCode") String validCode) {
 
         String attribute = (String) request.getSession().getAttribute(NUMBER);
         if (null != attribute && attribute.equals(phoneNumber)) {
@@ -210,26 +208,12 @@ public class UserController {
 
     @PostMapping("/add_message")
     @ResponseBody
-    public Reply addMessage(@RequestParam("payPicture") MultipartFile file, UserService.UserMessage userMessage,
+    public Reply addMessage(@RequestBody UserMessage userMessage,
                             @Authenticated AuthorizedUser user) {
-        if (file.isEmpty()) {
-            return Reply.fail().message("添加图片失败");
-        }
-        String fileName = System.currentTimeMillis()+file.getOriginalFilename();
-        String filePathName = path + "/" + fileName;
-        File dest = new File(filePathName);
-        if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
-            dest.getParentFile().mkdir();
-        }
-        try {
-            file.transferTo(dest); //保存文件
-        } catch (IllegalStateException | IOException e) {
-            logger.info("保存图片失败", e);
-        }
+
         UserRecord userRecord = new UserRecord();
         userRecord.from(userMessage);
         userRecord.setId(user.getId());
-        userRecord.setPayPicture(fileName);
         userRecord.setStatus(UserStatus.AWAIT_AUDUTING);
         boolean b = userService.updateUser(userRecord);
 
@@ -256,6 +240,25 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+    @PostMapping("/file/upload")
+    public Reply preview(@RequestParam("payPicture") MultipartFile file) {
+        if (file.isEmpty()) {
+            return Reply.fail().message("上传图片失败");
+        }
+        String fileName = System.currentTimeMillis()+file.getOriginalFilename();
+        String filePathName = path + fileName;
+        File dest = new File(filePathName);
+        if (!dest.getParentFile().exists()) { //判断文件父目录是否存在
+            dest.getParentFile().mkdir();
+        }
+        try {
+            file.transferTo(dest); //保存文件
+        } catch (IllegalStateException | IOException e) {
+            logger.info("保存图片失败", e);
+        }
+
+        return Reply.success().data(fileName);
     }
 
 }

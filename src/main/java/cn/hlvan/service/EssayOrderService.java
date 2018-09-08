@@ -44,21 +44,21 @@ public class EssayOrderService {
     }
 
     @Transactional
-    public boolean createEssay(MultipartFile file, Integer id, Integer userOrderId, String essayTitle) throws IOException {
+    public boolean createEssay(String fileName, Integer id, Integer userOrderId, String essayTitle) throws IOException {
 
         UserOrderRecord userOrderRecord = dsl.selectFrom(USER_ORDER).where(USER_ORDER.ID.eq(userOrderId))
                                              .and(USER_ORDER.USER_ID.eq(id)).fetchSingle();
-        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+//        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         if (fileName.endsWith(".docx")) {
-            byte[] bytes;
-            try {
-                bytes = file.getBytes();
-                Path path = Paths.get(filePath + fileName);
-                Files.write(path, bytes);
-            } catch (IOException e) {
-                logger.info("上传文件失败", e);
-                throw new ApplicationException("上传文件失败");
-            }
+//            byte[] bytes;
+//            try {
+//                bytes = file.getBytes();
+//                Path path = Paths.get(filePath + fileName);
+//                Files.write(path, bytes);
+//            } catch (IOException e) {
+//                logger.info("上传文件失败", e);
+//                throw new ApplicationException("上传文件失败");
+//            }
             OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
             orderEssayRecord.setEassyFile(fileName);
             orderEssayRecord.setEssayTitle(essayTitle);
@@ -92,7 +92,7 @@ public class EssayOrderService {
         }
     }
 
-    public boolean updateEssay(MultipartFile file, Integer id, Integer essayOrderId, String essayTitle) throws IOException {
+    public boolean updateEssay(String fileName, Integer id, Integer essayOrderId, String essayTitle) throws IOException {
         boolean exists =
             dsl.selectOne()
                .from(ORDER_ESSAY)
@@ -108,17 +108,17 @@ public class EssayOrderService {
 
         OrderEssayRecord orderEssayRecord = dsl.selectFrom(ORDER_ESSAY).where(ORDER_ESSAY.ID.eq(essayOrderId))
                                                .fetchSingle();
-        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+//        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         if (fileName.endsWith(".docx")) {
             byte[] bytes;
-            try {
-                bytes = file.getBytes();
-                Path path = Paths.get(filePath + fileName);
-                Files.write(path, bytes);
-            } catch (IOException e) {
-                logger.info("上传文件失败");
-                throw new ApplicationException("上传文件失败");
-            }
+//            try {
+//                bytes = file.getBytes();
+//                Path path = Paths.get(filePath + fileName);
+//                Files.write(path, bytes);
+//            } catch (IOException e) {
+//                logger.info("上传文件失败");
+//                throw new ApplicationException("上传文件失败");
+//            }
             orderEssayRecord.setEassyFile(fileName);
             orderEssayRecord.setEssayTitle(essayTitle);
             //删除之前的图片

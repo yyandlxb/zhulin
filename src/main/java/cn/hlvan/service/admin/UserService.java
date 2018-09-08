@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import static cn.hlvan.manager.database.tables.User.USER;
@@ -53,7 +54,7 @@ public class UserService {
 
     @Data
     public class UserForm{
-        @NotNull
+        @NotBlank
         private Integer id;
         private String phoneNumber;
         private String password;
@@ -61,20 +62,7 @@ public class UserService {
         private String code;
     }
 
-    @Data
-    public class UserMessage{
-        @NotNull
-        private String qq;//qq
-        private String weChat;//微信号
-        @NotNull
-        private String email;//邮箱
-        private String address;//住址
-        private Integer sex;//性别 0-男，1-女
-        private Integer age;//年龄
-        private String profession;//职业
-        private String good;//擅长领域
-        private Integer fullTime;//工作类型 0-全职，1-兼职
-    }
+
 
     @Data
     @AllArgsConstructor
