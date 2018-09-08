@@ -244,7 +244,7 @@ public class UserController {
     @PostMapping("/file/upload")
     public Reply preview(@RequestParam("payPicture") MultipartFile file) {
         if (file.isEmpty()) {
-            return Reply.fail().message("上传图片失败");
+            return Reply.fail().message("上传文件失败");
         }
         String fileName = System.currentTimeMillis()+file.getOriginalFilename();
         String filePathName = path + fileName;
@@ -255,7 +255,7 @@ public class UserController {
         try {
             file.transferTo(dest); //保存文件
         } catch (IllegalStateException | IOException e) {
-            logger.info("保存图片失败", e);
+            logger.info("上传文件失败", e);
         }
 
         return Reply.success().data(fileName);
