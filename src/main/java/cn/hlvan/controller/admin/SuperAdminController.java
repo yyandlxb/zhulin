@@ -60,7 +60,13 @@ public class SuperAdminController {
         Integer integer = dsl.selectCount().from(USER).where(USER.CODE.eq(userForm.getCode())).fetchOne().value1();
         if (integer > 0)
             return  Reply.fail().message("邀请码已存在");
-        boolean b = userService.addUser(userRecord);
+        boolean b;
+        try {
+            b = userService.addUser(userRecord);
+        }catch (Exception e){
+            logger.info("添加管理员",e);
+            return Reply.fail().message("添加管理员失败，管理员可能已经被添加");
+        }
         if (b){
             return Reply.success();
         }else {
