@@ -58,8 +58,8 @@ public class Bootstrap implements WebMvcConfigurer, Jackson2ObjectMapperBuilderC
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.addAll(Arrays.asList(this.argumentResolvers));
         argumentResolvers.add(new RequestJsonHandlerMethodArgumentResolver());
+        argumentResolvers.addAll(Arrays.asList(this.argumentResolvers));
     }
 
     @Override
