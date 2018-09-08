@@ -113,6 +113,7 @@ public class UserController {
                 user.setCode(user.getPhoneNumber());
                 userRecord.setType(Byte.valueOf(user.getType()));
                 userRecord.setPid(userR.getPid());
+                userRecord.setName(user.getName());
                 userRecord.setNumber(UUID.randomUUID().toString());
                 userService.addUser(userRecord);
             }else {
