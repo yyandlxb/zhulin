@@ -15,7 +15,7 @@ import java.util.List;
 
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 
-@RestController("essayOrderController")
+@RestController("writerEssayOrderController")
 @RequestMapping("/writer/essay")
 public class EssayOrderController {
     private DSLContext dsl;
