@@ -57,7 +57,7 @@ public class SuperAdminController {
         userRecord.setPassword(DigestUtils.md5Hex(userForm.getPassword()));
         userRecord.setNumber(UUID.randomUUID().toString());
         userRecord.setType(UserType.MANAGER);
-        Integer integer = dsl.selectCount().where(USER.CODE.eq(userForm.getCode())).fetchOne().value1();
+        Integer integer = dsl.selectCount().from(USER).where(USER.CODE.eq(userForm.getCode())).fetchOne().value1();
         if (integer > 0)
             return  Reply.fail().message("邀请码已存在");
         boolean b = userService.addUser(userRecord);
