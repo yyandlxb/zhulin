@@ -127,9 +127,10 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean distribute(String orderId, Integer reserveTotal, Integer userId) {
+    public boolean distribute(Integer orderId, Integer reserveTotal, Integer userId) {
         //查询订单还有多少文章
-        OrderRecord orderRecord = dsl.select(ORDER.fields()).from(ORDER).where(ORDER.ORDER_CODE.eq(orderId)).fetchSingleInto(OrderRecord.class);
+        OrderRecord orderRecord = dsl.select(ORDER.fields()).from(ORDER)
+                                     .where(ORDER.ID.eq(orderId)).fetchSingleInto(OrderRecord.class);
         if (orderRecord.getTotal() >= reserveTotal) {
             UserOrderRecord userOrderRecord = new UserOrderRecord();
             userOrderRecord.setOrderCode(orderRecord.getOrderCode());

@@ -48,7 +48,7 @@ public class AdminOrderController {
         }
     }
     @PostMapping("/distribute")
-    public Reply distribute(@RequestJson(value = "orderId") String orderId,
+    public Reply distribute(@RequestJson(value = "orderId") Integer orderId,
                             @RequestJson(value = "appointTotal") Integer appointTotal,
                             @RequestJson(value = "userId") Integer userId){
         boolean b = orderService.distribute(orderId,appointTotal,userId);

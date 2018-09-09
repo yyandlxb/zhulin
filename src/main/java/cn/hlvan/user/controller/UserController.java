@@ -114,7 +114,12 @@ public class UserController {
                 userRecord.setType(Byte.valueOf(user.getType()));
                 userRecord.setPid(userR.getPid());
                 userRecord.setNumber(UUID.randomUUID().toString());
-                userService.addUser(userRecord);
+                try {
+                    userService.addUser(userRecord);
+                }catch (Exception e){
+                    logger.info("账号可能已存在",e);
+                    return Reply.fail().message("账号可能已存在");
+                }
             }else {
                 return Reply.fail().message("邀请码错误");
             }
