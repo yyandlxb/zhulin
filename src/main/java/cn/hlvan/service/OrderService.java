@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cn.hlvan.constant.OrderStatus.PUBLICING;
+import static cn.hlvan.constant.OrderStatus.WAIT_AUDITING;
 import static cn.hlvan.constant.WriterOrderStatus.APPOINT_SUCCESS;
 import static cn.hlvan.constant.WriterOrderStatus.WAIT_APPOINT;
 import static cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
@@ -109,7 +110,7 @@ public class OrderService {
 
     public Integer delete(Integer ids, Integer userId) {
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, OrderStatus.DELETE)
-                  .where(ORDER.ORDER_STATUS.eq(OrderStatus.WAIT_AUDITING))
+                  .where(ORDER.ORDER_STATUS.eq(WAIT_AUDITING))
                   .and(ORDER.ID.in(ids))
                   .and(ORDER.USER_ID.eq(userId))
                   .execute();
@@ -120,7 +121,7 @@ public class OrderService {
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, status)
                   .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
                   .set(ORDER.ADMIN_END_TIME, Timestamp.valueOf(endTime))
-                  .where(ORDER.ID.eq(id)).execute() > 0;
+                  .where(ORDER.ID.eq(id)).and(ORDER.ORDER_STATUS.eq(WAIT_AUDITING)).execute() > 0;
     }
 
     @Transactional
