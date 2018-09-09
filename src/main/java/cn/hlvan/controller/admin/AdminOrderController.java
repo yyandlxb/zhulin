@@ -9,14 +9,18 @@ import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.MerchantOrderDetail;
+import cn.hlvan.view.User;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
+import static cn.hlvan.constant.UserType.WRITER;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
+import static cn.hlvan.manager.database.tables.User.USER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @RestController("adminOrderController")
@@ -68,5 +72,16 @@ public class AdminOrderController {
                                                       .fetchInto(OrderEssayRecord.class);
         merchantOrderDetail.setOrderEssayRecords(orderEssayRecords);
         return Reply.success().data(merchantOrderDetail);
+    }
+
+    //获取分配订单的写手信息
+    @GetMapping("/writer_list")
+    public Reply getWriter(@Authenticated AuthorizedUser user){
+
+        List<User> users = dsl.selectFrom(USER).where(USER.PID.eq(user.getId()))
+                              .and(USER.TYPE.eq(WRITER))
+                              .and(USER.STATUS.eq(AUDUTING_SUCCESS)).fetchInto(User.class);
+        users.forEach(e -> e.setPassword(null));
+        return Reply.success().data(user);
     }
 }
