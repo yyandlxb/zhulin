@@ -82,6 +82,6 @@ public class AdminOrderController {
                               .and(USER.TYPE.eq(WRITER))
                               .and(USER.STATUS.eq(AUDUTING_SUCCESS)).fetchInto(User.class);
         users.forEach(e -> e.setPassword(null));
-        return Reply.success().data(user);
+        return Reply.success().data(users);
     }
 }
