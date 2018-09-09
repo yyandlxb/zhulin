@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class AuditingForm {
-    private Integer id;private String status;
+    private Integer id;
+    private Byte status;
     private String result;
     private BigDecimal price;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

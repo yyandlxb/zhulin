@@ -115,9 +115,9 @@ public class OrderService {
                   .execute();
     }
 
-    public boolean auditing(Integer id, String status, String result, BigDecimal price, LocalDateTime endTime) {
+    public boolean auditing(Integer id, Byte status, String result, BigDecimal price, LocalDateTime endTime) {
 
-        return dsl.update(ORDER).set(ORDER.ORDER_STATUS, Byte.valueOf(status))
+        return dsl.update(ORDER).set(ORDER.ORDER_STATUS, status)
                   .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
                   .set(ORDER.ADMIN_END_TIME, Timestamp.valueOf(endTime))
                   .where(ORDER.ID.eq(id)).execute() > 0;

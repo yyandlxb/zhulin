@@ -9,12 +9,10 @@ import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.MerchantOrderDetail;
-import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
@@ -37,7 +35,7 @@ public class AdminOrderController {
     }
     @PostMapping("/auditing")
     public Reply auditing(@RequestBody AuditingForm auditingForm){
-        boolean b = orderService.auditing(auditingForm.getId(),auditingForm.getStatus(),auditingForm.getStatus(),
+        boolean b = orderService.auditing(auditingForm.getId(),auditingForm.getStatus(),auditingForm.getResult(),
             auditingForm.getPrice(),auditingForm.getEndTime());
         if (b){
             return Reply.success();
