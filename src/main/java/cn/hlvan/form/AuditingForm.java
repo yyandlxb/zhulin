@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class AuditingForm {
@@ -13,5 +13,5 @@ public class AuditingForm {
     private String result;
     private BigDecimal price;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime endTime;
+    private LocalDate endTime;
 }
