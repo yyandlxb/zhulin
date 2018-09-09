@@ -1,11 +1,14 @@
 package cn.hlvan.controller.writer;
 
 import cn.hlvan.configure.RequestJson;
+import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
+import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
+import cn.hlvan.view.MerchantOrderDetail;
 import cn.hlvan.view.UserOrder;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.Order.ORDER;
+import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @RestController("writerOrderController")
@@ -35,6 +39,11 @@ public class WriterOrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping("/detail")
+    public Reply list(@RequestParam Integer id) {
+        OrderRecord orderRecord = dsl.selectFrom(ORDER).where(ORDER.ID.eq(id)).fetchSingleInto(OrderRecord.class);
+        return Reply.success().data(orderRecord);
+    }
     //预约列表
     @GetMapping("/appoint/list")
     public Reply appointmentList(@Authenticated AuthorizedUser user, Pageable pageable) {

@@ -23,6 +23,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -274,5 +275,16 @@ public class OrderService {
     public boolean appoint(Integer id, Integer userId) {
         return dsl.update(USER_ORDER).set(USER_ORDER.STATUS, APPOINT_SUCCESS)
                   .where(USER_ORDER.ID.eq(id)).and(USER_ORDER.USER_ID.eq(userId)).execute() > 0;
+    }
+
+    @Data
+    public class DriverForm {
+        private Integer merchantId;
+        @NotBlank
+        private String userName;
+        @NotBlank
+        private String userPhone;
+        @NotBlank
+        private String plateNumber;
     }
 }
