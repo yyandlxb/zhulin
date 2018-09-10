@@ -7,5 +7,4 @@ public class OrderEssayStatus {
     public static final byte ALREADY_PAY = 3;//管理员已打款
     public static final byte MERCHANT_WAIT_AUDITING = 4;//商户待核通过
     public static final byte ADMIN_REJECTION = 5;//管理员退稿
-    public static final byte SUBMIT = 6;//文章提交
 }

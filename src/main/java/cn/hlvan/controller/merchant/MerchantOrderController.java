@@ -48,30 +48,21 @@ public class MerchantOrderController {
 
     @PostMapping("/update")
     public Reply update(@RequestBody OrderForm orderForm , @Authenticated AuthorizedUser user) {
-        OrderRecord orderRecord = new OrderRecord();
-        orderRecord.setId(orderForm.getId());
-        orderRecord.from(orderForm);
         OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
                                 .where(ORDER.ID.eq(orderForm.getId()))
                                 .and(ORDER.USER_ID.eq(user.getId()))
                                 .fetchSingleInto(OrderRecord.class);
+        orderR.from(orderForm);
 
-        if (null != orderR) {
-            Integer count = dsl.select(sum(USER_ORDER.RESERVE_TOTAL)).from(USER_ORDER)
-                               .where(USER_ORDER.ORDER_CODE.eq(orderR.getOrderCode()))
-                               .and(USER_ORDER.STATUS.eq(Byte.valueOf("1"))).fetchOneInto(Integer.class);
-            if (orderForm.getTotal() >= count) {
-                boolean b = orderService.update(orderRecord);
-                if (b) {
-                    return Reply.success();
-                } else {
-                    return Reply.fail().message("更新订单失败");
-                }
+        if (orderForm.getTotal() >= orderR.getAppointTotal()) {
+            boolean b = orderService.update(orderR);
+            if (b) {
+                return Reply.success();
             } else {
-                return Reply.fail().message("更新订单失败,数量小于已预订数量");
+                return Reply.fail().message("更新订单失败");
             }
         } else {
-            return Reply.fail().message("此状态不能进行修改");
+            return Reply.fail().message("更新订单失败,数量小于已预订数量");
         }
     }
 
@@ -82,7 +73,6 @@ public class MerchantOrderController {
     public Reply addOrder(@RequestBody OrderForm orderFrom, @Authenticated AuthorizedUser user) {
 
         Boolean b = orderService.addOrder(orderFrom,user.getId());
-//        logger.info("订单添加成功" + orderFrom.getOrderCode());
         if (b) {
             return Reply.success();
         } else {

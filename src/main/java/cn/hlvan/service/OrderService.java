@@ -30,7 +30,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cn.hlvan.constant.OrderStatus.PUBLICING;
 import static cn.hlvan.constant.OrderStatus.WAIT_AUDITING;
@@ -220,9 +222,13 @@ public class OrderService {
     //文章审核接口
     public boolean auditingEssay(AuditingEssayForm auditingEssayForm) {
 
+        Map<Object,Object> map = new HashMap<>();
+        if (StringUtils.isNotBlank(auditingEssayForm.getResult()))
+            map.put(ORDER_ESSAY.RESULT, auditingEssayForm.getResult());
+        if (null != auditingEssayForm.getOriginalLevel())
+            map.put(ORDER_ESSAY.ORIGINAL_LEVEL, auditingEssayForm.getOriginalLevel());
         return dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.STATUS, auditingEssayForm.getStatus())
-                  .set(ORDER_ESSAY.RESULT, auditingEssayForm.getResult())
-                  .set(ORDER_ESSAY.ORIGINAL_LEVEL, auditingEssayForm.getOriginalLevel())
+                  .set(map)
                   .where(ORDER_ESSAY.ID.eq(auditingEssayForm.getId())).execute() > 0;
 
     }
@@ -260,6 +266,32 @@ public class OrderService {
         }
         return true;
     }
+
+    public List<Condition> buildAppointConditions(OrderQueryForm form) {
+        List<Condition> list = new ArrayList<>();
+        String startTime = form.getStartTime();
+        if (StringUtils.isNotBlank(startTime)) {
+            LocalDateTime start = LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN);
+            list.add(USER_ORDER.CREATED_AT.greaterOrEqual(Timestamp.valueOf(start)));
+        }
+
+        String endTime = form.getEndTime();
+        if (StringUtils.isNotBlank(startTime)) {
+            LocalDateTime end = LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX);
+            list.add(USER_ORDER.CREATED_AT.lessOrEqual(Timestamp.valueOf(end)));
+        }
+        Byte status = form.getStatus();
+        if (null != status) {
+            list.add(USER_ORDER.STATUS.eq(status));
+        }
+        String orderCode = form.getOrderCode();
+        if (StringUtils.isNotBlank(orderCode)) {
+            list.add(USER_ORDER.ORDER_CODE.contains(orderCode));
+        }
+        return list;
+
+    }
+
     @Data
     public class OrderQueryForm {
         private Integer id;

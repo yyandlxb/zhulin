@@ -2,10 +2,12 @@ package cn.hlvan.controller.writer;
 
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
+import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.EssayOrderService;
 import cn.hlvan.util.Reply;
+import cn.hlvan.view.MerchantOrderDetail;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
+import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @RestController("writerEssayOrderController")
 @RequestMapping("/writer/essay")
@@ -49,14 +53,23 @@ public class EssayOrderController {
     }
 
     @GetMapping("/list")
-    public Reply list(@RequestParam Integer userOrderId) {
+    public Reply list(@RequestParam Integer userOrderId, @Authenticated AuthorizedUser user) {
+        MerchantOrderDetail merchantOrderDetail = new MerchantOrderDetail();
+        OrderRecord orderRecord = dsl.select(ORDER.fields()).from(USER_ORDER)
+                                     .innerJoin(ORDER).on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
+                                     .and(USER_ORDER.ID.eq(userOrderId))
+                                     .and(USER_ORDER.USER_ID.eq(user.getId()))
+                                     .fetchSingleInto(OrderRecord.class);
         List<OrderEssayRecord> orderEssayRecords = dsl.selectFrom(ORDER_ESSAY)
-                                                      .where(ORDER_ESSAY.USER_ORDER_ID.eq(userOrderId)).fetch();
-        return Reply.success().data(orderEssayRecords);
+                                                      .where(ORDER_ESSAY.USER_ORDER_ID.eq(userOrderId))
+                                                      .fetch();
+        merchantOrderDetail.setOrderRecord(orderRecord);
+        merchantOrderDetail.setOrderEssayRecords(orderEssayRecords);
+        return Reply.success().data(merchantOrderDetail);
     }
 
     @GetMapping("/detail")
-    public Reply detail( @RequestParam Integer essayOrderId) {
+    public Reply detail(@RequestParam Integer essayOrderId) {
         OrderEssayRecord orderEssayRecord = dsl.selectFrom(ORDER_ESSAY)
                                                .where(ORDER_ESSAY.ID.eq(essayOrderId))
                                                .fetchSingle();
@@ -72,20 +85,20 @@ public class EssayOrderController {
             if (b) {
                 return Reply.success();
             } else {
-                return Reply.fail().message("更新文章失败");
+                return Reply.fail().message("更新文章失败,此状态不准修改");
             }
         } catch (IOException e) {
             return Reply.fail().message("更新文章失败");
         }
     }
 
-    @PostMapping("/submit")
-    public Reply submit( @Authenticated AuthorizedUser user,@RequestJson(value = "essayOrderId")Integer essayOrderId) {
-        boolean b = essayOrderService.submit(user.getId(),essayOrderId);
-        if (b){
+    @PostMapping("/delete")
+    public Reply delete(@Authenticated AuthorizedUser user, @RequestJson(value = "essayOrderId") Integer essayOrderId) {
+        boolean b = essayOrderService.delete(user.getId(), essayOrderId);
+        if (b) {
             return Reply.success();
-        }else {
-            return Reply.fail().message("提交失败");
+        } else {
+            return Reply.fail().message("删除失败，此状态不准删除");
         }
     }
 }
