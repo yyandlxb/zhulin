@@ -26,7 +26,7 @@ import java.util.List;
 import static cn.hlvan.manager.database.Tables.USER;
 
 @RestController("adminMerchantWriterController")
-@RequestMapping("/user/merchant")
+@RequestMapping("/admin/user")
 public class AdminUserController {
 
     private static Logger logger = LoggerFactory.getLogger(AdminUserController.class);
@@ -70,24 +70,23 @@ public class AdminUserController {
     /**
      * 审核成功
      */
-    @PostMapping("/success")
-    public Reply auditingSuccess(@RequestJson(value = "id") Integer id, @Authenticated AuthorizedUser user){
-        Integer b = adminService.updateSuccess(id,user);
-        return Reply.success().data(b);
+    @PostMapping("/auditing")
+    public Reply auditingSuccess(@RequestJson(value = "id") Integer id,@RequestJson(value = "result") String result,
+                                 @RequestJson(value = "status") Byte status,
+                                 @Authenticated AuthorizedUser user){
+        boolean b = adminService.updateSuccess(id,user.getId(),result,status);
+        if (b){
+            return Reply.success();
+        }else {
+            return Reply.fail().data("审核失败");
+        }
     }
 
-    /**
-     * 审核失败
-     */
-    @PostMapping("/fail")
-    public Reply auditingFail(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
-        Integer b = adminService.updateFail(id,user);
-        return Reply.success().data(b);
-    }
 
     @GetMapping("/detail")
     public Reply userInfo(Integer id){
         UserRecord userRecord = dsl.selectFrom(USER).where(USER.ID.eq(id)).fetchOneInto(UserRecord.class);
+        userRecord.setPassword(null);
         return Reply.success().data(userRecord);
     }
 
