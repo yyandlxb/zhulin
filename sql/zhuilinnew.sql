@@ -155,6 +155,21 @@ CREATE TABLE `role_permission` (
 
 /*Data for the table `role_permission` */
 
+/*Table structure for table `trade_record` */
+
+DROP TABLE IF EXISTS `trade_record`;
+
+CREATE TABLE `trade_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户订单号id',
+  `order_code` varchar(30) DEFAULT NULL COMMENT '订单号',
+  `money` decimal(20,2) DEFAULT '0.00' COMMENT '商家价格',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/*Data for the table `trade_record` */
+
 /*Table structure for table `user` */
 
 DROP TABLE IF EXISTS `user`;
