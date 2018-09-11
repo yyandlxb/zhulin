@@ -220,6 +220,7 @@ public class OrderService {
     }
 
     //文章审核接口
+    @Transactional
     public boolean auditingEssay(AuditingEssayForm auditingEssayForm) {
 
         Map<Object,Object> map = new HashMap<>();
@@ -227,6 +228,10 @@ public class OrderService {
             map.put(ORDER_ESSAY.RESULT, auditingEssayForm.getResult());
         if (null != auditingEssayForm.getOriginalLevel())
             map.put(ORDER_ESSAY.ORIGINAL_LEVEL, auditingEssayForm.getOriginalLevel());
+        //添加财务信息
+
+
+
         return dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.STATUS, auditingEssayForm.getStatus())
                   .set(map)
                   .where(ORDER_ESSAY.ID.eq(auditingEssayForm.getId())).execute() > 0;
