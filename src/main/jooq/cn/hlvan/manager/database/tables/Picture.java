@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Picture extends TableImpl<PictureRecord> {
 
-    private static final long serialVersionUID = 551369341;
+    private static final long serialVersionUID = -1126217465;
 
     /**
      * The reference instance of <code>zhulin.picture</code>
@@ -83,12 +83,12 @@ public class Picture extends TableImpl<PictureRecord> {
     /**
      * The column <code>zhulin.picture.created_at</code>.
      */
-    public final TableField<PictureRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<PictureRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.picture.updated_at</code>.
      */
-    public final TableField<PictureRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<PictureRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>zhulin.picture</code> table reference

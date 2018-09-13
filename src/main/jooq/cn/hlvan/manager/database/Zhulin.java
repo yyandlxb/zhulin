@@ -4,6 +4,7 @@
 package cn.hlvan.manager.database;
 
 
+import cn.hlvan.manager.database.tables.ApplyFinance;
 import cn.hlvan.manager.database.tables.LimitTime;
 import cn.hlvan.manager.database.tables.Order;
 import cn.hlvan.manager.database.tables.OrderEssay;
@@ -11,7 +12,9 @@ import cn.hlvan.manager.database.tables.Permission;
 import cn.hlvan.manager.database.tables.Picture;
 import cn.hlvan.manager.database.tables.Role;
 import cn.hlvan.manager.database.tables.RolePermission;
+import cn.hlvan.manager.database.tables.TradeRecord;
 import cn.hlvan.manager.database.tables.User;
+import cn.hlvan.manager.database.tables.UserMoney;
 import cn.hlvan.manager.database.tables.UserOrder;
 import cn.hlvan.manager.database.tables.UserPermission;
 import cn.hlvan.manager.database.tables.UserRole;
@@ -40,12 +43,17 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Zhulin extends SchemaImpl {
 
-    private static final long serialVersionUID = -1590439198;
+    private static final long serialVersionUID = 722425047;
 
     /**
      * The reference instance of <code>zhulin</code>
      */
     public static final Zhulin ZHULIN = new Zhulin();
+
+    /**
+     * The table <code>zhulin.apply_finance</code>.
+     */
+    public final ApplyFinance APPLY_FINANCE = cn.hlvan.manager.database.tables.ApplyFinance.APPLY_FINANCE;
 
     /**
      * 文章领域
@@ -83,9 +91,19 @@ public class Zhulin extends SchemaImpl {
     public final RolePermission ROLE_PERMISSION = cn.hlvan.manager.database.tables.RolePermission.ROLE_PERMISSION;
 
     /**
+     * The table <code>zhulin.trade_record</code>.
+     */
+    public final TradeRecord TRADE_RECORD = cn.hlvan.manager.database.tables.TradeRecord.TRADE_RECORD;
+
+    /**
      * The table <code>zhulin.user</code>.
      */
     public final User USER = cn.hlvan.manager.database.tables.User.USER;
+
+    /**
+     * The table <code>zhulin.user_money</code>.
+     */
+    public final UserMoney USER_MONEY = cn.hlvan.manager.database.tables.UserMoney.USER_MONEY;
 
     /**
      * The table <code>zhulin.user_order</code>.
@@ -127,6 +145,7 @@ public class Zhulin extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            ApplyFinance.APPLY_FINANCE,
             LimitTime.LIMIT_TIME,
             Order.ORDER,
             OrderEssay.ORDER_ESSAY,
@@ -134,7 +153,9 @@ public class Zhulin extends SchemaImpl {
             Picture.PICTURE,
             Role.ROLE,
             RolePermission.ROLE_PERMISSION,
+            TradeRecord.TRADE_RECORD,
             User.USER,
+            UserMoney.USER_MONEY,
             UserOrder.USER_ORDER,
             UserPermission.USER_PERMISSION,
             UserRole.USER_ROLE);

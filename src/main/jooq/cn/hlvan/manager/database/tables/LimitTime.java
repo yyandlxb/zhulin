@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class LimitTime extends TableImpl<LimitTimeRecord> {
 
-    private static final long serialVersionUID = -542846822;
+    private static final long serialVersionUID = -905728742;
 
     /**
      * The reference instance of <code>zhulin.limit_time</code>
@@ -68,12 +68,12 @@ public class LimitTime extends TableImpl<LimitTimeRecord> {
     /**
      * The column <code>zhulin.limit_time.created_at</code>.
      */
-    public final TableField<LimitTimeRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<LimitTimeRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.limit_time.updated_at</code>.
      */
-    public final TableField<LimitTimeRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<LimitTimeRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>zhulin.limit_time</code> table reference

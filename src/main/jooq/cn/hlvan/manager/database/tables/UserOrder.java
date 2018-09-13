@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrder extends TableImpl<UserOrderRecord> {
 
-    private static final long serialVersionUID = -1965618594;
+    private static final long serialVersionUID = 1720191482;
 
     /**
      * The reference instance of <code>zhulin.user_order</code>
@@ -63,7 +63,7 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     /**
      * The column <code>zhulin.user_order.order_code</code>. 订单号
      */
-    public final TableField<UserOrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255), this, "订单号");
+    public final TableField<UserOrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(30), this, "订单号");
 
     /**
      * The column <code>zhulin.user_order.reserve_total</code>. 预定的文章数量
@@ -73,17 +73,17 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     /**
      * The column <code>zhulin.user_order.complete</code>. 完成文章数量
      */
-    public final TableField<UserOrderRecord, Integer> COMPLETE = createField("complete", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "完成文章数量");
+    public final TableField<UserOrderRecord, Integer> COMPLETE = createField("complete", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "完成文章数量");
 
     /**
      * The column <code>zhulin.user_order.created_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<UserOrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.user_order.updated_at</code>.
      */
-    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<UserOrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.user_order.user_id</code>. 用户id
@@ -91,9 +91,9 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     public final TableField<UserOrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
 
     /**
-     * The column <code>zhulin.user_order.status</code>. 0待预约，1-预约成功
+     * The column <code>zhulin.user_order.status</code>. 0待预约，1-待完成，2-已完成
      */
-    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-预约成功");
+    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-待完成，2-已完成");
 
     /**
      * Create a <code>zhulin.user_order</code> table reference
@@ -137,7 +137,7 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.USER_ORDER_PRIMARY);
+        return Arrays.<Index>asList(Indexes.USER_ORDER_IDX_ORDER_CODE, Indexes.USER_ORDER_PRIMARY);
     }
 
     /**

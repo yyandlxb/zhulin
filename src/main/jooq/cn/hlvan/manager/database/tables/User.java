@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -667464195;
+    private static final long serialVersionUID = -1722267117;
 
     /**
      * The reference instance of <code>zhulin.user</code>
@@ -68,7 +68,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>zhulin.user.name</code>. 用户名称
      */
-    public final TableField<UserRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(50).nullable(false), this, "用户名称");
+    public final TableField<UserRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(50), this, "用户名称");
 
     /**
      * The column <code>zhulin.user.password</code>. 用户密码
@@ -103,7 +103,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>zhulin.user.credit_level</code>. 信用等级
      */
-    public final TableField<UserRecord, Integer> CREDIT_LEVEL = createField("credit_level", org.jooq.impl.SQLDataType.INTEGER, this, "信用等级");
+    public final TableField<UserRecord, Integer> CREDIT_LEVEL = createField("credit_level", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("100", org.jooq.impl.SQLDataType.INTEGER)), this, "信用等级");
 
     /**
      * The column <code>zhulin.user.type</code>. 用户身份(1-超级管理员，2-管理员，3-商家，4-写手)
@@ -118,12 +118,12 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>zhulin.user.created_at</code>.
      */
-    public final TableField<UserRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<UserRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.user.updated_at</code>.
      */
-    public final TableField<UserRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<UserRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.user.number</code>. 编号

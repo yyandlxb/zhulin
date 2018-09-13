@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = 854764296;
+    private static final long serialVersionUID = -718320125;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -64,7 +64,7 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.order_code</code>. 订单号
      */
-    public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(255), this, "订单号");
+    public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(30), this, "订单号");
 
     /**
      * The column <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过
@@ -109,12 +109,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.created_at</code>.
      */
-    public final TableField<OrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<OrderRecord, Timestamp> CREATED_AT = createField("created_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.order.updated_at</code>.
      */
-    public final TableField<OrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<OrderRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>zhulin.order.order_title</code>. 文章标题
@@ -164,7 +164,7 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.appoint_total</code>. 已预约数量
      */
-    public final TableField<OrderRecord, Integer> APPOINT_TOTAL = createField("appoint_total", org.jooq.impl.SQLDataType.INTEGER, this, "已预约数量");
+    public final TableField<OrderRecord, Integer> APPOINT_TOTAL = createField("appoint_total", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "已预约数量");
 
     /**
      * The column <code>zhulin.order.admin_end_time</code>. 管理员设定的截稿时间

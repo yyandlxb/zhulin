@@ -1,5 +1,6 @@
 package cn.hlvan.service.admin;
 
+import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import java.math.BigInteger;
 
 import static cn.hlvan.manager.database.tables.User.USER;
 
@@ -27,8 +30,12 @@ public class UserService {
 
     @Transactional
     public boolean addUser(UserRecord userRecord){
-
-        return dsl.executeInsert(userRecord)>0;
+        dsl.executeInsert(userRecord);
+        Integer userId = dsl.lastID().intValue();
+        //添加余额表
+        UserMoneyRecord userMoneyRecord = new UserMoneyRecord();
+        userMoneyRecord.setUserId(userId);
+        return dsl.executeInsert(userMoneyRecord)>0;
     }
 
     public void modifyPassword(String password, Integer id) {
