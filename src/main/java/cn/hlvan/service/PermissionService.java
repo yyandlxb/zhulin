@@ -4,6 +4,7 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
 import static cn.hlvan.manager.database.Tables.*;
 import static cn.hlvan.manager.database.tables.UserRole.USER_ROLE;
 
@@ -17,10 +18,12 @@ public class PermissionService {
     }
 
     public boolean checkPermission(Integer userId, String code) {
-        return dsl.selectOne().from(USER_ROLE).innerJoin(ROLE).on(USER_ROLE.ROLE_ID.eq(ROLE.ID))
+        return dsl.selectOne().from(USER).innerJoin(USER_ROLE).on(USER_ROLE.USER_ID.eq(USER.ID))
+                  .innerJoin(ROLE).on(USER_ROLE.ROLE_ID.eq(ROLE.ID))
                   .innerJoin(ROLE_PERMISSION).on(ROLE_PERMISSION.ROLE_ID.eq(ROLE.ID))
                   .innerJoin(PERMISSION).on(PERMISSION.ID.eq(ROLE_PERMISSION.PERMISSION_ID))
-                  .and(PERMISSION.CODE.eq(code)).and(USER_ROLE.USER_ID.eq(userId)).fetchOptional().isPresent();
+                  .and(PERMISSION.CODE.eq(code)).and(USER_ROLE.USER_ID.eq(userId))
+                  .and(USER.STATUS.eq(AUDUTING_SUCCESS)).fetchOptional().isPresent();
     }
 
 }
