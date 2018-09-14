@@ -4,6 +4,8 @@ import cn.hlvan.configure.RequestJson;
 import cn.hlvan.constant.UserStatus;
 import cn.hlvan.constant.UserType;
 import cn.hlvan.form.UserMessage;
+import cn.hlvan.manager.database.tables.UserRole;
+import cn.hlvan.manager.database.tables.records.PermissionRecord;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
@@ -30,8 +32,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.List;
 import java.util.UUID;
 
+import static cn.hlvan.manager.database.tables.Permission.PERMISSION;
+import static cn.hlvan.manager.database.tables.Role.ROLE;
+import static cn.hlvan.manager.database.tables.RolePermission.ROLE_PERMISSION;
 import static cn.hlvan.manager.database.tables.User.USER;
 
 @Controller("userController")
@@ -271,4 +277,19 @@ public class UserController {
         return Reply.success().data(fileName);
     }
 
+    @GetMapping("/permission")
+    @ResponseBody
+    public Reply permission(@Authenticated AuthorizedUser user){
+        List<PermissionRecord> permissionRecords = dsl.select(PERMISSION.fields()).from(UserRole.USER_ROLE)
+                                                      .innerJoin(ROLE)
+                                                      .on(ROLE.ID.eq(UserRole.USER_ROLE.ROLE_ID))
+                                                      .and(ROLE.ENABLED.isTrue())
+                                                      .and(UserRole.USER_ROLE.USER_ID.eq(user.getId()))
+                                                      .innerJoin(ROLE_PERMISSION)
+                                                      .on(ROLE.ID.eq(ROLE_PERMISSION.ROLE_ID))
+                                                      .innerJoin(PERMISSION)
+                                                      .on(ROLE_PERMISSION.PERMISSION_ID.eq(PERMISSION.ID))
+                                                      .fetchInto(PermissionRecord.class);
+        return Reply.success().data(permissionRecords);
+    }
 }

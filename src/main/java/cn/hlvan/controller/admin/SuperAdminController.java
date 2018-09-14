@@ -104,7 +104,7 @@ public class SuperAdminController {
 
     //把商家或者写手分配至其它管理员
     @PostMapping("/update_admin")
-    public Reply distribute(@RequestJson(value = "id") Integer id, @RequestJson(value = "adminId") Integer adminId){
+    public Reply distribute(@RequestJson(value = "id") Integer[] id, @RequestJson(value = "adminId") Integer adminId){
 
         boolean b = userService.updateAdmin(id,adminId);
         if (b){
@@ -117,8 +117,8 @@ public class SuperAdminController {
 
     //列出管理员下的商家与写手
     @GetMapping("/merchant_list")
-    public Reply findMerchantAndWriter(Integer id ){
-        List<UserRecord> userRecords = dsl.selectFrom(USER).where(USER.PID.eq(id)).fetchInto(UserRecord.class);
+    public Reply findMerchantAndWriter(@RequestParam Integer id ){
+        List<UserRecord> userRecords = dsl.selectFrom(USER).where(USER.PID.eq(id)).fetch();
         return Reply.success().data(userRecords);
 
     }

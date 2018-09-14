@@ -24,8 +24,8 @@ public class UserService {
     @Autowired
     private DSLContext dsl;
     @Transactional
-    public  boolean updateAdmin(Integer id, Integer adminId) {
-        return dsl.update(USER).set(USER.PID,adminId).where(USER.ID.eq(id)).execute() > 0;
+    public  boolean updateAdmin(Integer[] id, Integer adminId) {
+        return dsl.update(USER).set(USER.PID,adminId).where(USER.ID.in(id)).execute() > 0;
     }
 
     @Transactional

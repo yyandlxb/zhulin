@@ -3,9 +3,11 @@ package cn.hlvan.security.permission;
 
 public enum PermissionEnum {
 
-    DEPART("部门管理"),
-    ROLE("角色管理"),
-    ACCOUNT("账户管理");
+    ORDER("订单管理"),
+    ORDINARY_USER("普通用户管理"),
+    WRITER_ORDER("我的订单"),
+    APPLY_FINANCE("资金申请"),
+    ADMIN_USER("管理员用户管理");
     private String name;
 
     PermissionEnum(String name) {
