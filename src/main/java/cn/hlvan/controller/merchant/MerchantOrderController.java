@@ -4,6 +4,8 @@ import cn.hlvan.configure.RequestJson;
 import cn.hlvan.form.OrderForm;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Reply;
@@ -41,12 +43,14 @@ public class MerchantOrderController {
     }
 
     @PostMapping("/delete")
+    @RequirePermission(PermissionEnum.ORDER)
     public Reply delete(@RequestJson(value = "id") Integer id, @Authenticated AuthorizedUser user) {
         Integer count = orderService.delete(id, user.getId());
         return Reply.success().data(count);
     }
 
     @PostMapping("/update")
+    @RequirePermission(PermissionEnum.ORDER)
     public Reply update(@RequestBody OrderForm orderForm , @Authenticated AuthorizedUser user) {
         OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
                                 .where(ORDER.ID.eq(orderForm.getId()))
@@ -70,6 +74,7 @@ public class MerchantOrderController {
      * 添加订单
      */
     @PostMapping("/create")
+    @RequirePermission(PermissionEnum.ORDER)
     public Reply addOrder(@RequestBody OrderForm orderFrom, @Authenticated AuthorizedUser user) {
 
         Boolean b = orderService.addOrder(orderFrom,user.getId());
@@ -82,6 +87,7 @@ public class MerchantOrderController {
 
     //催稿
     @PostMapping("/urge/email")
+    @RequirePermission(PermissionEnum.ORDER)
     public Reply sendMail(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
 
         boolean b = orderService.urgeMail(id,user.getId());

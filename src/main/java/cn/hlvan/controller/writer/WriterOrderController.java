@@ -3,6 +3,8 @@ package cn.hlvan.controller.writer;
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Page;
@@ -22,6 +24,7 @@ import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 
 @RestController("writerOrderController")
 @RequestMapping("/writer/order")
+@RequirePermission(PermissionEnum.WRITER_ORDER)
 public class WriterOrderController {
     private DSLContext dsl;
 

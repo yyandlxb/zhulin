@@ -3,6 +3,8 @@ package cn.hlvan.controller;
 import cn.hlvan.manager.database.tables.records.TradeRecordRecord;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.UserMoneyRecordView;
@@ -36,6 +38,7 @@ public class FinanceController {
     }
 
     @GetMapping("/list")
+    @RequirePermission(PermissionEnum.APPLY_FINANCE)
     public Reply financeList(@Authenticated AuthorizedUser user, Pageable pageable,
                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startTime,
                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endTime) {

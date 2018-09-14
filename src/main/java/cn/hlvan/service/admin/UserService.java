@@ -1,7 +1,10 @@
 package cn.hlvan.service.admin;
 
+import cn.hlvan.constant.RoleType;
+import cn.hlvan.constant.UserType;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.manager.database.tables.records.UserRecord;
+import cn.hlvan.manager.database.tables.records.UserRoleRecord;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -35,7 +38,17 @@ public class UserService {
         //添加余额表
         UserMoneyRecord userMoneyRecord = new UserMoneyRecord();
         userMoneyRecord.setUserId(userId);
-        return dsl.executeInsert(userMoneyRecord)>0;
+        dsl.executeInsert(userMoneyRecord);
+        UserRoleRecord userRoleRecord = new UserRoleRecord();
+        if (userRecord.getType().equals(UserType.MANAGER)){
+            userRoleRecord.setRoleId(RoleType.MANAGER);
+        }else if (userRecord.getType().equals(UserType.MERCHANT)){
+            userRoleRecord.setRoleId(RoleType.MERCHANT);
+        }else if (userRecord.getType().equals(UserType.WRITER)){
+            userRoleRecord.setRoleId(RoleType.WRITER);
+        }
+        userRoleRecord.setUserId(userId);
+        return dsl.executeInsert(userRoleRecord)>0;
     }
 
     public void modifyPassword(String password, Integer id) {

@@ -2,6 +2,8 @@ package cn.hlvan.controller.admin;
 
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.UserRecord;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.admin.AdminService;
 import cn.hlvan.security.AuthorizedUser;
@@ -45,6 +47,7 @@ public class AdminUserController {
      * 查询
      */
     @GetMapping("/list")
+    @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply query( @Authenticated AuthorizedUser user,Pageable pageable,String status,String account){
 
         List<Condition> conditions = new ArrayList<>();
@@ -71,6 +74,7 @@ public class AdminUserController {
      * 审核成功
      */
     @PostMapping("/auditing")
+    @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply auditingSuccess(@RequestJson(value = "id") Integer id,@RequestJson(value = "result") String result,
                                  @RequestJson(value = "status") Byte status,
                                  @Authenticated AuthorizedUser user){
@@ -84,6 +88,7 @@ public class AdminUserController {
 
 
     @GetMapping("/detail")
+    @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply userInfo(Integer id){
         UserRecord userRecord = dsl.selectFrom(USER).where(USER.ID.eq(id)).fetchOneInto(UserRecord.class);
         userRecord.setPassword(null);
@@ -91,11 +96,13 @@ public class AdminUserController {
     }
 
     @PostMapping("/delete")
+    @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply delete(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
         Integer b = adminService.delete(id,user);
         return Reply.success().data(b);
     }
     @PostMapping("/enable")
+    @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply enable(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
         Integer b = adminService.enable(id,user);
         return Reply.success().data(b);

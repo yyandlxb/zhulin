@@ -4,6 +4,8 @@ import cn.hlvan.configure.RequestJson;
 import cn.hlvan.constant.UserType;
 import cn.hlvan.form.UserForm;
 import cn.hlvan.manager.database.tables.records.UserRecord;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.service.admin.UserService;
 import cn.hlvan.util.Reply;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -19,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
 import static cn.hlvan.manager.database.tables.User.USER;
 
 @RestController("adminAccountController")
 @RequestMapping("/user")
+@RequirePermission(PermissionEnum.ADMIN_USER)
 public class SuperAdminController {
     private DSLContext dsl;
     private static Logger logger = LoggerFactory.getLogger(SuperAdminController.class);
@@ -57,6 +61,7 @@ public class SuperAdminController {
         userRecord.setPassword(DigestUtils.md5Hex(userForm.getPassword()));
         userRecord.setNumber(UUID.randomUUID().toString());
         userRecord.setType(UserType.MANAGER);
+        userRecord.setStatus(AUDUTING_SUCCESS);
         Integer integer = dsl.selectCount().from(USER).where(USER.CODE.eq(userForm.getCode())).fetchOne().value1();
         if (integer > 0)
             return  Reply.fail().message("邀请码已存在");

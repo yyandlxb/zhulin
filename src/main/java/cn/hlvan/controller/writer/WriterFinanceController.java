@@ -3,6 +3,8 @@ package cn.hlvan.controller.writer;
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.manager.database.tables.records.ApplyFinanceRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.FinanceService;
 import cn.hlvan.util.Reply;
@@ -27,6 +29,7 @@ import static cn.hlvan.manager.database.tables.ApplyFinance.APPLY_FINANCE;
 
 @RestController
 @RequestMapping("/writer/finance")
+@RequirePermission(PermissionEnum.APPLY_FINANCE)
 public class WriterFinanceController {
 
     private FinanceService financeService;

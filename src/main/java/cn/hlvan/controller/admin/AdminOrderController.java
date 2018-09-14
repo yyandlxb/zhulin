@@ -5,6 +5,8 @@ import cn.hlvan.form.AuditingForm;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Reply;
@@ -38,6 +40,7 @@ public class AdminOrderController {
         this.orderService = orderService;
     }
     @PostMapping("/auditing")
+    @RequirePermission(PermissionEnum.ORDER)
     public Reply auditing(@RequestBody AuditingForm auditingForm){
         boolean b = orderService.auditing(auditingForm.getId(),auditingForm.getStatus(),auditingForm.getResult(),
             auditingForm.getPrice(),auditingForm.getEndTime());
@@ -48,6 +51,7 @@ public class AdminOrderController {
         }
     }
     @PostMapping("/distribute")
+    @RequirePermission(PermissionEnum.DISTRIBUTE_ORDER)
     public Reply distribute(@RequestJson(value = "orderId") Integer orderId,
                             @RequestJson(value = "appointTotal") Integer appointTotal,
                             @RequestJson(value = "userId") Integer userId){
@@ -76,6 +80,7 @@ public class AdminOrderController {
 
     //获取分配订单的写手信息
     @GetMapping("/writer_list")
+    @RequirePermission(PermissionEnum.DISTRIBUTE_ORDER)
     public Reply getWriter(@Authenticated AuthorizedUser user){
 
         List<User> users = dsl.selectFrom(USER).where(USER.PID.eq(user.getId()))

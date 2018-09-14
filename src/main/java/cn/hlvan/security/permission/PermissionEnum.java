@@ -7,6 +7,7 @@ public enum PermissionEnum {
     ORDINARY_USER("普通用户管理"),
     WRITER_ORDER("我的订单"),
     APPLY_FINANCE("资金申请"),
+    DISTRIBUTE_ORDER("分配订单"),
     ADMIN_USER("管理员用户管理");
     private String name;
 

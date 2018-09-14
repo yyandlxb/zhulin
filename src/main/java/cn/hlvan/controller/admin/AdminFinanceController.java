@@ -2,6 +2,8 @@ package cn.hlvan.controller.admin;
 
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.security.permission.PermissionEnum;
+import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.FinanceService;
 import cn.hlvan.util.Reply;
@@ -35,6 +37,7 @@ public class AdminFinanceController {
     }
 
     @PostMapping("/make_money/writer")
+    @RequirePermission(PermissionEnum.APPLY_FINANCE)
     public Reply makeMoneyWriter(@Authenticated AuthorizedUser user,
                                 @RequestJson(value = "orderId") Integer id){
         financeService.determineMakeMoneyWriter(user, id);
