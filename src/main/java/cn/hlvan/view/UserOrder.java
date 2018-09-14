@@ -21,4 +21,5 @@ public class UserOrder {
     private String OrderCode;
     private String email;
     private Integer pid;
+    private Timestamp createAt;
 }

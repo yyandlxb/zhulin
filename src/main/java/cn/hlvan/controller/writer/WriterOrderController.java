@@ -58,9 +58,9 @@ public class WriterOrderController {
             userOrders = Collections.emptyList();
         } else {
             userOrders = dsl.select(ORDER.ADMIN_PRICE, ORDER.APPOINT_TOTAL, ORDER.ORDER_TITLE, ORDER.ORIGINAL_LEVEL,
-                ORDER.EASSY_TYPE)
+                ORDER.EASSY_TYPE,ORDER.ADMIN_END_TIME)
                             .select(USER_ORDER.RESERVE_TOTAL, USER_ORDER.COMPLETE, USER_ORDER.STATUS.as("userOrderStatus")
-                                , USER_ORDER.ID.as("userOrderId"))
+                                , USER_ORDER.ID.as("userOrderId"),USER_ORDER.CREATED_AT)
                             .from(USER_ORDER).innerJoin(USER_ORDER)
                             .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
                             .where(conditions)

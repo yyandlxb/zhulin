@@ -10,6 +10,7 @@ import static cn.hlvan.manager.database.tables.UserRole.USER_ROLE;
 
 @Service
 public class PermissionService {
+
     private DSLContext dsl;
 
     @Autowired
