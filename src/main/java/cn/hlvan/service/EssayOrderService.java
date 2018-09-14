@@ -1,6 +1,6 @@
 package cn.hlvan.service;
 
-import cn.hlvan.manager.database.tables.UserOrder;
+import cn.hlvan.exception.ApplicationException;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.PictureRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
@@ -21,6 +21,8 @@ import java.math.BigInteger;
 import java.util.List;
 
 import static cn.hlvan.constant.OrderEssayStatus.ADMIN_WAIT_AUDITING;
+import static cn.hlvan.constant.WriterOrderStatus.ALREADY_END;
+import static cn.hlvan.constant.WriterOrderStatus.CARRY_OUT;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.Picture.PICTURE;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
@@ -42,6 +44,9 @@ public class EssayOrderService {
 
         UserOrderRecord userOrderRecord = dsl.selectFrom(USER_ORDER).where(USER_ORDER.ID.eq(userOrderId))
                                              .and(USER_ORDER.USER_ID.eq(id)).fetchSingle();
+        if (userOrderRecord.getStatus().equals(ALREADY_END))
+            throw new ApplicationException("订单已截稿");
+
         if (fileName.endsWith(".docx")) {
             OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
             orderEssayRecord.setEassyFile(fileName);
@@ -71,7 +76,11 @@ public class EssayOrderService {
                 dsl.executeInsert(pictureRecord);
             }
             //更新订单表
-            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrderRecord.getComplete() + 1).execute();
+            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            //判断是否已经完成
+            if ((userOrderRecord.getComplete() + 1) >= userOrderRecord.getReserveTotal()){
+                dsl.update(USER_ORDER).set(USER_ORDER.STATUS,CARRY_OUT).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            }
             return true;
         } else {
             return false;

@@ -95,5 +95,9 @@ public class AdminUserController {
         Integer b = adminService.delete(id,user);
         return Reply.success().data(b);
     }
-
+    @PostMapping("/enable")
+    public Reply enable(@RequestJson(value = "id") Integer id,@Authenticated AuthorizedUser user){
+        Integer b = adminService.enable(id,user);
+        return Reply.success().data(b);
+    }
 }

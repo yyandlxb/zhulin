@@ -36,4 +36,9 @@ public class AdminService {
                   .where(USER.ID.in(ids)).and(USER.PID.eq(user.getId())).execute();
     }
 
+    public Integer enable(Integer id, AuthorizedUser user) {
+        logger.info("启动");
+        return dsl.update(USER).set(USER.STATUS,AUDUTING_SUCCESS)
+                  .where(USER.ID.in(id)).and(USER.PID.eq(user.getId())).execute();
+    }
 }

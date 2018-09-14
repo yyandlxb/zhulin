@@ -82,7 +82,7 @@ public class PublicOrderCotroller {
         Integer type = user.getType();
         if (type.equals(UserType.MERCHANT)) {
             conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
-            .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)).or(ORDER_ESSAY.STATUS.eq(ALREADY_PAY)));
+            .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)));
         }
         List<OrderEssayRecord> orderEssayRecords = dsl.select(ORDER_ESSAY.fields())
                                                       .from(USER_ORDER)

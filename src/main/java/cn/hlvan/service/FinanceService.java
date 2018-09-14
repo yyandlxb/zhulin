@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import static cn.hlvan.constant.OrderEssayStatus.ACCEPT_SUCCESS;
 import static cn.hlvan.constant.OrderStatus.CARRY_OUT;
+import static cn.hlvan.constant.OrderStatus.END;
 import static cn.hlvan.constant.OrderStatus.MAKE_MONEY;
 import static cn.hlvan.manager.database.tables.ApplyFinance.APPLY_FINANCE;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
@@ -115,7 +116,8 @@ public class FinanceService {
 
     public void makeMoney(Integer id, Integer orderId) {
         boolean b = dsl.update(ORDER).set(ORDER.ORDER_STATUS, MAKE_MONEY)
-                       .where(ORDER.USER_ID.eq(id).and(ORDER.ID.eq(orderId))).execute() > 0;
+                       .where(ORDER.USER_ID.eq(id).and(ORDER.ID.eq(orderId))
+                                           .and(ORDER.ORDER_STATUS.eq(END))).execute() > 0;
         if (!b) {
             throw new ApplicationException("打款失败");
         }
