@@ -1,4 +1,4 @@
-package cn.hlvan.controller.merchant;
+package cn.hlvan.controller.admin;
 
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.security.AuthorizedUser;
@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("merchantFinanceController")
-@RequestMapping("/merchant/finance")
-public class MerchantFinanceController {
-
+@RestController
+@RequestMapping("/admin/finance")
+public class AdminFinanceController {
     private FinanceService financeService;
 
     @Autowired
@@ -28,15 +27,17 @@ public class MerchantFinanceController {
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
     }
-
-    /**
-     * 订单打款给管理员
-     */
-    @PostMapping("/make_money")
-    public Reply makeMoney(@Authenticated AuthorizedUser user,
-                           @RequestJson(value = "orderId") Integer orderId) {
-        financeService.makeMoney(user.getId(), orderId);
+    @PostMapping("/determine")
+    public Reply checkMakeMoney(@Authenticated AuthorizedUser user,
+                                @RequestJson(value = "orderId") Integer orderId){
+        financeService.determineMakeMoney(user, orderId);
         return Reply.success();
     }
 
+    @PostMapping("/make_money/writer")
+    public Reply makeMoneyWriter(@Authenticated AuthorizedUser user,
+                                @RequestJson(value = "orderId") Integer id){
+        financeService.determineMakeMoneyWriter(user, id);
+        return Reply.success();
+    }
 }
