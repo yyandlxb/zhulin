@@ -36,7 +36,7 @@ public class QuartzService {
         {
             if (e.getAdminEndTime() != null && e.getAdminEndTime().compareTo(new Date()) < 0){
                 boolean b = dsl.update(ORDER).set(ORDER.ORDER_STATUS, END).where(ORDER.ORDER_STATUS.eq(PUBLICING))
-                               .and(USER_ORDER.ORDER_CODE.eq(e.getOrderCode())).execute() > 0;
+                               .and(ORDER.ORDER_CODE.eq(e.getOrderCode())).execute() > 0;
                 if (b){
                     dsl.update(USER_ORDER).set(USER_ORDER.STATUS,ALREADY_END).where(USER_ORDER.ORDER_CODE.eq(e.getOrderCode())).execute();
                     logger.info("订单被截稿："+e.getOrderCode());
