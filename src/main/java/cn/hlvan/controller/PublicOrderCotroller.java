@@ -96,6 +96,12 @@ public class PublicOrderCotroller {
         return Reply.success().data(merchantOrderDetail);
     }
 
+    @GetMapping("/order_detail")
+    public Reply orderDetail(@RequestParam Integer id, @Authenticated AuthorizedUser user) {
+        OrderRecord orderRecord = dsl.selectFrom(ORDER).where(ORDER.ID.eq(id)).fetchSingle();
+        return Reply.success().data(orderRecord);
+    }
+
     //审核文章
     @PostMapping("/auditing/essay")
     public Reply auditingEssay( @Authenticated AuthorizedUser user,@RequestBody AuditingEssayForm auditingEssayForm){

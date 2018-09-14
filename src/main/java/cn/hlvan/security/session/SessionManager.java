@@ -64,23 +64,24 @@ public class SessionManager extends HandlerInterceptorAdapter implements Handler
         request.setAttribute(Authenticated.class.getName(), authorizedUser);
 
         //编写admin与管理员的权限控制
-        boolean needPermission = AnnotationUtils.findAnnotation(method.getBeanType(), RequirePermission.class) != null;
-        if (!needPermission) {
-            needPermission = method.hasMethodAnnotation(RequirePermission.class);
-        }
-        if (!needPermission) {
-            return true;
-        }
-
-        RequirePermission requirePermission = AnnotationUtils.findAnnotation(method.getBeanType(), RequirePermission.class);
-        if (requirePermission == null) {
-            requirePermission = AnnotationUtils.findAnnotation(method.getMethod(), RequirePermission.class);
-        }
-//        if ( permissionService.hasPermission(systemCode,authorizedUser.getId(),requirePermission.value())){
+        return true;
+//        boolean needPermission = AnnotationUtils.findAnnotation(method.getBeanType(), RequirePermission.class) != null;
+//        if (!needPermission) {
+//            needPermission = method.hasMethodAnnotation(RequirePermission.class);
+//        }
+//        if (!needPermission) {
 //            return true;
 //        }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        return false;
+//
+//        RequirePermission requirePermission = AnnotationUtils.findAnnotation(method.getBeanType(), RequirePermission.class);
+//        if (requirePermission == null) {
+//            requirePermission = AnnotationUtils.findAnnotation(method.getMethod(), RequirePermission.class);
+//        }
+////        if ( permissionService.hasPermission(systemCode,authorizedUser.getId(),requirePermission.value())){
+////            return true;
+////        }
+//        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+//        return false;
 
     }
 

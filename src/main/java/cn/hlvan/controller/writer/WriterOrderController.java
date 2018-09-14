@@ -49,7 +49,7 @@ public class WriterOrderController {
     @GetMapping("/appoint/list")
     public Reply appointmentList(@Authenticated AuthorizedUser user, Pageable pageable,OrderService.OrderQueryForm form) {
         List<Condition> conditions = orderService.buildAppointConditions(form);
-        Integer count = dsl.selectCount().from(USER_ORDER).innerJoin(USER_ORDER)
+        Integer count = dsl.selectCount().from(USER_ORDER).innerJoin(ORDER)
                            .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
                            .where(conditions)
                            .and(USER_ORDER.USER_ID.eq(user.getId())).fetchOne().value1();
@@ -61,7 +61,7 @@ public class WriterOrderController {
                 ORDER.EASSY_TYPE,ORDER.ADMIN_END_TIME)
                             .select(USER_ORDER.RESERVE_TOTAL, USER_ORDER.COMPLETE, USER_ORDER.STATUS.as("userOrderStatus")
                                 , USER_ORDER.ID.as("userOrderId"),USER_ORDER.CREATED_AT)
-                            .from(USER_ORDER).innerJoin(USER_ORDER)
+                            .from(USER_ORDER).innerJoin(ORDER)
                             .on(USER_ORDER.ORDER_CODE.eq(ORDER.ORDER_CODE))
                             .where(conditions)
                             .and(USER_ORDER.USER_ID.eq(user.getId()))
