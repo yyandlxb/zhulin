@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import static cn.hlvan.manager.database.Tables.PERMISSION;
 
 @Component
-public class PermissionService  implements ApplicationRunner {
+public class PermissionEnumService implements ApplicationRunner {
 
     private DSLContext dsl;
     @Autowired
