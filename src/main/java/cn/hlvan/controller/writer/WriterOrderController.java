@@ -57,7 +57,7 @@ public class WriterOrderController {
         if (pageable.getOffset() > count) {
             userOrders = Collections.emptyList();
         } else {
-            userOrders = dsl.select(ORDER.ADMIN_PRICE, ORDER.APPOINT_TOTAL, ORDER.ORDER_TITLE, ORDER.ORIGINAL_LEVEL,
+            userOrders = dsl.select(ORDER.ADMIN_PRICE, ORDER.APPOINT_TOTAL, ORDER.ORDER_TITLE, ORDER.ORIGINAL_LEVEL,ORDER.ORDER_CODE,
                 ORDER.EASSY_TYPE,ORDER.ADMIN_END_TIME)
                             .select(USER_ORDER.RESERVE_TOTAL, USER_ORDER.COMPLETE, USER_ORDER.STATUS.as("userOrderStatus")
                                 , USER_ORDER.ID.as("userOrderId"),USER_ORDER.CREATED_AT)
