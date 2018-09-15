@@ -48,15 +48,17 @@ public class EssayOrderService {
             throw new ApplicationException("订单已截稿");
 
         if (fileName.endsWith(".docx")) {
-            OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
-            orderEssayRecord.setEassyFile(fileName);
-            orderEssayRecord.setEssayTitle(essayTitle);
-            orderEssayRecord.setOrderCode(userOrderRecord.getOrderCode());
-            dsl.executeInsert(orderEssayRecord);
+
             //文章读取
             InputStream is = new FileInputStream(filePath + fileName);
             XWPFDocument hwpfDocument = new XWPFDocument(is);
             List<XWPFPictureData> allPictures = hwpfDocument.getAllPictures();
+            OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
+            orderEssayRecord.setEassyFile(fileName);
+            orderEssayRecord.setEssayTitle(essayTitle);
+            orderEssayRecord.setUserOrderId(userOrderId);
+            orderEssayRecord.setOrderCode(userOrderRecord.getOrderCode());
+            dsl.executeInsert(orderEssayRecord);
             BigInteger essayId = dsl.lastID();
             for (XWPFPictureData a : allPictures) {
                 String fm = filePath + System.currentTimeMillis() + a.getFileName();
@@ -75,6 +77,9 @@ public class EssayOrderService {
                 pictureRecord.setOrderEassyId(essayId.intValue());
                 dsl.executeInsert(pictureRecord);
             }
+
+            Integer count = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayId.intValue())).fetchOne().value1();
+            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL,count).where(ORDER_ESSAY.ID.eq(essayId.intValue())).execute();
             //更新订单表
             dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
             //判断是否已经完成
@@ -132,6 +137,8 @@ public class EssayOrderService {
                 pictureRecord.setOrderEassyId(orderEssayRecord.getId());
                 dsl.executeInsert(pictureRecord);
             }
+            Integer ct = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayOrderId)).fetchOne().value1();
+            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL,ct).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute();
             return true;
         } else {
             return false;
