@@ -199,7 +199,7 @@ public class OrderService {
             int i = LocalDateTime.now().toLocalTime().plusHours(hours)
                                  .compareTo(orderRecord.getAdminEndTime().toLocalDateTime().toLocalTime());
 
-            if (orderRecord.getReserveTotal() >= total && total <= orderRecord.getComplete()) {
+            if (orderRecord.getReserveTotal() >= total && total <= (orderRecord.getReserveTotal() - orderRecord.getComplete())) {
                 //超过了截稿时间
                 if (i > 0) {
                     //查询用户

@@ -22,4 +22,5 @@ public class UserOrder {
     private String email;
     private Integer pid;
     private Timestamp createdAt;//创建时间
+    private String result;
 }
