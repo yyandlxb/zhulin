@@ -14,12 +14,14 @@ import cn.hlvan.view.MerchantOrderDetail;
 import cn.hlvan.view.User;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
 import static cn.hlvan.constant.UserType.WRITER;
+import static cn.hlvan.manager.database.tables.LimitTime.LIMIT_TIME;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.User.USER;
@@ -89,4 +91,12 @@ public class AdminOrderController {
         users.forEach(e -> e.setPassword(null));
         return Reply.success().data(users);
     }
+
+    @PostMapping("/time")
+    @Transactional
+    public Reply updateTime(Integer time){
+        boolean b = dsl.update(LIMIT_TIME).set(LIMIT_TIME.LIMIT_TIME_,time).execute() > 0;
+        return b ? Reply.success() : Reply.fail().message("更新失败");
+    }
+
 }
