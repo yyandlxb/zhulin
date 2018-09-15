@@ -61,7 +61,8 @@ public class EssayOrderService {
             dsl.executeInsert(orderEssayRecord);
             BigInteger essayId = dsl.lastID();
             for (XWPFPictureData a : allPictures) {
-                String fm = filePath + System.currentTimeMillis() + a.getFileName();
+                String fmn = System.currentTimeMillis() + a.getFileName();
+                String fm = filePath + fmn;
                 OutputStream os = new FileOutputStream(fm);
                 byte[] data = a.getData();
                 os.write(data);
@@ -72,7 +73,7 @@ public class EssayOrderService {
                 int height = bufferedImage.getHeight();
                 //存入图片信息
                 PictureRecord pictureRecord = new PictureRecord();
-                pictureRecord.setPictureName(fm);
+                pictureRecord.setPictureName(fmn);
                 pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + data.length / 1024 / 1024.0 + "M");
                 pictureRecord.setOrderEassyId(essayId.intValue());
                 dsl.executeInsert(pictureRecord);
@@ -121,7 +122,8 @@ public class EssayOrderService {
             XWPFDocument hwpfDocument = new XWPFDocument(is);
             List<XWPFPictureData> allPictures = hwpfDocument.getAllPictures();
             for (XWPFPictureData a : allPictures) {
-                String fm = filePath + System.currentTimeMillis() + a.getFileName();
+                String fmn = System.currentTimeMillis() + a.getFileName();
+                String fm = filePath + fmn;
                 OutputStream os = new FileOutputStream(fm);
                 byte[] data = a.getData();
                 os.write(data);
@@ -132,7 +134,7 @@ public class EssayOrderService {
                 int height = bufferedImage.getHeight();
                 //存入图片信息
                 PictureRecord pictureRecord = new PictureRecord();
-                pictureRecord.setPictureName(fm);
+                pictureRecord.setPictureName(fmn);
                 pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + data.length / 1024 / 1024.0 + "M");
                 pictureRecord.setOrderEassyId(orderEssayRecord.getId());
                 dsl.executeInsert(pictureRecord);
