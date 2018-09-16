@@ -243,7 +243,7 @@ public class OrderService {
                                         .on(USER_ORDER.USER_ID.eq(USER.ID))
                                         .and(ORDER.ID.eq(id))
                                         .and(ORDER.USER_ID.eq(userId))
-                                        .and(USER_ORDER.RESERVE_TOTAL.notEqual(USER_ORDER.COMPLETE))
+                                        .and(USER_ORDER.RESERVE_TOTAL.greaterThan(USER_ORDER.COMPLETE))
                                         .fetchInto(UserOrder.class);
 
         if (userOrders != null && userOrders.size()>0){

@@ -10,12 +10,14 @@ import cn.hlvan.util.Reply;
 import cn.hlvan.view.UserMoneyRecordView;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +41,7 @@ public class FinanceController {
 
     @GetMapping("/list")
     @RequirePermission(PermissionEnum.APPLY_FINANCE)
-    public Reply financeList(@Authenticated AuthorizedUser user, Pageable pageable,
+    public Reply financeList(@Authenticated AuthorizedUser user,
                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startTime,
                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endTime) {
         UserMoneyRecordView userMoneyRecordView = new UserMoneyRecordView();
@@ -54,14 +56,17 @@ public class FinanceController {
             list.add(TRADE_RECORD.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(endTime, LocalTime.MAX))));
 
         Integer count = dsl.selectCount().from(TRADE_RECORD).where(list).fetchOne().value1();
-        List<TradeRecordRecord> tradeRecordRecords;
-        if (pageable.getOffset() > count) {
-            tradeRecordRecords = Collections.emptyList();
-        } else {
-            tradeRecordRecords = dsl.selectFrom(TRADE_RECORD).where(list).fetch();
-        }
+        List<TradeRecordRecord> tradeRecordRecords = dsl.selectFrom(TRADE_RECORD).where(list).fetch();
         userMoneyRecordView.setTradeRecords(tradeRecordRecords);
-
+        //收入
+        userMoneyRecordView.setIncome(dsl.select(DSL.sum(TRADE_RECORD.MONEY))
+                                         .from(TRADE_RECORD).where(list)
+                                         .and(TRADE_RECORD.MONEY.greaterOrEqual(new BigDecimal(0)))
+                                         .fetchOneInto(BigDecimal.class));
+        userMoneyRecordView.setExpend(dsl.select(DSL.sum(TRADE_RECORD.MONEY))
+                                         .from(TRADE_RECORD).where(list)
+                                         .and(TRADE_RECORD.MONEY.lessOrEqual(new BigDecimal(0)))
+                                         .fetchOneInto(BigDecimal.class));
         return Reply.success().data(userMoneyRecordView);
     }
 }

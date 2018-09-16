@@ -76,9 +76,9 @@ public class AdminUserController {
     @PostMapping("/auditing")
     @RequirePermission(PermissionEnum.ORDINARY_USER)
     public Reply auditingSuccess(@RequestJson(value = "id") Integer id,@RequestJson(value = "result") String result,
-                                 @RequestJson(value = "status") Byte status,
+                                 @RequestJson(value = "status") Integer status,
                                  @Authenticated AuthorizedUser user){
-        boolean b = adminService.updateSuccess(id,user.getId(),result,status);
+        boolean b = adminService.updateSuccess(id,user.getId(),result,status.byteValue());
         if (b){
             return Reply.success();
         }else {

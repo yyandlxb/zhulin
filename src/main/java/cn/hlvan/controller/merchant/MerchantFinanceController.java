@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static cn.hlvan.constant.OrderEssayStatus.ACCEPT_SUCCESS;
+import static cn.hlvan.constant.OrderStatus.END;
 import static cn.hlvan.constant.OrderStatus.MAKE_MONEY;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
@@ -46,8 +47,9 @@ public class MerchantFinanceController {
             DSL.sum(ORDER.ADMIN_PRICE).as("adminPrice")).from(ORDER).innerJoin(USER_ORDER)
                                         .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE)).innerJoin(ORDER_ESSAY)
                                         .on(USER_ORDER.ID.eq(ORDER_ESSAY.USER_ORDER_ID)).and(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS))
-                                        .and(ORDER.ID.eq(orderId)).and(ORDER.ORDER_STATUS.eq(MAKE_MONEY))
-                                        .groupBy(ORDER.ORDER_CODE).fetchOneInto(FinanceService.Money.class);
+                                        .and(ORDER.ID.eq(orderId)).and(ORDER.ORDER_STATUS.eq(END))
+                                        .and(ORDER.USER_ID.eq(user.getId()))
+                                        .groupBy(ORDER.ORDER_CODE,ORDER.USER_ID).fetchOneInto(FinanceService.Money.class);
         return Reply.success().data(money);
     }
 
