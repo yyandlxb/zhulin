@@ -101,7 +101,7 @@ public class AdminOrderController {
     }
 
     //获取分配订单的写手信息
-    @GetMapping("/writer_list")
+    @GetMapping("/limit_time")
     public Reply getLimit(){
 
         List<LimitTimeRecord> limit = dsl.selectFrom(LIMIT_TIME).fetch();
