@@ -2,6 +2,7 @@ package cn.hlvan.controller.admin;
 
 import cn.hlvan.configure.RequestJson;
 import cn.hlvan.form.AuditingForm;
+import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.security.AuthorizedUser;
@@ -99,4 +100,11 @@ public class AdminOrderController {
         return b ? Reply.success() : Reply.fail().message("更新失败");
     }
 
+    //获取分配订单的写手信息
+    @GetMapping("/writer_list")
+    public Reply getLimit(){
+
+        List<LimitTimeRecord> limit = dsl.selectFrom(LIMIT_TIME).fetch();
+        return Reply.success().data(limit.get(0));
+    }
 }
