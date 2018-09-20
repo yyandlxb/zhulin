@@ -58,7 +58,7 @@ public class MerchantOrderController {
                                 .fetchSingleInto(OrderRecord.class);
         orderR.from(orderForm);
 
-        if (orderForm.getTotal() >= orderR.getAppointTotal()) {
+        if (orderForm.getTotal() >= 0) {
             boolean b = orderService.update(orderR);
             if (b) {
                 return Reply.success();
@@ -66,7 +66,7 @@ public class MerchantOrderController {
                 return Reply.fail().message("更新订单失败");
             }
         } else {
-            return Reply.fail().message("更新订单失败,数量小于已预订数量");
+            return Reply.fail().message("更新订单失败,数量小于0");
         }
     }
 
