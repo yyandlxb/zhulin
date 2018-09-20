@@ -23,4 +23,5 @@ public class UserOrder {
     private Integer pid;
     private Timestamp createdAt;//创建时间
     private String result;
+    private Integer total;//订单的文章数量
 }

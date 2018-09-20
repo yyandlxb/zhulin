@@ -191,13 +191,13 @@ public class OrderService {
         if (null != limitTimeRecords && limitTimeRecords.size() > 0) {
             //判断是否已经超过了截止时间
             Integer hours = limitTimeRecords.get(0).getLimitTime();
-            UserOrder orderRecord = dsl.select(ORDER.ADMIN_END_TIME)
+            UserOrder orderRecord = dsl.select(ORDER.ADMIN_END_TIME,ORDER.TOTAL,ORDER.ORDER_CODE)
                                        .select(USER_ORDER.COMPLETE, USER_ORDER.RESERVE_TOTAL)
                                        .from(USER_ORDER).innerJoin(ORDER)
                                        .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
-                                       .and(USER_ORDER.ID.eq(userOrderId)).fetchSingleInto(UserOrder.class);
-            int i = LocalDateTime.now().toLocalTime().plusHours(hours)
-                                 .compareTo(orderRecord.getAdminEndTime().toLocalDateTime().toLocalTime());
+                                       .and(USER_ORDER.ID.eq(userOrderId)).forUpdate().fetchSingleInto(UserOrder.class);
+            int i = LocalDateTime.now().plusHours(hours)
+                                 .compareTo(orderRecord.getAdminEndTime().toLocalDateTime());
 
             if (orderRecord.getReserveTotal() >= total && total <= (orderRecord.getReserveTotal() - orderRecord.getComplete())) {
                 //超过了截稿时间
@@ -210,6 +210,9 @@ public class OrderService {
                 }
                 dsl.update(USER_ORDER).set(USER_ORDER.RESERVE_TOTAL, orderRecord.getReserveTotal() - total)
                    .where(USER_ORDER.ID.eq(userOrderId)).execute();
+                //跟新订单数量
+                dsl.update(ORDER).set(ORDER.TOTAL,orderRecord.getTotal() + total)
+                   .where(ORDER.ORDER_CODE.eq(orderRecord.getOrderCode()).and(ORDER.ORDER_STATUS.eq(PUBLICING))).execute();
 
             } else {
                 throw new ApplicationException("取消失败，取消的数量大于预约数量");

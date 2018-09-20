@@ -1,6 +1,5 @@
 package cn.hlvan.service;
 
-import cn.hlvan.controller.admin.SuperAdminController;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static cn.hlvan.constant.OrderStatus.END;
@@ -34,7 +32,7 @@ public class QuartzService {
 
         dsl.selectFrom(ORDER).fetch().forEach( e->
         {
-            if (e.getAdminEndTime() != null && e.getAdminEndTime().compareTo(new Date()) < 0){
+            if (e.getEndTime() != null && e.getEndTime().compareTo(new Date()) < 0){
                 boolean b = dsl.update(ORDER).set(ORDER.ORDER_STATUS, END).where(ORDER.ORDER_STATUS.eq(PUBLICING))
                                .and(ORDER.ORDER_CODE.eq(e.getOrderCode())).execute() > 0;
                 if (b){
