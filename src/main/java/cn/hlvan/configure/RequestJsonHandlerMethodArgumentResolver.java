@@ -22,7 +22,7 @@ public class RequestJsonHandlerMethodArgumentResolver implements HandlerMethodAr
         RequestJson requestJson = parameter.getParameterAnnotation(RequestJson.class);
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         StringBuilder sb = (StringBuilder) request.getAttribute(request.getSession().getId());
-        if (null != sb){
+        if (null != sb && sb.length() > 0){
             JSONObject jsonObject = JSONObject.parseObject(sb.toString());
             String value = requestJson.value();
             return jsonObject.get(value);
