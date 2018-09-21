@@ -46,16 +46,15 @@ public class WriterFinanceController {
     }
 
     @GetMapping("/list")
-    public Reply applyFinance(@Authenticated AuthorizedUser user, Byte status,
-                              @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate startTime,
-                              @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endTime){
+    public Reply applyFinance(@Authenticated AuthorizedUser user, Byte status,String startTime,
+                             String endTime){
 
         List<Condition> list = new ArrayList<>();
         list.add(APPLY_FINANCE.USER_ID.eq(user.getId()));
         if (null != startTime)
-            list.add(APPLY_FINANCE.CREATED_AT.greaterOrEqual(Timestamp.valueOf( LocalDateTime.of(startTime,LocalTime.MIN))));
+            list.add(APPLY_FINANCE.CREATED_AT.greaterOrEqual(Timestamp.valueOf( LocalDateTime.of(LocalDate.parse(startTime),LocalTime.MIN))));
         if (null != endTime)
-            list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf( LocalDateTime.of(endTime,LocalTime.MAX))));
+            list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf( LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX))));
         if (null != status)
             list.add(APPLY_FINANCE.STATUS.eq(status));
         List<ApplyFinanceRecord> applyFinanceRecords = dsl.selectFrom(APPLY_FINANCE).where(list).fetch();
