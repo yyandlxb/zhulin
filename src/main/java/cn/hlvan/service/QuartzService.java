@@ -8,7 +8,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static cn.hlvan.constant.OrderStatus.END;
 import static cn.hlvan.constant.OrderStatus.PUBLICING;
@@ -25,22 +27,13 @@ public class QuartzService {
         this.dsl = dsl;
     }
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @Transactional
     public void order(){
-
-
-        dsl.selectFrom(ORDER).fetch().forEach( e->
-        {
-            if (e.getEndTime() != null && e.getEndTime().compareTo(new Date()) < 0){
-                boolean b = dsl.update(ORDER).set(ORDER.ORDER_STATUS, END).where(ORDER.ORDER_STATUS.eq(PUBLICING))
-                               .and(ORDER.ORDER_CODE.eq(e.getOrderCode())).execute() > 0;
-                if (b){
-                    dsl.update(USER_ORDER).set(USER_ORDER.STATUS,ALREADY_END).where(USER_ORDER.ORDER_CODE.eq(e.getOrderCode())).execute();
-                    logger.info("订单被截稿："+e.getOrderCode());
-                }
-            }
-        });
+         dsl.update(ORDER).set(ORDER.ORDER_STATUS, END).where(ORDER.ORDER_STATUS.eq(PUBLICING))
+                       .and(ORDER.END_TIME.lessOrEqual(Timestamp.valueOf(LocalDateTime.now()))).execute();
+        List<String> list = dsl.select(ORDER.ORDER_CODE).from(ORDER).where(ORDER.ORDER_STATUS.eq(END)).fetchInto(String.class);
+        dsl.update(USER_ORDER).set(USER_ORDER.STATUS,ALREADY_END).where(USER_ORDER.ORDER_CODE.in(list)).execute();
 
     }
 }

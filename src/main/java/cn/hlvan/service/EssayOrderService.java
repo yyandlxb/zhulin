@@ -23,15 +23,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static cn.hlvan.constant.OrderEssayStatus.ADMIN_WAIT_AUDITING;
 import static cn.hlvan.constant.WriterOrderStatus.ALREADY_END;
 import static cn.hlvan.constant.WriterOrderStatus.CARRY_OUT;
+import static cn.hlvan.constant.WriterOrderStatus.WAIT_APPOINT;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.Picture.PICTURE;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
@@ -238,8 +237,15 @@ public class EssayOrderService {
                .and(USER_ORDER.USER_ID.eq(id)).fetchOneInto(UserOrderRecord.class);
 
         if (userOrder != null) {
+            Map<Object,Object> map = new HashMap<>();
             //更新订单表
-            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrder.getComplete() - 1).execute();
+            if (userOrder.getReserveTotal() > userOrder.getComplete() - 1){
+                map.put(USER_ORDER.STATUS,WAIT_APPOINT);
+            }
+            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrder.getComplete() - 1).set(map)
+               .where(USER_ORDER.ID.eq(id)).execute();
+            //删除照片
+            dsl.deleteFrom(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayOrderId)).execute();
             return dsl.deleteFrom(ORDER_ESSAY).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute() > 0;
         } else {
             return false;

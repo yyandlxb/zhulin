@@ -151,9 +151,11 @@ public class OrderService {
                 message.setFrom(fromMail);
                 message.setTo(s);
                 message.setSubject("管理员分配任务");
-                message.setText("管理员分配了文章任务给您，请注意查收，订单号为：" + orderRecord.getOrderCode()
+                message.setText("管理员分配了"+reserveTotal+"篇文章任务给您，请注意查收，订单号为：" + orderRecord.getOrderCode()
                                 + "系统邮件，请勿回复");
                 javaMailSender.send(message);
+            }else{
+                throw new ApplicationException("分配失败，分配的用户没有邮箱");
             }
             return dsl.executeInsert(userOrderRecord) > 0;
         } else {
