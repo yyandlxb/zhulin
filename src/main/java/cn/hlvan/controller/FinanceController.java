@@ -11,8 +11,6 @@ import cn.hlvan.view.UserMoneyRecordView;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static cn.hlvan.manager.database.tables.TradeRecord.TRADE_RECORD;
@@ -41,9 +38,7 @@ public class FinanceController {
 
     @GetMapping("/list")
     @RequirePermission(PermissionEnum.APPLY_FINANCE)
-    public Reply financeList(@Authenticated AuthorizedUser user,
-                             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startTime,
-                             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endTime) {
+    public Reply financeList(@Authenticated AuthorizedUser user,String startTime,String endTime) {
         UserMoneyRecordView userMoneyRecordView = new UserMoneyRecordView();
         //余额信息
         UserMoneyRecord userMoneyRecord = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(user.getId())).fetchSingle();
@@ -51,9 +46,9 @@ public class FinanceController {
         List<Condition> list = new ArrayList<>();
         list.add(TRADE_RECORD.USER_ID.eq(user.getId()));
         if (null != startTime)
-            list.add(TRADE_RECORD.CREATED_AT.greaterOrEqual(Timestamp.valueOf(LocalDateTime.of(startTime, LocalTime.MIN))));
+            list.add(TRADE_RECORD.CREATED_AT.greaterOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN))));
         if (null != endTime)
-            list.add(TRADE_RECORD.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(endTime, LocalTime.MAX))));
+            list.add(TRADE_RECORD.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX))));
 
         Integer count = dsl.selectCount().from(TRADE_RECORD).where(list).fetchOne().value1();
         List<TradeRecordRecord> tradeRecordRecords = dsl.selectFrom(TRADE_RECORD).where(list).fetch();

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static cn.hlvan.constant.OrderEssayStatus.ACCEPT_SUCCESS;
 import static cn.hlvan.constant.OrderStatus.END;
-import static cn.hlvan.constant.OrderStatus.MAKE_MONEY;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
