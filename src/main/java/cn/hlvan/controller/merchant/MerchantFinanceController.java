@@ -5,6 +5,7 @@ import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.FinanceService;
 import cn.hlvan.util.Reply;
+import cn.hlvan.view.Money;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
 
 import static cn.hlvan.constant.OrderEssayStatus.ACCEPT_SUCCESS;
 import static cn.hlvan.constant.OrderStatus.END;
@@ -40,15 +43,15 @@ public class MerchantFinanceController {
 
     //订单要打款的金额展示
     @GetMapping("/make_money/info")
-    public Reply makeMoneyInfo(@Authenticated AuthorizedUser user,
-                           @RequestJson(value = "orderId") Integer orderId) {
-        FinanceService.Money money = dsl.select(DSL.sum(ORDER.MERCHANT_PRICE).as("merchantPrice"), ORDER.ORDER_CODE, ORDER.USER_ID,
-            DSL.sum(ORDER.ADMIN_PRICE).as("adminPrice")).from(ORDER).innerJoin(USER_ORDER)
-                                        .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE)).innerJoin(ORDER_ESSAY)
-                                        .on(USER_ORDER.ID.eq(ORDER_ESSAY.USER_ORDER_ID)).and(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS))
-                                        .and(ORDER.ID.eq(orderId)).and(ORDER.ORDER_STATUS.eq(END))
-                                        .and(ORDER.USER_ID.eq(user.getId()))
-                                        .groupBy(ORDER.ORDER_CODE,ORDER.USER_ID).fetchOneInto(FinanceService.Money.class);
+    public Reply makeMoneyInfo(@Authenticated AuthorizedUser user,Integer orderId) {
+        Money money = dsl.select(DSL.sum(ORDER.MERCHANT_PRICE).as("merchantPrice").cast(BigDecimal.class), ORDER.ORDER_CODE, ORDER.USER_ID,
+            DSL.sum(ORDER.ADMIN_PRICE).as("adminPrice").cast(BigDecimal.class)).from(ORDER).innerJoin(USER_ORDER)
+                         .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE)).innerJoin(ORDER_ESSAY)
+                         .on(USER_ORDER.ID.eq(ORDER_ESSAY.USER_ORDER_ID)).and(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS))
+                         .and(ORDER.ID.eq(orderId)).and(ORDER.ORDER_STATUS.eq(END))
+                         .and(ORDER.USER_ID.eq(user.getId()))
+                         .groupBy(ORDER.ORDER_CODE,ORDER.USER_ID)
+                         .fetchOneInto(Money.class);
         return Reply.success().data(money);
     }
 

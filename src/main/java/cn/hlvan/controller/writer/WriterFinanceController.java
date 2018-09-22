@@ -40,6 +40,7 @@ public class WriterFinanceController {
 
     private DSLContext dsl;
 
+    @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
     }
@@ -61,8 +62,8 @@ public class WriterFinanceController {
     }
 
     @PostMapping("/create")
-    public Reply createApplyFinance(@Authenticated AuthorizedUser user, @RequestJson(value = "money")BigDecimal money){
-        financeService.create(user.getId(),money);
+    public Reply createApplyFinance(@Authenticated AuthorizedUser user, @RequestJson(value = "money")String money){
+        financeService.create(user.getId(),new BigDecimal(money));
         return Reply.success();
     }
 }

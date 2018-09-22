@@ -5,6 +5,8 @@ import cn.hlvan.manager.database.tables.records.ApplyFinanceRecord;
 import cn.hlvan.manager.database.tables.records.TradeRecordRecord;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.view.Money;
+import cn.hlvan.view.UserOrderFinance;
 import lombok.Data;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -72,23 +74,28 @@ public class FinanceService {
             dsl.update(USER_MONEY).set(USER_MONEY.MONEY, adminMoney.getMoney().add(money.getMerchantPrice()))
                .where(USER_MONEY.USER_ID.eq(user.getId())).execute();
 
-            List<UserOrderFinance> userOrderFinances = dsl.select(USER.ID, DSL.sum(ORDER.ADMIN_PRICE).as("userMoney"), ORDER.ORDER_CODE)
+            List<UserOrderFinance> userOrderFinances = dsl.select(USER.ID.as("userId"),
+                DSL.sum(ORDER.ADMIN_PRICE).cast(BigDecimal.class), ORDER.ORDER_CODE)
                                                           .from(USER).innerJoin(USER_ORDER)
-                                                          .on(USER.ID.eq(USER_ORDER.USER_ID)).innerJoin(ORDER_ESSAY)
+                                                          .on(USER.ID.eq(USER_ORDER.USER_ID))
+                                                          .innerJoin(ORDER)
+                                                          .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
+                                                          .innerJoin(ORDER_ESSAY)
                                                           .on(USER_ORDER.ID.eq(ORDER_ESSAY.USER_ORDER_ID))
                                                           .and(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS))
-                                                          .and(ORDER.ID.eq(orderId)).groupBy(USER.ID, ORDER.ORDER_CODE)
+                                                          .and(ORDER.ID.eq(orderId))
+                                                          .groupBy(USER.ID, ORDER.ORDER_CODE)
                                                           .fetchInto(UserOrderFinance.class);
 
             userOrderFinances.forEach(e -> {
                 TradeRecordRecord tr = new TradeRecordRecord();
-                tr.setMoney(e.getUserMoney());
+                tr.setMoney(e.getAdminPrice());
                 tr.setTradeInfo("文章收入，订单号为：" + money.getOrderCode());
                 tr.setTradeCode(s);
                 tr.setUserId(e.getUserId());
                 dsl.executeInsert(tr);
                 UserMoneyRecord writerMoney = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(e.getUserId())).fetchSingle();
-                dsl.update(USER_MONEY).set(USER_MONEY.MONEY, writerMoney.getMoney().add(e.getUserMoney()))
+                dsl.update(USER_MONEY).set(USER_MONEY.MONEY, writerMoney.getMoney().add(e.getAdminPrice()))
                    .where(USER_MONEY.USER_ID.eq(e.getUserId())).execute();
             });
         } else {
@@ -164,20 +171,6 @@ public class FinanceService {
 
     }
 
-    @Data
-    public class Money {
-        BigDecimal merchantPrice;
-        BigDecimal adminPrice;
-        String orderCode;
-        Integer userId;
-    }
-
-    @Data
-    public class UserOrderFinance {
-        String orderCode;
-        Integer userId;
-        BigDecimal userMoney;
-    }
 
     @Data
     public class UserMoney {

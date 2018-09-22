@@ -1,5 +1,6 @@
 package cn.hlvan.controller;
 
+import cn.hlvan.controller.admin.AdminUserController;
 import cn.hlvan.manager.database.tables.records.TradeRecordRecord;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.security.AuthorizedUser;
@@ -8,9 +9,13 @@ import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.UserMoneyRecordView;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,13 +31,14 @@ import java.util.List;
 import static cn.hlvan.manager.database.tables.TradeRecord.TRADE_RECORD;
 import static cn.hlvan.manager.database.tables.UserMoney.USER_MONEY;
 
-@RestController
+@RestController("financeOrderController")
 @RequestMapping("/finance/record")
 public class FinanceController {
-
+    private static Logger logger = LoggerFactory.getLogger(FinanceController.class);
     private DSLContext dsl;
 
-    public void setDsl(org.jooq.DSLContext dsl) {
+    @Autowired
+    public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
     }
 
@@ -40,14 +46,15 @@ public class FinanceController {
     @RequirePermission(PermissionEnum.APPLY_FINANCE)
     public Reply financeList(@Authenticated AuthorizedUser user,String startTime,String endTime) {
         UserMoneyRecordView userMoneyRecordView = new UserMoneyRecordView();
+        logger.info(user.toString()+"====================================");
         //余额信息
         UserMoneyRecord userMoneyRecord = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(user.getId())).fetchSingle();
         userMoneyRecordView.setUserMoneyRecord(userMoneyRecord);
         List<Condition> list = new ArrayList<>();
         list.add(TRADE_RECORD.USER_ID.eq(user.getId()));
-        if (null != startTime)
+        if (StringUtils.isNotBlank(startTime))
             list.add(TRADE_RECORD.CREATED_AT.greaterOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN))));
-        if (null != endTime)
+        if (StringUtils.isNotBlank(endTime))
             list.add(TRADE_RECORD.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX))));
 
         Integer count = dsl.selectCount().from(TRADE_RECORD).where(list).fetchOne().value1();
