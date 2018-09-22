@@ -27,7 +27,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> {
 
-    private static final long serialVersionUID = 1145282018;
+    private static final long serialVersionUID = 1002520108;
 
     /**
      * Setter for <code>zhulin.user.id</code>. 用户id
@@ -105,17 +105,17 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     }
 
     /**
-     * Setter for <code>zhulin.user.wechat</code>. 微信号
+     * Setter for <code>zhulin.user.we_chat</code>. 微信号
      */
-    public UserRecord setWechat(String value) {
+    public UserRecord setWeChat(String value) {
         set(5, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.user.wechat</code>. 微信号
+     * Getter for <code>zhulin.user.we_chat</code>. 微信号
      */
-    public String getWechat() {
+    public String getWeChat() {
         return (String) get(5);
     }
 
@@ -430,7 +430,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(Integer id, String account, String name, String password, String qq, String wechat, String code, String address, Byte status, Integer creditLevel, Byte type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel, String email, String result) {
+    public UserRecord(Integer id, String account, String name, String password, String qq, String weChat, String code, String address, Byte status, Integer creditLevel, Byte type, Integer pid, Timestamp createdAt, Timestamp updatedAt, String number, String remark, Integer sex, Integer age, String profession, String good, Integer fullTime, String payPicture, Integer startLevel, String email, String result) {
         super(User.USER);
 
         set(0, id);
@@ -438,7 +438,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         set(2, name);
         set(3, password);
         set(4, qq);
-        set(5, wechat);
+        set(5, weChat);
         set(6, code);
         set(7, address);
         set(8, status);

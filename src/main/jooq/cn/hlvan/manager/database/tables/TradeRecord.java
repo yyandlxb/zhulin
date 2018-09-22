@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TradeRecord extends TableImpl<TradeRecordRecord> {
 
-    private static final long serialVersionUID = -360052772;
+    private static final long serialVersionUID = 728158094;
 
     /**
      * The reference instance of <code>zhulin.trade_record</code>
@@ -69,12 +69,12 @@ public class TradeRecord extends TableImpl<TradeRecordRecord> {
     /**
      * The column <code>zhulin.trade_record.trade_info</code>. 交易信息
      */
-    public final TableField<TradeRecordRecord, String> TRADE_INFO = createField("trade_info", org.jooq.impl.SQLDataType.VARCHAR(30), this, "交易信息");
+    public final TableField<TradeRecordRecord, String> TRADE_INFO = createField("trade_info", org.jooq.impl.SQLDataType.VARCHAR(50), this, "交易信息");
 
     /**
      * The column <code>zhulin.trade_record.money</code>. 商家价格
      */
-    public final TableField<TradeRecordRecord, BigDecimal> MONEY = createField("money", org.jooq.impl.SQLDataType.DECIMAL(20, 2).defaultValue(org.jooq.impl.DSL.inline("0.00", org.jooq.impl.SQLDataType.DECIMAL)), this, "商家价格");
+    public final TableField<TradeRecordRecord, BigDecimal> MONEY = createField("money", org.jooq.impl.SQLDataType.DECIMAL(10, 2).defaultValue(org.jooq.impl.DSL.inline("0.00", org.jooq.impl.SQLDataType.DECIMAL)), this, "商家价格");
 
     /**
      * The column <code>zhulin.trade_record.created_at</code>.
@@ -84,7 +84,7 @@ public class TradeRecord extends TableImpl<TradeRecordRecord> {
     /**
      * The column <code>zhulin.trade_record.trade_code</code>. 交易相关码
      */
-    public final TableField<TradeRecordRecord, String> TRADE_CODE = createField("trade_code", org.jooq.impl.SQLDataType.VARCHAR(20), this, "交易相关码");
+    public final TableField<TradeRecordRecord, String> TRADE_CODE = createField("trade_code", org.jooq.impl.SQLDataType.VARCHAR(100), this, "交易相关码");
 
     /**
      * Create a <code>zhulin.trade_record</code> table reference

@@ -121,10 +121,16 @@ public class OrderService {
 
     public boolean auditing(Integer id, Byte status, String result, BigDecimal price, LocalDate endTime) {
 
+        Map<Object,Object> map = new HashMap<>();
         LocalDateTime of = LocalDateTime.of(endTime, LocalTime.MIN);
+        if (null != endTime) {
+            map.put(ORDER.ADMIN_END_TIME, Timestamp.valueOf(of));
+        }
+        if (null != price)
+            map.put(ORDER.ADMIN_PRICE, price);
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, status)
-                  .set(ORDER.RESULT, result).set(ORDER.ADMIN_PRICE, price)
-                  .set(ORDER.ADMIN_END_TIME, Timestamp.valueOf(of))
+                  .set(map)
+                  .set(ORDER.RESULT, result)
                   .where(ORDER.ID.eq(id)).and(ORDER.ORDER_STATUS.eq(WAIT_AUDITING)).execute() > 0;
     }
 
@@ -296,6 +302,12 @@ public class OrderService {
         }
         return list;
 
+    }
+
+    public void createLimitTime(int i) {
+        LimitTimeRecord limitTimeRecord = new LimitTimeRecord();
+        limitTimeRecord.setUserId(i);
+        dsl.executeInsert(limitTimeRecord);
     }
 
     @Data

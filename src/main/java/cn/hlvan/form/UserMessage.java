@@ -18,4 +18,5 @@ public class UserMessage{
     private String good;//擅长领域
     private Integer fullTime;//工作类型 0-全职，1-兼职
     private String payPicture;//图片名称
+    private String name;
 }

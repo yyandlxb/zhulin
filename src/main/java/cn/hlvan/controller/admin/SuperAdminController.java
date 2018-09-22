@@ -6,6 +6,7 @@ import cn.hlvan.form.UserForm;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.security.permission.PermissionEnum;
 import cn.hlvan.security.permission.RequirePermission;
+import cn.hlvan.service.OrderService;
 import cn.hlvan.service.admin.UserService;
 import cn.hlvan.util.Reply;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -15,6 +16,7 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,6 +38,12 @@ public class SuperAdminController {
     }
     private UserService userService;
 
+    private OrderService orderService;
+    @Autowired
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -53,6 +61,7 @@ public class SuperAdminController {
         return Reply.success().data(userRecords);
     }
     @PostMapping("/add")
+    @Transactional
     public Reply addUser(@RequestBody UserForm userForm) {
         UserRecord userRecord = new UserRecord();
         userRecord.setAccount(userForm.getPhoneNumber());
@@ -68,6 +77,9 @@ public class SuperAdminController {
         boolean b;
         try {
             b = userService.addUser(userRecord);
+            int i = dsl.lastID().intValue();
+            //创建截稿限制时间
+            orderService.createLimitTime(i);
         }catch (Exception e){
             logger.info("添加管理员",e);
             return Reply.fail().message("添加管理员失败，管理员可能已经被添加");
@@ -122,7 +134,7 @@ public class SuperAdminController {
 
     //列出管理员下的商家与写手
     @GetMapping("/merchant_list")
-    public Reply findMerchantAndWriter(@RequestParam Integer id ){
+    public Reply findMerchantAndWriter(Integer id ){
         List<UserRecord> userRecords = dsl.selectFrom(USER).where(USER.PID.eq(id)).fetch();
         return Reply.success().data(userRecords);
 

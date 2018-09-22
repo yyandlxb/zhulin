@@ -74,8 +74,8 @@ public class FinanceService {
             dsl.update(USER_MONEY).set(USER_MONEY.MONEY, adminMoney.getMoney().add(money.getMerchantPrice()))
                .where(USER_MONEY.USER_ID.eq(user.getId())).execute();
 
-            List<UserOrderFinance> userOrderFinances = dsl.select(USER.ID.as("userId"),
-                DSL.sum(ORDER.ADMIN_PRICE).cast(BigDecimal.class), ORDER.ORDER_CODE)
+            List<UserOrderFinance> userOrderFinances = dsl.select(USER_ORDER.USER_ID.as("userId"),
+                DSL.sum(ORDER.ADMIN_PRICE).cast(BigDecimal.class).as("adminPrice"), ORDER.ORDER_CODE)
                                                           .from(USER).innerJoin(USER_ORDER)
                                                           .on(USER.ID.eq(USER_ORDER.USER_ID))
                                                           .innerJoin(ORDER)

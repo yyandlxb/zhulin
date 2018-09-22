@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Permission extends TableImpl<PermissionRecord> {
 
-    private static final long serialVersionUID = -833512648;
+    private static final long serialVersionUID = -1427271527;
 
     /**
      * The reference instance of <code>zhulin.permission</code>
@@ -83,7 +83,7 @@ public class Permission extends TableImpl<PermissionRecord> {
     /**
      * The column <code>zhulin.permission.pid</code>. 父id
      */
-    public final TableField<PermissionRecord, Integer> PID = createField("pid", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "父id");
+    public final TableField<PermissionRecord, Integer> PID = createField("pid", org.jooq.impl.SQLDataType.INTEGER, this, "父id");
 
     /**
      * The column <code>zhulin.permission.created_at</code>.

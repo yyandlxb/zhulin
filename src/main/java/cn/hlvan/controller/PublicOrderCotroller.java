@@ -2,6 +2,7 @@ package cn.hlvan.controller;
 
 import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.constant.UserType;
+import cn.hlvan.controller.admin.AdminUserController;
 import cn.hlvan.form.AuditingEssayForm;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
@@ -50,21 +51,23 @@ public class PublicOrderCotroller {
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
-
+    private static Logger logger = LoggerFactory.getLogger(PublicOrderCotroller.class);
     @GetMapping("/list")
     public Reply list(OrderService.OrderQueryForm orderForm, @Authenticated AuthorizedUser user, Pageable pageable) {
 
         List<Condition> conditions = orderService.buildConditions(orderForm);
         Integer type = user.getType();
-        if (type.equals(UserType.WRITER)) {
+        logger.info("用户类型"+type);
+        if (type == (UserType.WRITER)) {
             orderForm.setStatus(OrderStatus.PUBLICING);
             conditions.add(USER.PID.eq(user.getPid()));
-        } else if (type.equals(UserType.MANAGER)) {
+        } else if (type ==(UserType.MANAGER)) {
             conditions.add(USER.PID.eq(user.getId()));
         } else {
             conditions.add(ORDER.USER_ID.eq(user.getId()));
         }
-        int count = dsl.selectCount().from(ORDER).where(conditions).fetchOne().value1();
+        int count = dsl.selectCount().from(ORDER) .innerJoin(USER)
+                       .on(USER.ID.eq(ORDER.USER_ID)).where(conditions).fetchOne().value1();
         List<OrderRecord> orderRecords;
         if (pageable.getOffset() >= count) {
             orderRecords = Collections.emptyList();

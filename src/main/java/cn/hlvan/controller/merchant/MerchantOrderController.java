@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static cn.hlvan.constant.OrderStatus.WAIT_AUDITING;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 import static org.jooq.impl.DSL.boolAnd;
@@ -57,7 +58,7 @@ public class MerchantOrderController {
                                 .and(ORDER.USER_ID.eq(user.getId()))
                                 .fetchSingleInto(OrderRecord.class);
         orderR.from(orderForm);
-
+        orderR.setOrderStatus(WAIT_AUDITING);
         if (orderForm.getTotal() >= 0) {
             boolean b = orderService.update(orderR);
             if (b) {

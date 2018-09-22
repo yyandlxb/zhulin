@@ -28,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
 
-    private static final long serialVersionUID = -1948177042;
+    private static final long serialVersionUID = 28522878;
 
     /**
      * Setter for <code>zhulin.order.id</code>.
@@ -61,7 +61,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
     }
 
     /**
-     * Setter for <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过
+     * Setter for <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过
      */
     public OrderRecord setOrderStatus(Byte value) {
         set(2, value);
@@ -69,7 +69,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
     }
 
     /**
-     * Getter for <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过
+     * Getter for <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过
      */
     public Byte getOrderStatus() {
         return (Byte) get(2);

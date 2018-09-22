@@ -95,16 +95,17 @@ public class AdminOrderController {
 
     @PostMapping("/time")
     @Transactional
-    public Reply updateTime(Integer time){
-        boolean b = dsl.update(LIMIT_TIME).set(LIMIT_TIME.LIMIT_TIME_,time).execute() > 0;
+    public Reply updateTime(@Authenticated AuthorizedUser user,@RequestJson(value = "time") Integer time){
+        boolean b = dsl.update(LIMIT_TIME).set(LIMIT_TIME.LIMIT_TIME_,time)
+                       .where(LIMIT_TIME.USER_ID.eq(user.getId())).execute() > 0;
         return b ? Reply.success() : Reply.fail().message("更新失败");
     }
 
     //获取分配订单的写手信息
     @GetMapping("/limit_time")
-    public Reply getLimit(){
+    public Reply getLimit(@Authenticated AuthorizedUser user){
 
-        List<LimitTimeRecord> limit = dsl.selectFrom(LIMIT_TIME).fetch();
+        List<LimitTimeRecord> limit = dsl.selectFrom(LIMIT_TIME).where(LIMIT_TIME.USER_ID.eq(user.getId())).fetch();
         return Reply.success().data(limit.get(0));
     }
 }

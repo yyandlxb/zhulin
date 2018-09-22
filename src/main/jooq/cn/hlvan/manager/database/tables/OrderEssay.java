@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEssay extends TableImpl<OrderEssayRecord> {
 
-    private static final long serialVersionUID = -1106851820;
+    private static final long serialVersionUID = 359898518;
 
     /**
      * The reference instance of <code>zhulin.order_essay</code>
@@ -111,9 +111,9 @@ public class OrderEssay extends TableImpl<OrderEssayRecord> {
     public final TableField<OrderEssayRecord, Timestamp> UPDATED_AT = createField("updated_at", org.jooq.impl.SQLDataType.TIMESTAMP.defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
-     * The column <code>zhulin.order_essay.status</code>. 0-待管理员审核，1-商家退稿，2-收稿成功，3-商家已打款，4待商家审核，5商家退稿，6管理员已打款
+     * The column <code>zhulin.order_essay.status</code>. 0-待管理员审核，1-商家退稿，2-收稿成功，3-商家已打款，4待商家审核，5管理员退稿，6管理员已打款
      */
-    public final TableField<OrderEssayRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待管理员审核，1-商家退稿，2-收稿成功，3-商家已打款，4待商家审核，5商家退稿，6管理员已打款");
+    public final TableField<OrderEssayRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待管理员审核，1-商家退稿，2-收稿成功，3-商家已打款，4待商家审核，5管理员退稿，6管理员已打款");
 
     /**
      * The column <code>zhulin.order_essay.result</code>. 审核结果

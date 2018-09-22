@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = -718320125;
+    private static final long serialVersionUID = -1209351984;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -67,9 +67,9 @@ public class Order extends TableImpl<OrderRecord> {
     public final TableField<OrderRecord, String> ORDER_CODE = createField("order_code", org.jooq.impl.SQLDataType.VARCHAR(30), this, "订单号");
 
     /**
-     * The column <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过
+     * The column <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过
      */
-    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：关闭 7：管理员已完成（已打款）,8-审核未通过");
+    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过");
 
     /**
      * The column <code>zhulin.order.pay_type</code>. 1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay
@@ -164,7 +164,7 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.appoint_total</code>. 已预约数量
      */
-    public final TableField<OrderRecord, Integer> APPOINT_TOTAL = createField("appoint_total", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "已预约数量");
+    public final TableField<OrderRecord, Integer> APPOINT_TOTAL = createField("appoint_total", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.INTEGER)), this, "已预约数量");
 
     /**
      * The column <code>zhulin.order.admin_end_time</code>. 管理员设定的截稿时间

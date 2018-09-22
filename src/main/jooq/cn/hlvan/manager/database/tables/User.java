@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = -1722267117;
+    private static final long serialVersionUID = -888880548;
 
     /**
      * The reference instance of <code>zhulin.user</code>
@@ -81,9 +81,9 @@ public class User extends TableImpl<UserRecord> {
     public final TableField<UserRecord, String> QQ = createField("qq", org.jooq.impl.SQLDataType.VARCHAR(15), this, "qq号");
 
     /**
-     * The column <code>zhulin.user.wechat</code>. 微信号
+     * The column <code>zhulin.user.we_chat</code>. 微信号
      */
-    public final TableField<UserRecord, String> WECHAT = createField("wechat", org.jooq.impl.SQLDataType.VARCHAR(50), this, "微信号");
+    public final TableField<UserRecord, String> WE_CHAT = createField("we_chat", org.jooq.impl.SQLDataType.VARCHAR(50), this, "微信号");
 
     /**
      * The column <code>zhulin.user.code</code>. 用户编码

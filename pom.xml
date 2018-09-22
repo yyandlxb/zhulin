@@ -248,9 +248,9 @@
                 <configuration>
                     <jdbc>
                         <driver>com.mysql.jdbc.Driver</driver>
-                        <url>jdbc:mysql://localhost:3306/zhulin?useSSL=false</url>
+                        <url>jdbc:mysql://132.232.177.22:3306/zhulin?useSSL=false</url>
                         <user>root</user>
-                        <password>123456</password>
+                        <password>root</password>
                     </jdbc>
                     <generator>
                         <database>
