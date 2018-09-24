@@ -40,14 +40,10 @@ public class EssayOrderController {
     public Reply addEssay(@RequestJson(value = "fileName") String fileName, @Authenticated AuthorizedUser user,
                           @RequestJson(value = "userOrderId") Integer userOrderId,
                           @RequestJson(value = "essayTitle") String essayTitle) {
-        try {
-            boolean b = essayOrderService.createEssay(fileName, user.getId(), userOrderId, essayTitle);
-            if (b) {
-                return Reply.success();
-            } else {
-                return Reply.fail().message("添加文章失败");
-            }
-        } catch (IOException e) {
+        boolean b = essayOrderService.createEssay(fileName, user.getId(), userOrderId, essayTitle);
+        if (b) {
+            return Reply.success();
+        } else {
             return Reply.fail().message("添加文章失败");
         }
     }

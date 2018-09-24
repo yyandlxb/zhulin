@@ -24,7 +24,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.hlvan.constant.RoleType.MANAGER;
 import static cn.hlvan.manager.database.tables.ApplyFinance.APPLY_FINANCE;
+import static cn.hlvan.manager.database.tables.User.USER;
 
 @RestController
 @RequestMapping("/writer/finance")
@@ -46,24 +48,30 @@ public class WriterFinanceController {
     }
 
     @GetMapping("/list")
-    public Reply applyFinance(@Authenticated AuthorizedUser user, Byte status,String startTime,
-                             String endTime){
+    public Reply applyFinance(@Authenticated AuthorizedUser user, Byte status, String startTime,
+                              String endTime) {
 
         List<Condition> list = new ArrayList<>();
-        list.add(APPLY_FINANCE.USER_ID.eq(user.getId()));
+        if (user.getType() == MANAGER){
+            list.add(USER.PID.eq(user.getId()));
+        }else {
+            list.add(APPLY_FINANCE.USER_ID.eq(user.getId()));
+        }
         if (null != startTime)
-            list.add(APPLY_FINANCE.CREATED_AT.greaterOrEqual(Timestamp.valueOf( LocalDateTime.of(LocalDate.parse(startTime),LocalTime.MIN))));
+            list.add(APPLY_FINANCE.CREATED_AT.greaterOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(startTime), LocalTime.MIN))));
         if (null != endTime)
-            list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf( LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX))));
+            list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX))));
         if (null != status)
             list.add(APPLY_FINANCE.STATUS.eq(status));
-        List<ApplyFinanceRecord> applyFinanceRecords = dsl.selectFrom(APPLY_FINANCE).where(list).fetch();
+        List<ApplyFinanceRecord> applyFinanceRecords = dsl.select(APPLY_FINANCE.fields()).from(APPLY_FINANCE)
+                                                          .innerJoin(USER).on(USER.ID.eq(APPLY_FINANCE.USER_ID))
+                                                          .where(list).fetchInto(ApplyFinanceRecord.class);
         return Reply.success().data(applyFinanceRecords);
     }
 
     @PostMapping("/create")
-    public Reply createApplyFinance(@Authenticated AuthorizedUser user, @RequestJson(value = "money")String money){
-        financeService.create(user.getId(),new BigDecimal(money));
+    public Reply createApplyFinance(@Authenticated AuthorizedUser user, @RequestJson(value = "money") Integer money) {
+        financeService.create(user.getId(), new BigDecimal(money));
         return Reply.success();
     }
 }

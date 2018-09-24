@@ -29,9 +29,10 @@ public class AdminFinanceController {
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
     }
+
     @PostMapping("/determine")
     public Reply checkMakeMoney(@Authenticated AuthorizedUser user,
-                                @RequestJson(value = "orderId") Integer orderId){
+                                @RequestJson(value = "orderId") Integer orderId) {
         financeService.determineMakeMoney(user, orderId);
         return Reply.success();
     }
@@ -39,7 +40,7 @@ public class AdminFinanceController {
     @PostMapping("/make_money/writer")
     @RequirePermission(PermissionEnum.APPLY_FINANCE)
     public Reply makeMoneyWriter(@Authenticated AuthorizedUser user,
-                                @RequestJson(value = "orderId") Integer id){
+                                 @RequestJson(value = "id") Integer id) {
         financeService.determineMakeMoneyWriter(user, id);
         return Reply.success();
     }

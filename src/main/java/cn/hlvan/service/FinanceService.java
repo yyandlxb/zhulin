@@ -6,8 +6,8 @@ import cn.hlvan.manager.database.tables.records.TradeRecordRecord;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.view.Money;
+import cn.hlvan.view.UserMoney;
 import cn.hlvan.view.UserOrderFinance;
-import lombok.Data;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static cn.hlvan.constant.OrderEssayStatus.ACCEPT_SUCCESS;
-import static cn.hlvan.constant.OrderStatus.CARRY_OUT;
-import static cn.hlvan.constant.OrderStatus.END;
-import static cn.hlvan.constant.OrderStatus.MAKE_MONEY;
+import static cn.hlvan.constant.OrderStatus.*;
 import static cn.hlvan.manager.database.tables.ApplyFinance.APPLY_FINANCE;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
 import static cn.hlvan.manager.database.tables.OrderEssay.ORDER_ESSAY;
@@ -70,7 +68,8 @@ public class FinanceService {
             trr.setUserId(user.getId());
             dsl.executeInsert(trr);
 
-            UserMoneyRecord adminMoney = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(user.getId())).fetchSingle();
+            UserMoneyRecord adminMoney = dsl.selectFrom(USER_MONEY)
+                                            .where(USER_MONEY.USER_ID.eq(user.getId())).forUpdate().fetchSingle();
             dsl.update(USER_MONEY).set(USER_MONEY.MONEY, adminMoney.getMoney().add(money.getMerchantPrice()))
                .where(USER_MONEY.USER_ID.eq(user.getId())).execute();
 
@@ -94,7 +93,8 @@ public class FinanceService {
                 tr.setTradeCode(s);
                 tr.setUserId(e.getUserId());
                 dsl.executeInsert(tr);
-                UserMoneyRecord writerMoney = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(e.getUserId())).fetchSingle();
+                UserMoneyRecord writerMoney = dsl.selectFrom(USER_MONEY)
+                                                 .where(USER_MONEY.USER_ID.eq(e.getUserId())).forUpdate().fetchSingle();
                 dsl.update(USER_MONEY).set(USER_MONEY.MONEY, writerMoney.getMoney().add(e.getAdminPrice()))
                    .where(USER_MONEY.USER_ID.eq(e.getUserId())).execute();
             });
@@ -115,7 +115,7 @@ public class FinanceService {
             ApplyFinanceRecord applyFinance = new ApplyFinanceRecord();
             applyFinance.setMoney(money);
             applyFinance.setUserId(id);
-            dsl.executeInsert(userMoneyRecord);
+            dsl.executeInsert(applyFinance);
         } else {
             throw new ApplicationException("输入的金额应小于等于余额");
         }
@@ -139,43 +139,41 @@ public class FinanceService {
                                                    .fetchSingle();
 
         //查询写手余额
-        UserMoney userMoneyRecord = dsl.select(USER.ACCOUNT).select(USER_MONEY.MONEY)
-
+        UserMoney userMoneyRecord = dsl.select(USER.ACCOUNT).select(USER_MONEY.MONEY,USER_MONEY.USER_ID)
                                        .from(USER_MONEY).innerJoin(USER).on(USER_MONEY.USER_ID.eq(USER.ID))
-                                       .and(USER_MONEY.USER_ID.eq(applyFinanceRecord.getUserId())).fetchSingleInto(UserMoney.class);
+                                       .and(USER_MONEY.USER_ID.eq(applyFinanceRecord.getUserId())).forUpdate().fetchSingleInto(UserMoney.class);
 
         //查询管理员余额
-        UserMoneyRecord userMoneyAdmin = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(user.getId())).fetchSingle();
+        UserMoneyRecord userMoneyAdmin = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(user.getId())).forUpdate().fetchSingle();
         //查询写手信息
         //记录打款
         TradeRecordRecord tradeRecordRecord = new TradeRecordRecord();
-        tradeRecordRecord.setMoney(userMoneyRecord.getMoney().subtract(applyFinanceRecord.getMoney()));
+        tradeRecordRecord.setMoney(new BigDecimal(0).subtract(applyFinanceRecord.getMoney()));
         tradeRecordRecord.setTradeInfo("打款给" + userMoneyRecord.getAccount());
         tradeRecordRecord.setTradeCode(s);
         tradeRecordRecord.setUserId(user.getId());
         dsl.executeInsert(tradeRecordRecord);
         //写手增加提现记录
         TradeRecordRecord trr = new TradeRecordRecord();
-        trr.setMoney(userMoneyRecord.getMoney().subtract(applyFinanceRecord.getMoney()));
+        trr.setMoney(new BigDecimal(0).subtract(applyFinanceRecord.getMoney()));
         trr.setTradeInfo("提现");
         trr.setTradeCode(s);
         trr.setUserId(applyFinanceRecord.getUserId());
         dsl.executeInsert(trr);
         //减少余额
-        dsl.update(USER_MONEY).set(USER_MONEY.MONEY,userMoneyAdmin.getMoney().subtract(applyFinanceRecord.getMoney()))
+        dsl.update(USER_MONEY).set(USER_MONEY.MONEY, userMoneyAdmin.getMoney().subtract(applyFinanceRecord.getMoney()))
            .where(USER_MONEY.USER_ID.eq(user.getId())).execute();
-        dsl.update(USER_MONEY).set(USER_MONEY.MONEY,userMoneyRecord.getMoney().subtract(applyFinanceRecord.getMoney()))
+        dsl.update(USER_MONEY).set(USER_MONEY.MONEY, userMoneyRecord.getMoney().subtract(applyFinanceRecord.getMoney()))
            .where(USER_MONEY.USER_ID.eq(applyFinanceRecord.getUserId())).execute();
         //更新打款转态
-        dsl.update(APPLY_FINANCE).set(APPLY_FINANCE.STATUS,Byte.valueOf("1")).where(APPLY_FINANCE.ID.eq(id)).execute();
+        dsl.update(APPLY_FINANCE).set(APPLY_FINANCE.STATUS, Byte.valueOf("1")).where(APPLY_FINANCE.ID.eq(id)).execute();
 
     }
 
-
-    @Data
+    /*@Data
     public class UserMoney {
-        BigDecimal money;
         String account;
+        BigDecimal money;
         Integer userId;
-    }
+    }*/
 }

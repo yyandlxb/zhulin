@@ -32,39 +32,44 @@ import static cn.hlvan.manager.database.tables.UserOrder.USER_ORDER;
 @RequestMapping("/admin/merchant/order")
 public class AdminOrderController {
     private DSLContext dsl;
+
     @Autowired
     public void setDsl(DSLContext dsl) {
         this.dsl = dsl;
     }
+
     private OrderService orderService;
 
     @Autowired
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @PostMapping("/auditing")
     @RequirePermission(PermissionEnum.ORDER)
-    public Reply auditing(@RequestBody AuditingForm auditingForm){
-        boolean b = orderService.auditing(auditingForm.getId(),auditingForm.getStatus(),auditingForm.getResult(),
-            auditingForm.getPrice(),auditingForm.getEndTime());
-        if (b){
+    public Reply auditing(@RequestBody AuditingForm auditingForm) {
+        boolean b = orderService.auditing(auditingForm.getId(), auditingForm.getStatus(), auditingForm.getResult(),
+            auditingForm.getPrice(), auditingForm.getEndTime());
+        if (b) {
             return Reply.success();
-        }else {
+        } else {
             return Reply.fail().message("审核失败");
         }
     }
+
     @PostMapping("/distribute")
     @RequirePermission(PermissionEnum.DISTRIBUTE_ORDER)
     public Reply distribute(@RequestJson(value = "orderId") Integer orderId,
                             @RequestJson(value = "appointTotal") Integer appointTotal,
-                            @RequestJson(value = "userId") Integer userId){
-        boolean b = orderService.distribute(orderId,appointTotal,userId);
-        if (b){
+                            @RequestJson(value = "userId") Integer userId) {
+        boolean b = orderService.distribute(orderId, appointTotal, userId);
+        if (b) {
             return Reply.success();
-        }else {
+        } else {
             return Reply.fail().message("分配失败");
         }
     }
+
     @GetMapping("/detail")
     public Reply list(@RequestParam Integer id, @Authenticated AuthorizedUser user) {
         MerchantOrderDetail merchantOrderDetail = new MerchantOrderDetail();
@@ -84,7 +89,7 @@ public class AdminOrderController {
     //获取分配订单的写手信息
     @GetMapping("/writer_list")
     @RequirePermission(PermissionEnum.DISTRIBUTE_ORDER)
-    public Reply getWriter(@Authenticated AuthorizedUser user){
+    public Reply getWriter(@Authenticated AuthorizedUser user) {
 
         List<User> users = dsl.selectFrom(USER).where(USER.PID.eq(user.getId()))
                               .and(USER.TYPE.eq(WRITER))
@@ -95,15 +100,15 @@ public class AdminOrderController {
 
     @PostMapping("/time")
     @Transactional
-    public Reply updateTime(@Authenticated AuthorizedUser user,@RequestJson(value = "time") Integer time){
-        boolean b = dsl.update(LIMIT_TIME).set(LIMIT_TIME.LIMIT_TIME_,time)
+    public Reply updateTime(@Authenticated AuthorizedUser user, @RequestJson(value = "limitTime") Integer limitTime) {
+        boolean b = dsl.update(LIMIT_TIME).set(LIMIT_TIME.LIMIT_TIME_, limitTime)
                        .where(LIMIT_TIME.USER_ID.eq(user.getId())).execute() > 0;
         return b ? Reply.success() : Reply.fail().message("更新失败");
     }
 
     //获取分配订单的写手信息
     @GetMapping("/limit_time")
-    public Reply getLimit(@Authenticated AuthorizedUser user){
+    public Reply getLimit(@Authenticated AuthorizedUser user) {
 
         List<LimitTimeRecord> limit = dsl.selectFrom(LIMIT_TIME).where(LIMIT_TIME.USER_ID.eq(user.getId())).fetch();
         return Reply.success().data(limit.get(0));

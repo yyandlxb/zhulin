@@ -25,4 +25,5 @@ public class UserOrder {
     private Timestamp createdAt;//创建时间
     private String result;
     private Integer total;//订单的文章数量
+    private Integer appointTotal;
 }

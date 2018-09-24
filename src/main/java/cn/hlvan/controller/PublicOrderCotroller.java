@@ -90,7 +90,7 @@ public class PublicOrderCotroller {
         merchantOrderDetail.setOrderRecord(orderRecord);
         List<Condition> conditions = new ArrayList<>();
         Integer type = user.getType();
-        if (type.equals(UserType.MERCHANT)) {
+        if (type == UserType.MERCHANT) {
             conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
             .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)));
         }
