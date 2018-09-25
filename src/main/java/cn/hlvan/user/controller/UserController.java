@@ -124,7 +124,7 @@ public class UserController {
                     userService.addUser(userRecord);
                 }catch (Exception e){
                     logger.info("账号可能已存在",e);
-                    return Reply.fail().message("账号可能已存在");
+                    return Reply.fail().message("账号可能已注册");
                 }
             }else {
                 return Reply.fail().message("邀请码错误");

@@ -61,7 +61,7 @@ public class PublicOrderCotroller {
         if (type == (UserType.WRITER)) {
             orderForm.setStatus(OrderStatus.PUBLICING);
             conditions.add(USER.PID.eq(user.getPid()));
-        } else if (type ==(UserType.MANAGER)) {
+        } else if (type ==UserType.MANAGER) {
             conditions.add(USER.PID.eq(user.getId()));
         } else {
             conditions.add(ORDER.USER_ID.eq(user.getId()));

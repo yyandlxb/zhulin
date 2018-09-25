@@ -2,6 +2,7 @@ package cn.hlvan.service.admin;
 
 import cn.hlvan.constant.RoleType;
 import cn.hlvan.constant.UserType;
+import cn.hlvan.exception.ApplicationException;
 import cn.hlvan.manager.database.tables.records.UserMoneyRecord;
 import cn.hlvan.manager.database.tables.records.UserRecord;
 import cn.hlvan.manager.database.tables.records.UserRoleRecord;
@@ -60,7 +61,11 @@ public class UserService {
            .where(USER.ACCOUNT.eq(phoneNumber)).execute() > 0;
     }
 
+    @Transactional
     public boolean delete(Integer id) {
+        boolean present = dsl.selectOne().from(USER).where(USER.PID.eq(id)).fetchOptional().isPresent();
+        if (present)
+            throw new ApplicationException("管理员下有管辖的用户，不可删除");
         return dsl.deleteFrom(USER).where(USER.ID.eq(id)).execute() > 0;
     }
     public boolean update(UserRecord userRecord) {

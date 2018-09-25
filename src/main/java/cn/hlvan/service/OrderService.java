@@ -8,6 +8,7 @@ import cn.hlvan.manager.database.tables.records.LimitTimeRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
 import cn.hlvan.manager.database.tables.records.UserOrderRecord;
 import cn.hlvan.security.AuthorizedUser;
+import cn.hlvan.view.OrderEssayView;
 import cn.hlvan.view.UserOrder;
 import lombok.Data;
 import org.apache.commons.lang.RandomStringUtils;
@@ -239,18 +240,18 @@ public class OrderService {
             map.put(ORDER_ESSAY.RESULT, auditingEssayForm.getResult());
         if (null != auditingEssayForm.getOriginalLevel())
             map.put(ORDER_ESSAY.ORIGINAL_LEVEL, auditingEssayForm.getOriginalLevel());
-        OrderRecord orderRecord = dsl.select(ORDER.fields()).from(ORDER)
+        OrderEssayView orderRecord = dsl.select(ORDER.TOTAL,ORDER.ID,ORDER.ORDER_STATUS).select(ORDER_ESSAY.STATUS).from(ORDER)
                                      .innerJoin(USER_ORDER).on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
                                      .innerJoin(ORDER_ESSAY).on(USER_ORDER.ID.eq(ORDER_ESSAY.USER_ORDER_ID))
-                                     .and(ORDER_ESSAY.ID.eq(auditingEssayForm.getId())).forUpdate().fetchSingleInto(OrderRecord.class);
+                                     .and(ORDER_ESSAY.ID.eq(auditingEssayForm.getId())).forUpdate().fetchSingleInto(OrderEssayView.class);
         //不通过的文章要更新订单信息
-        if (auditingEssayForm.getStatus().equals(MERCHANT_REJECTION) || auditingEssayForm.getStatus().equals(ADMIN_REJECTION)){
+        if (auditingEssayForm.getStatus()== MERCHANT_REJECTION || auditingEssayForm.getStatus() == ADMIN_REJECTION){
 
             boolean b = dsl.update(ORDER).set(ORDER.TOTAL, orderRecord.getTotal() + 1).where(ORDER.ID.eq(orderRecord.getId())).execute() > 0;
             if (!b)
                 throw new ApplicationException("更新订单数量失败");
         }
-        if (orderRecord.getOrderStatus().equals(CARRY_OUT) || orderRecord.getOrderStatus().equals(MAKE_MONEY)){
+        if (orderRecord.getOrderStatus() == CARRY_OUT || orderRecord.getOrderStatus()== MAKE_MONEY){
             throw new ApplicationException("商家已打款或订单已完成");
         }
 

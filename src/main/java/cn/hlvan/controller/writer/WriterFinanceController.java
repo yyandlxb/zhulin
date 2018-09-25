@@ -1,13 +1,13 @@
 package cn.hlvan.controller.writer;
 
 import cn.hlvan.configure.RequestJson;
-import cn.hlvan.manager.database.tables.records.ApplyFinanceRecord;
 import cn.hlvan.security.AuthorizedUser;
 import cn.hlvan.security.permission.PermissionEnum;
 import cn.hlvan.security.permission.RequirePermission;
 import cn.hlvan.security.session.Authenticated;
 import cn.hlvan.service.FinanceService;
 import cn.hlvan.util.Reply;
+import cn.hlvan.view.ApplyFinanceView;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +63,9 @@ public class WriterFinanceController {
             list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX))));
         if (null != status)
             list.add(APPLY_FINANCE.STATUS.eq(status));
-        List<ApplyFinanceRecord> applyFinanceRecords = dsl.select(APPLY_FINANCE.fields()).from(APPLY_FINANCE)
-                                                          .innerJoin(USER).on(USER.ID.eq(APPLY_FINANCE.USER_ID))
-                                                          .where(list).fetchInto(ApplyFinanceRecord.class);
+        List<ApplyFinanceView> applyFinanceRecords = dsl.select(APPLY_FINANCE.fields()).select(USER.ACCOUNT).from(APPLY_FINANCE)
+                                                        .innerJoin(USER).on(USER.ID.eq(APPLY_FINANCE.USER_ID))
+                                                        .where(list).fetchInto(ApplyFinanceView.class);
         return Reply.success().data(applyFinanceRecords);
     }
 
