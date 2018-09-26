@@ -63,7 +63,7 @@ public class WriterFinanceController {
             list.add(APPLY_FINANCE.CREATED_AT.lessOrEqual(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX))));
         if (null != status)
             list.add(APPLY_FINANCE.STATUS.eq(status));
-        List<ApplyFinanceView> applyFinanceRecords = dsl.select(APPLY_FINANCE.fields()).select(USER.ACCOUNT).from(APPLY_FINANCE)
+        List<ApplyFinanceView> applyFinanceRecords = dsl.select(APPLY_FINANCE.fields()).select(USER.ACCOUNT,USER.PAY_PICTURE).from(APPLY_FINANCE)
                                                         .innerJoin(USER).on(USER.ID.eq(APPLY_FINANCE.USER_ID))
                                                         .where(list).fetchInto(ApplyFinanceView.class);
         return Reply.success().data(applyFinanceRecords);

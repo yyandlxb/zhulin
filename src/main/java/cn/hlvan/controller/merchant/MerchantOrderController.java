@@ -47,20 +47,24 @@ public class MerchantOrderController {
     @RequirePermission(PermissionEnum.ORDER)
     public Reply delete(@RequestJson(value = "id") Integer id, @Authenticated AuthorizedUser user) {
         Integer count = orderService.delete(id, user.getId());
-        return Reply.success().data(count);
+        if (count > 0){
+            return Reply.success().data(count);
+        }else {
+            return Reply.fail().message("删除失败");
+        }
     }
 
     @PostMapping("/update")
     @RequirePermission(PermissionEnum.ORDER)
-    public Reply update(@RequestBody OrderForm orderForm , @Authenticated AuthorizedUser user) {
-        OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
-                                .where(ORDER.ID.eq(orderForm.getId()))
-                                .and(ORDER.USER_ID.eq(user.getId()))
-                                .fetchSingleInto(OrderRecord.class);
-        orderR.from(orderForm);
-        orderR.setOrderStatus(WAIT_AUDITING);
-        if (orderForm.getTotal() >= 0) {
-            boolean b = orderService.update(orderR);
+    public Reply update(@RequestJson(value = "total") Integer total ,@RequestJson(value = "id") Integer id , @Authenticated AuthorizedUser user) {
+//        OrderRecord orderR = dsl.select(ORDER.fields()).from(ORDER)
+//                                .where(ORDER.ID.eq(orderForm.getId()))
+//                                .and(ORDER.USER_ID.eq(user.getId()))
+//                                .fetchSingleInto(OrderRecord.class);
+//        orderR.from(orderForm);
+//        orderR.setOrderStatus(WAIT_AUDITING);
+        if (total >= 0) {
+            boolean b = orderService.update(id,total,user.getId());
             if (b) {
                 return Reply.success();
             } else {

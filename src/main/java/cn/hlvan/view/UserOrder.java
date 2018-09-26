@@ -26,4 +26,5 @@ public class UserOrder {
     private String result;
     private Integer total;//订单的文章数量
     private Integer appointTotal;
+    private String account;
 }

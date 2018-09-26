@@ -112,11 +112,14 @@ public class OrderService {
     public boolean update(OrderRecord orderRecord) {
         return dsl.executeUpdate(orderRecord) > 0;
     }
+    public boolean update(Integer id,Integer total ,Integer userId) {
+        return dsl.update(ORDER).set(ORDER.TOTAL,total).where(ORDER.USER_ID.eq(id).and(ORDER.USER_ID.eq(userId))).execute() > 0;
+    }
 
     public Integer delete(Integer ids, Integer userId) {
         return dsl.update(ORDER).set(ORDER.ORDER_STATUS, OrderStatus.DELETE)
-                  .where(ORDER.ORDER_STATUS.eq(WAIT_AUDITING))
-                  .and(ORDER.ID.in(ids))
+                  .where(ORDER.ORDER_STATUS.in(WAIT_AUDITING,AUDITING_FAIL))
+                  .and(ORDER.ID.eq(ids))
                   .and(ORDER.USER_ID.eq(userId))
                   .execute();
     }
@@ -264,7 +267,7 @@ public class OrderService {
     public boolean urgeMail(Integer id, Integer userId) {
         //查询未完成订单的用户信息
         List<UserOrder> userOrders = dsl.select(USER_ORDER.fields())
-                                        .select(USER.EMAIL, USER.PID)
+                                        .select(USER.EMAIL, USER.PID,USER.ACCOUNT)
                                         .from(ORDER).innerJoin(USER_ORDER)
                                         .on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE)).innerJoin(USER)
                                         .on(USER_ORDER.USER_ID.eq(USER.ID))
@@ -285,7 +288,7 @@ public class OrderService {
                 message.setTo(u.getEmail());
                 message.setBcc(s);
                 message.setSubject("催稿通知");
-                message.setText("你有订单未完成，订单号为：" + u.getOrderCode()
+                message.setText("写手"+u.getAccount()+"有订单未完成，订单号为：" + u.getOrderCode()
                                 + "系统邮件，请勿回复");
                 javaMailSender.send(message);
             }

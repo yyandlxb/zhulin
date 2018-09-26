@@ -111,13 +111,17 @@ public class FinanceService {
     @Transactional
     public void create(Integer id, BigDecimal money) {
         UserMoneyRecord userMoneyRecord = dsl.selectFrom(USER_MONEY).where(USER_MONEY.USER_ID.eq(id)).fetchSingle();
-        if (userMoneyRecord.getMoney().compareTo(money) >= 0) {
+        boolean present = dsl.selectOne().from(APPLY_FINANCE)
+                             .where(APPLY_FINANCE.STATUS.eq(Byte.valueOf("0")))//待打款的
+                             .and(APPLY_FINANCE.USER_ID.eq(id)).forUpdate()
+                             .fetchOptional().isPresent();
+        if (userMoneyRecord.getMoney().compareTo(money) >= 0 && present) {
             ApplyFinanceRecord applyFinance = new ApplyFinanceRecord();
             applyFinance.setMoney(money);
             applyFinance.setUserId(id);
             dsl.executeInsert(applyFinance);
         } else {
-            throw new ApplicationException("输入的金额应小于等于余额");
+            throw new ApplicationException("输入的金额应小于等于余额或有未打款的申请");
         }
     }
 
