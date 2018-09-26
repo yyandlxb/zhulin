@@ -115,7 +115,7 @@ public class FinanceService {
                              .where(APPLY_FINANCE.STATUS.eq(Byte.valueOf("0")))//待打款的
                              .and(APPLY_FINANCE.USER_ID.eq(id)).forUpdate()
                              .fetchOptional().isPresent();
-        if (userMoneyRecord.getMoney().compareTo(money) >= 0 && present) {
+        if (userMoneyRecord.getMoney().compareTo(money) >= 0 && !present && money.compareTo(new BigDecimal(0)) > 0) {
             ApplyFinanceRecord applyFinance = new ApplyFinanceRecord();
             applyFinance.setMoney(money);
             applyFinance.setUserId(id);

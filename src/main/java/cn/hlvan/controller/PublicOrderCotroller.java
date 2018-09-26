@@ -1,8 +1,6 @@
 package cn.hlvan.controller;
 
-import cn.hlvan.constant.OrderStatus;
 import cn.hlvan.constant.UserType;
-import cn.hlvan.controller.admin.AdminUserController;
 import cn.hlvan.form.AuditingEssayForm;
 import cn.hlvan.manager.database.tables.records.OrderEssayRecord;
 import cn.hlvan.manager.database.tables.records.OrderRecord;
@@ -17,13 +15,9 @@ import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +53,7 @@ public class PublicOrderCotroller {
         Integer type = user.getType();
         logger.info("用户类型"+type);
         if (type == (UserType.WRITER)) {
-            orderForm.setStatus(OrderStatus.PUBLICING);
+//            orderForm.setStatus(OrderStatus.PUBLICING);
             conditions.add(USER.PID.eq(user.getPid()));
         } else if (type ==UserType.MANAGER) {
             conditions.add(USER.PID.eq(user.getId()));
