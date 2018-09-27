@@ -10,6 +10,7 @@ import cn.hlvan.service.OrderService;
 import cn.hlvan.util.Page;
 import cn.hlvan.util.Reply;
 import cn.hlvan.view.MerchantOrderDetail;
+import cn.hlvan.view.UserOrder;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -119,4 +120,32 @@ public class PublicOrderCotroller {
 
     }
 
+
+    @GetMapping("/search")
+    public Reply list(String fileName, @Authenticated AuthorizedUser user) {
+        MerchantOrderDetail merchantOrderDetail = new MerchantOrderDetail();
+        List<Condition> conditions = new ArrayList<>();
+        Integer type = user.getType();
+        if (type == UserType.MERCHANT) {
+            conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
+                                             .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)));
+        }
+        UserOrder orderEssayRecords = dsl.select(ORDER_ESSAY.fields())
+                                               .select(ORDER.ORDER_CODE)
+                                               .from(USER_ORDER)
+                                               .innerJoin(ORDER_ESSAY)
+                                               .on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
+                                               .innerJoin(ORDER).on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
+                                               .where(conditions)
+                                               .and(ORDER_ESSAY.ESSAY_TITLE.eq(fileName))
+                                               .fetchOneInto(UserOrder.class);
+        merchantOrderDetail.setUserOrder(orderEssayRecords);
+        if (orderEssayRecords !=null ){
+            OrderRecord orderRecord = dsl.selectFrom(ORDER)
+                                         .where(ORDER.ORDER_CODE.eq(orderEssayRecords.getOrderCode()))
+                                         .fetchSingleInto(OrderRecord.class);
+            merchantOrderDetail.setOrderRecord(orderRecord);
+        }
+        return Reply.success().data(merchantOrderDetail);
+    }
 }

@@ -54,6 +54,9 @@ public class EssayOrderService {
                                              .and(USER_ORDER.USER_ID.eq(id)).fetchSingle();
         if (userOrderRecord.getStatus().equals(ALREADY_END))
             throw new ApplicationException("订单已截稿");
+
+        if (userOrderRecord.getReserveTotal() >= userOrderRecord.getComplete())
+            throw new ApplicationException("订单已完成，不能再添加文章");
         OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
         orderEssayRecord.setEassyFile(fileName);
         orderEssayRecord.setEssayTitle(essayTitle);
@@ -67,17 +70,17 @@ public class EssayOrderService {
             try {
                 list = extractRar(filePath + fileName);
             } catch (RarException | IOException e) {
-                logger.info("解析图片错误",e);
+                logger.info("解析图片错误", e);
                 throw new ApplicationException("文件解析失败");
             }
-            for (String fileN:list) {
+            for (String fileN : list) {
                 File file = new File(filePath + fileN);
-                if (file.getName().contains(".jpg") || file.getName().contains(".png")){
+                if (file.getName().contains(".jpg") || file.getName().contains(".png")) {
                     BufferedImage bufferedImage;
                     try {
                         bufferedImage = ImageIO.read(file);
                     } catch (IOException e) {
-                        logger.info("解析图片错误",e);
+                        logger.info("解析图片错误", e);
                         throw new ApplicationException("文件解析失败");
                     }
                     int width = bufferedImage.getWidth();
@@ -85,36 +88,36 @@ public class EssayOrderService {
                     //存入图片信息
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length()/1024 /1024 / 1024 / 1024.0 + "M");
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
                     pictureRecord.setOrderEassyId(essayId.intValue());
                     dsl.executeInsert(pictureRecord);
                 }
             }
             //更新订单表
-            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE, userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
             //判断是否已经完成
-            if ((userOrderRecord.getComplete() + 1) >= userOrderRecord.getReserveTotal()){
-                dsl.update(USER_ORDER).set(USER_ORDER.STATUS,CARRY_OUT).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            if ((userOrderRecord.getComplete() + 1) >= userOrderRecord.getReserveTotal()) {
+                dsl.update(USER_ORDER).set(USER_ORDER.STATUS, CARRY_OUT).where(USER_ORDER.ID.eq(userOrderId)).execute();
             }
             Integer count = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayId.intValue())).fetchOne().value1();
             dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL, count).where(ORDER_ESSAY.ID.eq(essayId.intValue())).execute();
             return true;
-        } else if (fileName.endsWith(".zip")){
+        } else if (fileName.endsWith(".zip")) {
             List<String> list;
             try {
                 list = extractZip(filePath + fileName);
             } catch (IOException e) {
-                logger.info("解析图片错误",e);
+                logger.info("解析图片错误", e);
                 throw new ApplicationException("文件解析失败");
             }
-            for (String fileN:list) {
+            for (String fileN : list) {
                 File file = new File(filePath + fileN);
-                if (file.getName().contains(".jpg") || file.getName().contains(".png")){
-                    BufferedImage bufferedImage ;
+                if (file.getName().contains(".jpg") || file.getName().contains(".png")) {
+                    BufferedImage bufferedImage;
                     try {
                         bufferedImage = ImageIO.read(file);
                     } catch (IOException e) {
-                        logger.info("解析图片错误",e);
+                        logger.info("解析图片错误", e);
                         throw new ApplicationException("文件解析失败");
                     }
                     int width = bufferedImage.getWidth();
@@ -123,25 +126,24 @@ public class EssayOrderService {
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
                     pictureRecord.setOrderEassyId(essayId.intValue());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length()/1024 /1024 / 1024 / 1024.0 + "M");
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
                     dsl.executeInsert(pictureRecord);
                 }
             }
             //更新订单表
-            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE, userOrderRecord.getComplete() + 1).where(USER_ORDER.ID.eq(userOrderId)).execute();
             //判断是否已经完成
-            if ((userOrderRecord.getComplete() + 1) >= userOrderRecord.getReserveTotal()){
-                dsl.update(USER_ORDER).set(USER_ORDER.STATUS,CARRY_OUT).where(USER_ORDER.ID.eq(userOrderId)).execute();
+            if ((userOrderRecord.getComplete() + 1) >= userOrderRecord.getReserveTotal()) {
+                dsl.update(USER_ORDER).set(USER_ORDER.STATUS, CARRY_OUT).where(USER_ORDER.ID.eq(userOrderId)).execute();
             }
             Integer count = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayId.intValue())).fetchOne().value1();
             dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL, count).where(ORDER_ESSAY.ID.eq(essayId.intValue())).execute();
             return true;
-        }else {
+        } else {
             return false;
 
         }
     }
-
 
 //    public void insertWord(String fileName,Integer essayId) throws IOException {
 //        //文章读取
@@ -170,7 +172,6 @@ public class EssayOrderService {
 //            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL, count).where(ORDER_ESSAY.ID.eq(essayId.intValue())).execute();
 //        }
 //    }
-
 
     @Transactional
     public boolean updateEssay(String fileName, Integer id, Integer essayOrderId, String essayTitle) throws IOException {
@@ -203,23 +204,23 @@ public class EssayOrderService {
             } catch (RarException e) {
                 throw new ApplicationException("文件解析失败");
             }
-            for (String fileN:list) {
+            for (String fileN : list) {
                 File file = new File(filePath + fileN);
-                if (file.getName().contains(".jpg") || file.getName().contains(".png")){
+                if (file.getName().contains(".jpg") || file.getName().contains(".png")) {
                     BufferedImage bufferedImage = ImageIO.read(file);
                     int width = bufferedImage.getWidth();
                     int height = bufferedImage.getHeight();
                     //存入图片信息
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.getTotalSpace() / 1024 / 1024.0 + "M");
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
                     pictureRecord.setOrderEassyId(orderEssayRecord.getId());
                     dsl.executeInsert(pictureRecord);
                 }
             }
 
             Integer ct = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayOrderId)).fetchOne().value1();
-            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL,ct).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute();
+            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL, ct).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute();
             return true;
         } else if (fileName.endsWith(".zip")) {
             List<String> list = extractZip(fileName);
@@ -233,14 +234,14 @@ public class EssayOrderService {
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
                     pictureRecord.setOrderEassyId(orderEssayRecord.getId());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.getTotalSpace() / 1024 / 1024.0 + "M");
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
                     dsl.executeInsert(pictureRecord);
                 }
             }
             Integer ct = dsl.selectCount().from(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayOrderId)).fetchOne().value1();
-            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL,ct).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute();
+            dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.PICTURE_TOTAL, ct).where(ORDER_ESSAY.ID.eq(essayOrderId)).execute();
             return true;
-        }else{
+        } else {
             throw new ApplicationException("上传文件格式不正确");
         }
     }
@@ -256,12 +257,12 @@ public class EssayOrderService {
                .and(USER_ORDER.USER_ID.eq(id)).fetchOneInto(UserOrderRecord.class);
 
         if (userOrder != null) {
-            Map<Object,Object> map = new HashMap<>();
+            Map<Object, Object> map = new HashMap<>();
             //更新订单表
-            if (userOrder.getReserveTotal() > userOrder.getComplete() - 1){
-                map.put(USER_ORDER.STATUS,WAIT_APPOINT);
+            if (userOrder.getReserveTotal() > userOrder.getComplete() - 1) {
+                map.put(USER_ORDER.STATUS, WAIT_APPOINT);
             }
-            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE,userOrder.getComplete() - 1).set(map)
+            dsl.update(USER_ORDER).set(USER_ORDER.COMPLETE, userOrder.getComplete() - 1).set(map)
                .where(USER_ORDER.ID.eq(id)).execute();
             //删除照片
             dsl.deleteFrom(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(essayOrderId)).execute();
@@ -276,19 +277,19 @@ public class EssayOrderService {
         Archive arch = new Archive(new File(file));
         List<FileHeader> headers = arch.getFileHeaders();
         Iterator<FileHeader> iterator = headers.iterator();
-        while ( iterator.hasNext() ){
+        while (iterator.hasNext()) {
             FileHeader next = iterator.next();
             int i = next.getFileNameW().lastIndexOf(".");
             int length = next.getFileNameW().length();
-            if (!next.isDirectory()){
+            if (!next.isDirectory()) {
                 String fileName = System.currentTimeMillis() +
-                RandomStringUtils.randomNumeric(3) + next.getFileNameW().substring(i,length);
+                                  RandomStringUtils.randomNumeric(3) + next.getFileNameW().substring(i, length);
                 File fileExtract = new File(filePath + fileName);
                 list.add(fileName);
-                if (fileExtract.exists()){
+                if (fileExtract.exists()) {
                     FileOutputStream os = new FileOutputStream(fileExtract);
                     arch.extractFile(next, os);
-                }else {
+                } else {
                     fileExtract.createNewFile();
                     FileOutputStream os = new FileOutputStream(fileExtract);
                     arch.extractFile(next, os);
@@ -297,14 +298,15 @@ public class EssayOrderService {
         }
         return list;
     }
+
     private List<String> extractZip(String file) throws IOException {
         List<String> list = new ArrayList<>();
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(new FileInputStream(file));
         ZipEntry zipEntry = zis.getNextEntry();
-        while(zipEntry != null){
-            if (!zipEntry.isDirectory()){
-                String fileName = System.currentTimeMillis()+ zipEntry.getName().substring (zipEntry.getName().lastIndexOf("/")+1, zipEntry.getName().length());
+        while (zipEntry != null) {
+            if (!zipEntry.isDirectory()) {
+                String fileName = System.currentTimeMillis() + zipEntry.getName().substring(zipEntry.getName().lastIndexOf("/") + 1, zipEntry.getName().length());
                 File newFile = new File(filePath + fileName);
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;

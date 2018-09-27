@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class UserOrder {
     private Integer userOrderId;//用户订单Id
     private String essayTitle;//文章标题
+    private String essayFile;
     private String orderTitle;//订单标题
     private BigDecimal adminPrice;//价格
     private String essayType;//文章领域

@@ -140,7 +140,9 @@ public class FinanceService {
         ApplyFinanceRecord applyFinanceRecord = dsl.selectFrom(APPLY_FINANCE)
                                                    .where(APPLY_FINANCE.ID.eq(id)
                                                                           .and(APPLY_FINANCE.STATUS.eq(Byte.valueOf("0"))))
-                                                   .fetchSingle();
+                                                   .fetchOne();
+        if (null == applyFinanceRecord)
+            throw new ApplicationException("打款失败，此申请已打款");
 
         //查询写手余额
         UserMoney userMoneyRecord = dsl.select(USER.ACCOUNT).select(USER_MONEY.MONEY,USER_MONEY.USER_ID)
@@ -174,10 +176,4 @@ public class FinanceService {
 
     }
 
-    /*@Data
-    public class UserMoney {
-        String account;
-        BigDecimal money;
-        Integer userId;
-    }*/
 }

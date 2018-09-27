@@ -121,9 +121,14 @@ public class SuperAdminController {
 
     //把商家或者写手分配至其它管理员
     @PostMapping("/update_admin")
-    public Reply distribute(@RequestJson(value = "id") Integer[] id, @RequestJson(value = "adminId") Integer adminId){
+    public Reply distribute(@RequestJson(value = "id") String id, @RequestJson(value = "adminId") Integer adminId){
+        String[] split = id.split(",");
+        Integer[] ids = new Integer[split.length];
+        for (int i = 0; i< split.length ;i ++ ) {
+            ids[i] = Integer.parseInt(split[i]);
+        }
 
-        boolean b = userService.updateAdmin(id,adminId);
+        boolean b = userService.updateAdmin(ids,adminId);
         if (b){
             return Reply.success();
         }else {

@@ -10,4 +10,5 @@ import java.util.List;
 public class MerchantOrderDetail {
     private OrderRecord orderRecord;
     private List<OrderEssayRecord> OrderEssayRecords;
+    private UserOrder userOrder;
 }
