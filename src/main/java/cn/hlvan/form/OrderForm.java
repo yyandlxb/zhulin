@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class OrderForm {
@@ -19,8 +20,7 @@ public class OrderForm {
     private Double originalLevel;//原创度要求
     private Integer picture;//图片数量要求
     private Byte type;//类型 0-流量文，1-养号文
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate endTime;//截止交稿时间
+    private String endTime;//截止交稿时间
     private String require;//要求
     private String wordCount;//字数要求
 }

@@ -55,10 +55,10 @@ public class EssayOrderService {
         if (userOrderRecord.getStatus().equals(ALREADY_END))
             throw new ApplicationException("订单已截稿");
 
-        if (userOrderRecord.getReserveTotal() >= userOrderRecord.getComplete())
+        if (userOrderRecord.getReserveTotal() <= userOrderRecord.getComplete())
             throw new ApplicationException("订单已完成，不能再添加文章");
         OrderEssayRecord orderEssayRecord = new OrderEssayRecord();
-        orderEssayRecord.setEassyFile(fileName);
+        orderEssayRecord.setEssayFile(fileName);
         orderEssayRecord.setEssayTitle(essayTitle);
         orderEssayRecord.setUserOrderId(userOrderId);
         orderEssayRecord.setOrderCode(userOrderRecord.getOrderCode());
@@ -186,12 +186,12 @@ public class EssayOrderService {
 
         OrderEssayRecord orderEssayRecord = dsl.selectFrom(ORDER_ESSAY).where(ORDER_ESSAY.ID.eq(essayOrderId))
                                                .fetchSingle();
-        orderEssayRecord.setEassyFile(fileName);
+        orderEssayRecord.setEssayFile(fileName);
         orderEssayRecord.setEssayTitle(essayTitle);
         //删除之前的图片
         dsl.deleteFrom(PICTURE).where(PICTURE.ORDER_EASSY_ID.eq(orderEssayRecord.getId())).execute();
         boolean b = dsl.update(ORDER_ESSAY).set(ORDER_ESSAY.ESSAY_TITLE, essayTitle)
-                       .set(ORDER_ESSAY.EASSY_FILE, fileName)
+                       .set(ORDER_ESSAY.ESSAY_FILE, fileName)
                        .where(ORDER_ESSAY.ID.eq(essayOrderId))
                        .and(ORDER_ESSAY.STATUS.eq(ADMIN_WAIT_AUDITING)).execute() > 0;
         if (!b)

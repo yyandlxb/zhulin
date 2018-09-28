@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserOrder extends TableImpl<UserOrderRecord> {
 
-    private static final long serialVersionUID = 180814106;
+    private static final long serialVersionUID = 210011898;
 
     /**
      * The reference instance of <code>zhulin.user_order</code>
@@ -91,9 +91,9 @@ public class UserOrder extends TableImpl<UserOrderRecord> {
     public final TableField<UserOrderRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "用户id");
 
     /**
-     * The column <code>zhulin.user_order.status</code>. 0待预约，1-待完成，2-已完成，3-已截稿
+     * The column <code>zhulin.user_order.status</code>. 0待预约，1-待完成，2-已完成，3-已截稿,4-已取消
      */
-    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-待完成，2-已完成，3-已截稿");
+    public final TableField<UserOrderRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0待预约，1-待完成，2-已完成，3-已截稿,4-已取消");
 
     /**
      * Create a <code>zhulin.user_order</code> table reference

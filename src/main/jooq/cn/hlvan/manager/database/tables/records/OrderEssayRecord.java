@@ -30,7 +30,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> implements Record13<Integer, Integer, String, String, String, Double, Integer, Integer, String, Timestamp, Timestamp, Byte, String> {
 
-    private static final long serialVersionUID = -1873697463;
+    private static final long serialVersionUID = -1131811767;
 
     /**
      * Setter for <code>zhulin.order_essay.id</code>.
@@ -93,17 +93,17 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
     }
 
     /**
-     * Setter for <code>zhulin.order_essay.eassy_file</code>. 文件路径
+     * Setter for <code>zhulin.order_essay.essay_file</code>. 文件路径
      */
-    public OrderEssayRecord setEassyFile(String value) {
+    public OrderEssayRecord setEssayFile(String value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.order_essay.eassy_file</code>. 文件路径
+     * Getter for <code>zhulin.order_essay.essay_file</code>. 文件路径
      */
-    public String getEassyFile() {
+    public String getEssayFile() {
         return (String) get(4);
     }
 
@@ -296,7 +296,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
      */
     @Override
     public Field<String> field5() {
-        return OrderEssay.ORDER_ESSAY.EASSY_FILE;
+        return OrderEssay.ORDER_ESSAY.ESSAY_FILE;
     }
 
     /**
@@ -400,7 +400,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
      */
     @Override
     public String component5() {
-        return getEassyFile();
+        return getEssayFile();
     }
 
     /**
@@ -504,7 +504,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
      */
     @Override
     public String value5() {
-        return getEassyFile();
+        return getEssayFile();
     }
 
     /**
@@ -612,7 +612,7 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
      */
     @Override
     public OrderEssayRecord value5(String value) {
-        setEassyFile(value);
+        setEssayFile(value);
         return this;
     }
 
@@ -723,14 +723,14 @@ public class OrderEssayRecord extends UpdatableRecordImpl<OrderEssayRecord> impl
     /**
      * Create a detached, initialised OrderEssayRecord
      */
-    public OrderEssayRecord(Integer id, Integer userOrderId, String orderCode, String essayTitle, String eassyFile, Double originalLevel, Integer pictureTotal, Integer pictureId, String notes, Timestamp createdAt, Timestamp updatedAt, Byte status, String result) {
+    public OrderEssayRecord(Integer id, Integer userOrderId, String orderCode, String essayTitle, String essayFile, Double originalLevel, Integer pictureTotal, Integer pictureId, String notes, Timestamp createdAt, Timestamp updatedAt, Byte status, String result) {
         super(OrderEssay.ORDER_ESSAY);
 
         set(0, id);
         set(1, userOrderId);
         set(2, orderCode);
         set(3, essayTitle);
-        set(4, eassyFile);
+        set(4, essayFile);
         set(5, originalLevel);
         set(6, pictureTotal);
         set(7, pictureId);

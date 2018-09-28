@@ -111,7 +111,7 @@ public class EssayController {
 
         list.forEach(r -> {
             try {
-                zipFile(new File(path + r.getEassyFile()), new ZipOutputStream(new FileOutputStream(file)));
+                zipFile(new File(path + r.getEssayFile()), new ZipOutputStream(new FileOutputStream(file)));
             } catch (FileNotFoundException e) {
                 logger.info("压缩失败", e);
             }
@@ -157,7 +157,7 @@ public class EssayController {
         return null;
     }
 
-    private static void zipFile(File inputFile, ZipOutputStream ouputStream) {
+    private static void zipFile(File inputFile, ZipOutputStream outputStream) {
         try {
             if (inputFile.exists()) {
                 if (inputFile.isFile()) {
@@ -165,12 +165,12 @@ public class EssayController {
                     BufferedInputStream bins = new BufferedInputStream(in, 1024);
                     //org.apache.tools.zip.ZipEntry
                     ZipEntry entry = new ZipEntry(inputFile.getName());
-                    ouputStream.putNextEntry(entry);
+                    outputStream.putNextEntry(entry);
                     // 向压缩文件中输出数据
                     int nNumber;
                     byte[] buffer = new byte[1024];
                     while ((nNumber = bins.read(buffer)) != -1) {
-                        ouputStream.write(buffer, 0, nNumber);
+                        outputStream.write(buffer, 0, nNumber);
                     }
                     // 关闭创建的流对象
                     bins.close();
@@ -179,7 +179,7 @@ public class EssayController {
                     try {
                         File[] files = inputFile.listFiles();
                         for (File file : files) {
-                            zipFile(file, ouputStream);
+                            zipFile(file, outputStream);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

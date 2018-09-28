@@ -28,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
 
-    private static final long serialVersionUID = 28522878;
+    private static final long serialVersionUID = -2024203188;
 
     /**
      * Setter for <code>zhulin.order.id</code>.
@@ -151,17 +151,17 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
     }
 
     /**
-     * Setter for <code>zhulin.order.eassy_type</code>. 文章领域
+     * Setter for <code>zhulin.order.essay_type</code>. 文章领域
      */
-    public OrderRecord setEassyType(String value) {
+    public OrderRecord setEssayType(String value) {
         set(8, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.order.eassy_type</code>. 文章领域
+     * Getter for <code>zhulin.order.essay_type</code>. 文章领域
      */
-    public String getEassyType() {
+    public String getEssayType() {
         return (String) get(8);
     }
 
@@ -301,17 +301,17 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
     }
 
     /**
-     * Setter for <code>zhulin.order.eassy_total</code>. 文章数量
+     * Setter for <code>zhulin.order.essay_total</code>. 文章数量
      */
-    public OrderRecord setEassyTotal(Integer value) {
+    public OrderRecord setEssayTotal(Integer value) {
         set(18, value);
         return this;
     }
 
     /**
-     * Getter for <code>zhulin.order.eassy_total</code>. 文章数量
+     * Getter for <code>zhulin.order.essay_total</code>. 文章数量
      */
-    public Integer getEassyTotal() {
+    public Integer getEssayTotal() {
         return (Integer) get(18);
     }
 
@@ -375,6 +375,21 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
         return (Timestamp) get(22);
     }
 
+    /**
+     * Setter for <code>zhulin.order.account</code>. 发布中账号
+     */
+    public OrderRecord setAccount(String value) {
+        set(23, value);
+        return this;
+    }
+
+    /**
+     * Getter for <code>zhulin.order.account</code>. 发布中账号
+     */
+    public String getAccount() {
+        return (String) get(23);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -401,7 +416,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
     /**
      * Create a detached, initialised OrderRecord
      */
-    public OrderRecord(Integer id, String orderCode, Byte orderStatus, Byte payType, Integer userId, Integer total, BigDecimal merchantPrice, BigDecimal adminPrice, String eassyType, String notes, Timestamp createdAt, Timestamp updatedAt, String orderTitle, Double originalLevel, Integer picture, Byte type, Timestamp endTime, String require, Integer eassyTotal, String wordCount, String result, Integer appointTotal, Timestamp adminEndTime) {
+    public OrderRecord(Integer id, String orderCode, Byte orderStatus, Byte payType, Integer userId, Integer total, BigDecimal merchantPrice, BigDecimal adminPrice, String essayType, String notes, Timestamp createdAt, Timestamp updatedAt, String orderTitle, Double originalLevel, Integer picture, Byte type, Timestamp endTime, String require, Integer essayTotal, String wordCount, String result, Integer appointTotal, Timestamp adminEndTime, String account) {
         super(Order.ORDER);
 
         set(0, id);
@@ -412,7 +427,7 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
         set(5, total);
         set(6, merchantPrice);
         set(7, adminPrice);
-        set(8, eassyType);
+        set(8, essayType);
         set(9, notes);
         set(10, createdAt);
         set(11, updatedAt);
@@ -422,10 +437,11 @@ public class OrderRecord extends UpdatableRecordImpl<OrderRecord> {
         set(15, type);
         set(16, endTime);
         set(17, require);
-        set(18, eassyTotal);
+        set(18, essayTotal);
         set(19, wordCount);
         set(20, result);
         set(21, appointTotal);
         set(22, adminEndTime);
+        set(23, account);
     }
 }

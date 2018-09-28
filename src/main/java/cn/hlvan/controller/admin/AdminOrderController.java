@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static cn.hlvan.constant.UserStatus.AUDUTING_SUCCESS;
@@ -48,8 +49,9 @@ public class AdminOrderController {
     @PostMapping("/auditing")
     @RequirePermission(PermissionEnum.ORDER)
     public Reply auditing(@RequestBody AuditingForm auditingForm) {
+
         boolean b = orderService.auditing(auditingForm.getId(), auditingForm.getStatus(), auditingForm.getResult(),
-            auditingForm.getPrice(), auditingForm.getEndTime());
+            auditingForm.getPrice(),auditingForm.getEndTime());
         if (b) {
             return Reply.success();
         } else {

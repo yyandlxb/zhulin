@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ApplyFinance extends TableImpl<ApplyFinanceRecord> {
 
-    private static final long serialVersionUID = -321016326;
+    private static final long serialVersionUID = -828266420;
 
     /**
      * The reference instance of <code>zhulin.apply_finance</code>
@@ -84,7 +84,7 @@ public class ApplyFinance extends TableImpl<ApplyFinanceRecord> {
     /**
      * The column <code>zhulin.apply_finance.status</code>. 0-待打款，1-已打款
      */
-    public final TableField<ApplyFinanceRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT, this, "0-待打款，1-已打款");
+    public final TableField<ApplyFinanceRecord, Byte> STATUS = createField("status", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0-待打款，1-已打款");
 
     /**
      * Create a <code>zhulin.apply_finance</code> table reference

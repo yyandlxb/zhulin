@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class OrderEssay extends TableImpl<OrderEssayRecord> {
 
-    private static final long serialVersionUID = 359898518;
+    private static final long serialVersionUID = -1822840505;
 
     /**
      * The reference instance of <code>zhulin.order_essay</code>
@@ -76,9 +76,9 @@ public class OrderEssay extends TableImpl<OrderEssayRecord> {
     public final TableField<OrderEssayRecord, String> ESSAY_TITLE = createField("essay_title", org.jooq.impl.SQLDataType.VARCHAR(255), this, "文章标题");
 
     /**
-     * The column <code>zhulin.order_essay.eassy_file</code>. 文件路径
+     * The column <code>zhulin.order_essay.essay_file</code>. 文件路径
      */
-    public final TableField<OrderEssayRecord, String> EASSY_FILE = createField("eassy_file", org.jooq.impl.SQLDataType.VARCHAR(255), this, "文件路径");
+    public final TableField<OrderEssayRecord, String> ESSAY_FILE = createField("essay_file", org.jooq.impl.SQLDataType.VARCHAR(255), this, "文件路径");
 
     /**
      * The column <code>zhulin.order_essay.original_level</code>. 原创度
@@ -118,7 +118,7 @@ public class OrderEssay extends TableImpl<OrderEssayRecord> {
     /**
      * The column <code>zhulin.order_essay.result</code>. 审核结果
      */
-    public final TableField<OrderEssayRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "审核结果");
+    public final TableField<OrderEssayRecord, String> RESULT = createField("result", org.jooq.impl.SQLDataType.VARCHAR(1024).defaultValue(org.jooq.impl.DSL.inline(" ", org.jooq.impl.SQLDataType.VARCHAR)), this, "审核结果");
 
     /**
      * Create a <code>zhulin.order_essay</code> table reference

@@ -73,13 +73,13 @@ public class OrderService {
         orderRecord.setUserId(id);
         orderRecord.setTotal(orderFrom.getTotal());
         orderRecord.setMerchantPrice(orderFrom.getMerchantPrice());
-        orderRecord.setEassyType(orderFrom.getEssayType());
+        orderRecord.setEssayType(orderFrom.getEssayType());
         orderRecord.setNotes(orderFrom.getNotes());
         orderRecord.setOrderTitle(orderFrom.getOrderTitle());
         orderRecord.setOriginalLevel(orderFrom.getOriginalLevel());
         orderRecord.setPicture(orderFrom.getPicture());
         orderRecord.setType(orderFrom.getType());
-        orderRecord.setEndTime(Timestamp.valueOf(LocalDateTime.of(orderFrom.getEndTime(), LocalTime.MIN)));
+        orderRecord.setEndTime(Timestamp.valueOf(orderFrom.getEndTime()));
         orderRecord.setRequire(orderFrom.getRequire());
         orderRecord.setWordCount(orderFrom.getWordCount());
         return dsl.executeInsert(orderRecord) > 0;
@@ -124,12 +124,11 @@ public class OrderService {
                   .execute();
     }
 
-    public boolean auditing(Integer id, Byte status, String result, BigDecimal price, LocalDate endTime) {
+    public boolean auditing(Integer id, Byte status, String result, BigDecimal price, String endTime) {
 
         Map<Object, Object> map = new HashMap<>();
-        LocalDateTime of = LocalDateTime.of(endTime, LocalTime.MIN);
         if (null != endTime) {
-            map.put(ORDER.ADMIN_END_TIME, Timestamp.valueOf(of));
+            map.put(ORDER.ADMIN_END_TIME, Timestamp.valueOf(endTime));
         }
         if (null != price)
             map.put(ORDER.ADMIN_PRICE, price);

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static cn.hlvan.constant.OrderEssayStatus.*;
 import static cn.hlvan.manager.database.tables.Order.ORDER;
@@ -67,13 +68,18 @@ public class PublicOrderCotroller {
         if (pageable.getOffset() >= count) {
             orderRecords = Collections.emptyList();
         } else {
-            orderRecords = dsl.select(ORDER.fields()).from(ORDER)
+            orderRecords = dsl.select(ORDER.fields())
+                              .from(ORDER)
                               .innerJoin(USER)
                               .on(USER.ID.eq(ORDER.USER_ID))
                               .where(conditions)
                               .orderBy(ORDER.ID.desc())
                               .limit((int) pageable.getOffset(), pageable.getPageSize())
                               .fetchInto(OrderRecord.class);
+            Map<Integer,String> userRecord = dsl.select(USER.ID,USER.ACCOUNT)
+                                .from(USER).where(USER.PID.eq(user.getId()))
+                                .fetchMap(USER.ID,USER.ACCOUNT);
+            orderRecords.forEach(e -> e.setAccount(userRecord.get(e.getUserId())));
         }
         return Reply.success().data(new Page<>(orderRecords, pageable, count));
     }
@@ -129,23 +135,18 @@ public class PublicOrderCotroller {
         if (type == UserType.MERCHANT) {
             conditions.add(ORDER_ESSAY.STATUS.eq(MERCHANT_WAIT_AUDITING).or(ORDER_ESSAY.STATUS.eq(MERCHANT_REJECTION))
                                              .or(ORDER_ESSAY.STATUS.eq(ACCEPT_SUCCESS)));
+            conditions.add(ORDER.USER_ID.eq(user.getId()));
         }
-        UserOrder orderEssayRecords = dsl.select(ORDER_ESSAY.fields())
+        List<UserOrder> orderEssayRecords = dsl.select(ORDER_ESSAY.fields())
                                                .select(ORDER.ORDER_CODE)
                                                .from(USER_ORDER)
                                                .innerJoin(ORDER_ESSAY)
                                                .on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
                                                .innerJoin(ORDER).on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
                                                .where(conditions)
-                                               .and(ORDER_ESSAY.ESSAY_TITLE.eq(fileName))
-                                               .fetchOneInto(UserOrder.class);
+                                               .and(ORDER_ESSAY.ESSAY_TITLE.contains(fileName))
+                                               .fetchInto(UserOrder.class);
         merchantOrderDetail.setUserOrder(orderEssayRecords);
-        if (orderEssayRecords !=null ){
-            OrderRecord orderRecord = dsl.selectFrom(ORDER)
-                                         .where(ORDER.ORDER_CODE.eq(orderEssayRecords.getOrderCode()))
-                                         .fetchSingleInto(OrderRecord.class);
-            merchantOrderDetail.setOrderRecord(orderRecord);
-        }
         return Reply.success().data(merchantOrderDetail);
     }
 }

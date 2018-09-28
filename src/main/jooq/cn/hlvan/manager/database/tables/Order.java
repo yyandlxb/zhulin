@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Order extends TableImpl<OrderRecord> {
 
-    private static final long serialVersionUID = -1209351984;
+    private static final long serialVersionUID = 955017472;
 
     /**
      * The reference instance of <code>zhulin.order</code>
@@ -69,7 +69,7 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.order_status</code>. 0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过
      */
-    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过");
+    public final TableField<OrderRecord, Byte> ORDER_STATUS = createField("order_status", org.jooq.impl.SQLDataType.TINYINT.nullable(false).defaultValue(org.jooq.impl.DSL.inline("0", org.jooq.impl.SQLDataType.TINYINT)), this, "0：待审核 1：发布中 2：已完成 3：待点评 4：商家已打款5：取消 6：已截稿 7：管理员已完成（已打款）,8-审核未通过");
 
     /**
      * The column <code>zhulin.order.pay_type</code>. 1、微信 2、支付宝 3、银联 4、余额 5、现金 6、chinaPay
@@ -94,12 +94,12 @@ public class Order extends TableImpl<OrderRecord> {
     /**
      * The column <code>zhulin.order.admin_price</code>. 管理员价格
      */
-    public final TableField<OrderRecord, BigDecimal> ADMIN_PRICE = createField("admin_price", org.jooq.impl.SQLDataType.DECIMAL(20, 2).defaultValue(org.jooq.impl.DSL.inline("0.00", org.jooq.impl.SQLDataType.DECIMAL)), this, "管理员价格");
+    public final TableField<OrderRecord, BigDecimal> ADMIN_PRICE = createField("admin_price", org.jooq.impl.SQLDataType.DECIMAL(20, 2).nullable(false).defaultValue(org.jooq.impl.DSL.inline("0.00", org.jooq.impl.SQLDataType.DECIMAL)), this, "管理员价格");
 
     /**
-     * The column <code>zhulin.order.eassy_type</code>. 文章领域
+     * The column <code>zhulin.order.essay_type</code>. 文章领域
      */
-    public final TableField<OrderRecord, String> EASSY_TYPE = createField("eassy_type", org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "文章领域");
+    public final TableField<OrderRecord, String> ESSAY_TYPE = createField("essay_type", org.jooq.impl.SQLDataType.VARCHAR(255), this, "文章领域");
 
     /**
      * The column <code>zhulin.order.notes</code>. 备注
@@ -147,9 +147,9 @@ public class Order extends TableImpl<OrderRecord> {
     public final TableField<OrderRecord, String> REQUIRE = createField("require", org.jooq.impl.SQLDataType.VARCHAR(1024), this, "要求");
 
     /**
-     * The column <code>zhulin.order.eassy_total</code>. 文章数量
+     * The column <code>zhulin.order.essay_total</code>. 文章数量
      */
-    public final TableField<OrderRecord, Integer> EASSY_TOTAL = createField("eassy_total", org.jooq.impl.SQLDataType.INTEGER, this, "文章数量");
+    public final TableField<OrderRecord, Integer> ESSAY_TOTAL = createField("essay_total", org.jooq.impl.SQLDataType.INTEGER, this, "文章数量");
 
     /**
      * The column <code>zhulin.order.word_count</code>. 文章字数
@@ -170,6 +170,11 @@ public class Order extends TableImpl<OrderRecord> {
      * The column <code>zhulin.order.admin_end_time</code>. 管理员设定的截稿时间
      */
     public final TableField<OrderRecord, Timestamp> ADMIN_END_TIME = createField("admin_end_time", org.jooq.impl.SQLDataType.TIMESTAMP, this, "管理员设定的截稿时间");
+
+    /**
+     * The column <code>zhulin.order.account</code>. 发布中账号
+     */
+    public final TableField<OrderRecord, String> ACCOUNT = createField("account", org.jooq.impl.SQLDataType.VARCHAR(12), this, "发布中账号");
 
     /**
      * Create a <code>zhulin.order</code> table reference
