@@ -29,4 +29,5 @@ public class UserOrder {
     private Integer appointTotal;
     private String account;
     private Byte status;
+    private Integer id;
 }

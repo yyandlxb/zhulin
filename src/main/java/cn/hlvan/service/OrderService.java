@@ -113,7 +113,7 @@ public class OrderService {
         return dsl.executeUpdate(orderRecord) > 0;
     }
     public boolean update(Integer id,Integer total ,Integer userId) {
-        return dsl.update(ORDER).set(ORDER.TOTAL,total).where(ORDER.USER_ID.eq(id).and(ORDER.USER_ID.eq(userId))).execute() > 0;
+        return dsl.update(ORDER).set(ORDER.TOTAL,total).where(ORDER.ID.eq(id).and(ORDER.USER_ID.eq(userId))).execute() > 0;
     }
 
     public Integer delete(Integer ids, Integer userId) {

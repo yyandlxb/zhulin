@@ -126,7 +126,7 @@ public class EssayOrderService {
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
                     pictureRecord.setOrderEassyId(essayId.intValue());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length()+"B");
                     dsl.executeInsert(pictureRecord);
                 }
             }
@@ -213,7 +213,7 @@ public class EssayOrderService {
                     //存入图片信息
                     PictureRecord pictureRecord = new PictureRecord();
                     pictureRecord.setPictureName(file.getName());
-                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length());
+                    pictureRecord.setPicturePixel(width + "×" + height + "图片大小" + file.length()+"B");
                     pictureRecord.setOrderEassyId(orderEssayRecord.getId());
                     dsl.executeInsert(pictureRecord);
                 }
