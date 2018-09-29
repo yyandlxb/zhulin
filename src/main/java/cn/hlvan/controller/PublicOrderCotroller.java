@@ -144,7 +144,7 @@ public class PublicOrderCotroller {
                                                .on(ORDER_ESSAY.USER_ORDER_ID.eq(USER_ORDER.ID))
                                                .innerJoin(ORDER).on(ORDER.ORDER_CODE.eq(USER_ORDER.ORDER_CODE))
                                                .where(conditions)
-                                               .and(ORDER_ESSAY.ESSAY_TITLE.contains(fileName))
+                                               .and(ORDER_ESSAY.ESSAY_FILE.contains(fileName))
                                                .fetchInto(UserOrder.class);
         merchantOrderDetail.setUserOrder(orderEssayRecords);
         return Reply.success().data(merchantOrderDetail);

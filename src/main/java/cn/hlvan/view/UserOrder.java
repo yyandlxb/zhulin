@@ -28,4 +28,5 @@ public class UserOrder {
     private Integer total;//订单的文章数量
     private Integer appointTotal;
     private String account;
+    private Byte status;
 }
